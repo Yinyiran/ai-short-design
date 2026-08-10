@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 漫剧创作小程序 · 统一专业版</title>
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --primary-light: #9333EA;
+      --primary-bg: #F3F0FF;
+      --secondary: #EC4899;
+      --accent-blue: #3B82F6;
+      --text-main: #1F2937;
+      --text-sub: #6B7280;
+      --text-muted: #9CA3AF;
+      --bg-app: #F6F7FB;
+      --card-bg: #FFFFFF;
+      --border-color: #E5E7EB;
+      --gold-start: #FDE68A;
+      --gold-end: #D97706;
+      --shadow-sm: 0 2px 8px rgba(124, 58, 237, 0.06);
+      --shadow-md: 0 4px 16px rgba(124, 58, 237, 0.1);
+      --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", STHeiti, Microsoft YaHei, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: #0F172A;
+      color: var(--text-main);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .viewport-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .top-toolbar {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      color: #94A3B8;
+      font-size: 13px;
+    }
+
+    .top-toolbar .title-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #F8FAFC;
+      font-weight: 600;
+    }
+
+    .top-toolbar .title-info span {
+      background: rgba(124, 58, 237, 0.3);
+      color: #A78BFA;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+    }
+
+    .top-toolbar .btn-toggle-frame {
+      background: rgba(255, 255, 255, 0.1);
+      color: #E2E8F0;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 5px 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s;
+    }
+
+    .top-toolbar .btn-toggle-frame:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #FFF;
+    }
+
+    /* Device Mockup Frame */
+    .device-frame {
+      position: relative;
+      width: 420px;
+      height: 870px;
+      background: #000;
+      border-radius: 48px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 0 12px #1E293B, 0 0 0 14px #334155;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+    }
+
+    .device-frame.fullscreen-mode {
+      width: 100%;
+      max-width: 480px;
+      height: 92vh;
+      border-radius: 32px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+
+    /* iOS Notch & Status Bar */
+    .status-bar {
+      height: 44px;
+      background: transparent;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #000;
+      z-index: 100;
+      user-select: none;
+      flex-shrink: 0;
+    }
+
+    .status-bar.light-text { color: #FFFFFF; }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140px;
+      height: 28px;
+      background: #000;
+      border-bottom-left-radius: 16px;
+      border-bottom-right-radius: 16px;
+      z-index: 101;
+    }
+
+    /* WeChat Header Nav */
+    .wx-header {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      position: relative;
+      z-index: 90;
+      flex-shrink: 0;
+      background: #FFFFFF;
+      border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+    }
+
+    .wx-header .header-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1F2937;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .wx-capsule {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 16px;
+      padding: 4px 10px;
+      gap: 10px;
+      height: 30px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .wx-capsule .dots { display: flex; gap: 3px; }
+    .wx-capsule .dot { width: 4px; height: 4px; background: #000; border-radius: 50%; }
+    .wx-capsule .divider { width: 1px; height: 12px; background: rgba(0, 0, 0, 0.15); }
+    .wx-capsule .target-icon { width: 12px; height: 12px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .wx-capsule .target-icon::after { content: ''; width: 4px; height: 4px; background: #000; border-radius: 50%; }
+
+    /* App Content Screen */
+    .app-screen {
+      flex: 1;
+      background: var(--bg-app);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-content {
+      flex: 1;
+      overflow-y: auto;
+      padding-bottom: 70px;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    .page-content::-webkit-scrollbar { display: none; }
+
+    .page-view {
+      display: none;
+      animation: fadeIn 0.25s ease-in-out forwards;
+    }
+
+    .page-view.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom TabBar - 4 Tabs */
+    .tab-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(229, 231, 235, 0.8);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 100;
+      padding-bottom: 6px;
+    }
+
+    .tab-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #9CA3AF;
+      font-size: 10px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex: 1;
+    }
+
+    .tab-item svg { width: 22px; height: 22px; fill: currentColor; }
+    .tab-item.active { color: var(--primary); font-weight: 600; }
+    .tab-item.active svg { fill: var(--primary); }
+
+    /* Hero Banner */
+    .hero-banner {
+      position: relative;
+      margin: 12px 16px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #C084FC 100%);
+      color: white;
+      padding: 20px 18px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-banner .hero-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .hero-banner .hero-sub { font-size: 12px; opacity: 0.9; margin-bottom: 14px; }
+    .hero-banner .hero-tags { display: flex; gap: 8px; }
+    .hero-banner .tag-chip { background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); padding: 4px 10px; border-radius: 12px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+
+    .entrance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 14px; }
+    .entrance-card { background: var(--card-bg); border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; border: 1px solid rgba(243, 240, 255, 0.8); }
+    .entrance-card:active { transform: scale(0.98); }
+    .entrance-card.full-width { grid-column: span 2; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); color: white; display: flex; justify-content: space-between; align-items: center; }
+    .entrance-card .card-badge { position: absolute; top: 10px; right: 10px; background: #FEE2E2; color: #EF4444; font-size: 9px; padding: 2px 6px; border-radius: 8px; font-weight: 700; }
+    .entrance-card .card-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+    .entrance-card.full-width .card-title { color: white; }
+    .entrance-card .card-desc { font-size: 11px; color: var(--text-sub); }
+    .entrance-card.full-width .card-desc { color: rgba(255, 255, 255, 0.85); }
+    .entrance-card .card-icon { font-size: 24px; margin-bottom: 8px; }
+
+    .section-title { font-size: 16px; font-weight: 700; color: #1F2937; padding: 8px 16px; display: flex; justify-content: space-between; align-items: center; }
+    .section-title .more-link { font-size: 12px; color: var(--primary); font-weight: 500; cursor: pointer; }
+
+    .filter-pills { display: flex; gap: 8px; padding: 4px 16px 12px 16px; overflow-x: auto; scrollbar-width: none; }
+    .filter-pills::-webkit-scrollbar { display: none; }
+    .pill-btn { padding: 6px 14px; background: #EFEBF8; color: #4B5563; border-radius: 16px; font-size: 12px; white-space: nowrap; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+    .pill-btn.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
+
+    .waterfall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
+    .waterfall-card { background: var(--card-bg); border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); position: relative; cursor: pointer; transition: transform 0.2s; }
+    .waterfall-card:active { transform: scale(0.98); }
+    .waterfall-card .cover-box { width: 100%; height: 180px; position: relative; background: #334155; overflow: hidden; }
+    .waterfall-card .cover-img { width: 100%; height: 100%; object-fit: cover; }
+    .waterfall-card .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 1.5px solid rgba(255,255,255,0.7); }
+    .waterfall-card .badge-hot { position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; }
+    .waterfall-card .duration-tag { position: absolute; bottom: 8px; right: 8px; background: rgba(0, 0, 0, 0.65); color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
+    .waterfall-card .card-info { padding: 10px; }
+    .waterfall-card .title { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 4px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .waterfall-card .meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); }
+    .waterfall-card .btn-do-same { background: var(--primary-bg); color: var(--primary); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+
+    /* Profile Page Styles */
+    .profile-header { background: linear-gradient(180deg, #DDD6FE 0%, #F3F0FF 60%, var(--bg-app) 100%); padding: 16px 20px 24px 20px; display: flex; align-items: center; gap: 14px; }
+    .profile-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; box-shadow: var(--shadow-sm); object-fit: cover; background: #7C3AED; }
+    .profile-info { flex: 1; }
+    .profile-info .user-name { font-size: 18px; font-weight: 800; color: #111827; }
+    .profile-info .user-id { font-size: 12px; color: var(--text-sub); margin-top: 2px; }
+    .vip-tag { display: inline-flex; align-items: center; gap: 4px; background: #FEF3C7; color: #92400E; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; margin-top: 4px; }
+
+    .gold-vip-banner { margin: -10px 16px 14px 16px; background: linear-gradient(135deg, #FDE68A 0%, #F59E0B 50%, #D97706 100%); border-radius: var(--radius-md); padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; color: #78350F; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25); }
+    .gold-vip-banner .btn-open-vip { background: #78350F; color: #FDE68A; border: none; padding: 6px 14px; border-radius: 16px; font-size: 12px; font-weight: 700; cursor: pointer; }
+
+    .menu-group { background: var(--card-bg); border-radius: var(--radius-md); margin: 0 16px 12px 16px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .menu-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #F3F4F6; cursor: pointer; font-size: 14px; color: #374151; }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-item .left { display: flex; align-items: center; gap: 12px; font-weight: 500; }
+    .menu-item .icon { font-size: 18px; }
+    .menu-item .right-arrow { color: #9CA3AF; font-size: 14px; }
+
+    /* Sub-Pages */
+    .subpage-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg-app);
+      z-index: 150;
+      display: none;
+      flex-direction: column;
+      animation: slideInRight 0.25s ease-out forwards;
+    }
+
+    .subpage-container.active { display: flex; }
+
+    .subpage-header {
+      height: 44px;
+      background: #FFFFFF;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .subpage-back {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 14px;
+      color: var(--primary);
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+
+    .subpage-back:active { background: var(--primary-bg); }
+    .subpage-title { font-size: 15px; font-weight: 700; color: #111827; text-align: center; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .subpage-capsule-spacer { width: 70px; }
+
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .form-input, .form-textarea, .form-select { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); font-size: 13px; outline: none; background: #FFFFFF; transition: border-color 0.2s; }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--primary); }
+    .form-textarea { height: 80px; resize: none; }
+
+    .btn-primary { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; padding: 12px; border-radius: 22px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-primary:active { opacity: 0.9; }
+
+    /* Modals & Overlays */
+    .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 200; display: none; justify-content: flex-end; flex-direction: column; animation: fadeIn 0.2s ease; }
+    .modal-overlay.active { display: flex; }
+    .bottom-sheet { background: #FFFFFF; border-top-left-radius: 24px; border-top-right-radius: 24px; padding: 20px; max-height: 85%; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+    .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .sheet-title { font-size: 16px; font-weight: 700; color: #111827; }
+    .close-btn { font-size: 20px; color: #9CA3AF; cursor: pointer; }
+
+    .video-player-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 300; display: none; flex-direction: column; }
+    .video-player-modal.active { display: flex; }
+    .video-viewport { flex: 1; position: relative; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .video-watermark { position: absolute; bottom: 20px; right: 16px; background: rgba(0, 0, 0, 0.6); color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 1px; pointer-events: none; z-index: 10; }
+    .player-controls-bar { padding: 16px; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%); color: white; display: flex; flex-direction: column; gap: 10px; }
+
+    .synthesis-progress { padding: 20px 0; text-align: center; }
+    .stage-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; color: #4B5563; }
+    .stage-item.done { color: #10B981; font-weight: 600; }
+    .stage-item.active { color: var(--primary); font-weight: 700; }
+    .stage-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #E5E7EB; }
+    .stage-item.done .stage-icon { background: #D1FAE5; color: #10B981; }
+    .stage-item.active .stage-icon { background: #F3F0FF; color: var(--primary); border: 2px solid var(--primary); }
+
+    .spinner { width: 14px; height: 14px; border: 2px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .toast-msg { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: rgba(17, 24, 39, 0.88); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 500; display: none; backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+
+    /* Rich Storyboard Shot Card Styling */
+    .shot-card-rich {
+      background: #FFFFFF;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid #EEF2FF;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .shot-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed #E5E7EB;
+      padding-bottom: 6px;
+    }
+    .shot-card-badge {
+      background: var(--primary-bg);
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+    .shot-camera-tag {
+      background: #F3F4F6;
+      color: #374151;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .shot-card-body {
+      font-size: 12px;
+      line-height: 1.5;
+      color: #374151;
+    }
+    .shot-field-row {
+      margin-bottom: 4px;
+    }
+    .shot-field-row label {
+      font-weight: 700;
+      color: #111827;
+      margin-right: 4px;
+    }
+    .shot-prompt-code {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 10px;
+      color: #475569;
+      word-break: break-all;
+    }
+    
+    /* 360 Degree Viewport Angle Matrix Grid */
+    .angle-matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .angle-matrix-card {
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      border-radius: 8px;
+      padding: 6px;
+      text-align: center;
+    }
+    .angle-matrix-card img {
+      width: 100%;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 4px;
+    }
+    .angle-matrix-card .angle-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport-wrapper">
+    <div class="top-toolbar">
+      <div class="title-info">AI漫剧创作 <span>统一专业版</span></div>
+      <button class="btn-toggle-frame" onclick="toggleFrameSize()">📱 切换全屏模式</button>
+    </div>
+
+    <!-- Phone Simulator Frame -->
+    <div class="device-frame" id="deviceFrame">
+      <div class="notch"></div>
+
+      <!-- iOS Status Bar -->
+      <div class="status-bar light-text" id="statusBar">
+        <span id="currentTime">13:09</span>
+        <div style="display:flex; gap: 6px; align-items:center;">
+          <span>5G</span>
+          <svg width="16" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.4-.4-.4-1.02 0-1.41l1.41-1.41c.39-.39 1.02-.39 1.41 0l7.07 7.07c.39.39.39 1.02 0 1.41l-1.41 1.41c-.39.39-1.02.39-1.41 0l-1.78-1.78C9.57 23.63 7.85 24 6 24 2.69 24 0 21.31 0 18c0-3.31 2.69-6 6-6 1.85 0 3.57.84 4.73 2.17l4.86-4.86C16.93 7.04 14.63 6 12 6c-3.31 0-6 2.69-6 6 0 .8.16 1.56.45 2.26L4.8 15.91C4.28 14.71 4 13.39 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.21-.9 4.21-2.34 5.66l1.41 1.41C20.9 17.24 22 14.74 22 12c0-5.52-4.48-10-10-10z"/></svg>
+          <svg width="18" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+        </div>
+      </div>
+
+      <!-- App Content Screen -->
+      <div class="app-screen">
+        <div class="wx-header" id="wxHeader">
+          <div class="nav-back" id="btnBack" onclick="goBack()" style="display:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            <span>返回</span>
+          </div>
+          <div class="header-title" id="pageTitle">AI漫剧</div>
+          <div class="wx-capsule">
+            <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+            <div class="divider"></div>
+            <div class="target-icon"></div>
+          </div>
+        </div>
+
+        <!-- Main Scrollable Content -->
+        <div class="page-content">
+
+          <!-- TAB 1: 漫剧 (Home) -->
+          <div class="page-view active" id="tabComic">
+            <div class="hero-banner">
+              <div class="hero-title">让猫咪故事动起来</div>
+              <div class="hero-sub">轻松制作 你的专属AI拟人化猫咪漫剧</div>
+              <div class="hero-tags">
+                <div class="tag-chip">⚡ 拟人猫咪</div>
+                <div class="tag-chip">🎨 360°视角锁定</div>
+                <div class="tag-chip">🎬 一键生成</div>
+              </div>
+            </div>
+
+            <!-- 3 Main Entrance Cards -->
+            <div class="entrance-grid">
+              <div class="entrance-card" onclick="openSubpage('scriptCreation')">
+                <div class="card-badge">AI剧本</div>
+                <div class="card-icon">✍️</div>
+                <div class="card-title">AI 写剧本</div>
+                <div class="card-desc">拟人化猫咪故事剧本</div>
+              </div>
+
+              <div class="entrance-card" onclick="openSubpage('materialLibrary')">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">猫咪资产库</div>
+                <div class="card-desc">360°多视角形象锁</div>
+              </div>
+
+              <div class="entrance-card full-width" onclick="openDraftOrContinue()">
+                <div>
+                  <div class="card-title">继续草稿 / 开始创作</div>
+                  <div class="card-desc">载入上次未完成的分镜草稿</div>
+                </div>
+                <div style="font-size:24px;">🚀</div>
+              </div>
+            </div>
+
+            <div class="section-title">
+              <span>猫咪漫剧精选广场</span>
+              <span class="more-link">全部分类 ›</span>
+            </div>
+
+            <div class="filter-pills">
+              <div class="pill-btn active">热门</div>
+              <div class="pill-btn">拟人萌宠</div>
+              <div class="pill-btn">古风猫客栈</div>
+              <div class="pill-btn">悬疑侦探</div>
+              <div class="pill-btn">赛博喵星</div>
+            </div>
+
+            <div class="waterfall-grid">
+              <div class="waterfall-card" onclick="playDemoVideo('《猫大厨：汴京客栈》', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4')">
+                <div class="cover-box">
+                  <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" class="cover-img" alt="cover">
+                  <div class="badge-hot">热播</div>
+                  <div class="play-btn">▶</div>
+                  <div class="duration-tag">01:28</div>
+                </div>
+                <div class="card-info">
+                  <div class="title">《猫大厨：汴京客栈》</div>
+                  <div class="meta">
+                    <span>古风/拟人猫</span>
+                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化猫大厨，古风客栈烹饪红烧肉')">做同款</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="waterfall-card" onclick="playDemoVideo('《橘猫少爷大冒险》', 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4')">
+                <div class="cover-box">
+                  <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400" class="cover-img" alt="cover">
+                  <div class="badge-hot">热播</div>
+                  <div class="play-btn">▶</div>
+                  <div class="duration-tag">01:22</div>
+                </div>
+                <div class="card-info">
+                  <div class="title">《橘猫少爷大冒险》</div>
+                  <div class="meta">
+                    <span>赛博/萌宠</span>
+                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化橘猫少爷，赛博朋克风街头')">做同款</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: AI视频 -->
+          <div class="page-view" id="tabVideo">
+            <div style="padding: 16px 16px 8px 16px;">
+              <h2 style="font-size:20px; font-weight:800; color:#111827;">AI 猫咪视频</h2>
+              <p style="font-size:12px; color:var(--text-sub);">内置全套拟人化猫咪形象，让静态猫咪动起来</p>
+            </div>
+
+            <div class="entrance-grid">
+              <div class="entrance-card" onclick="openSubpage('t2vDrawer')">
+                <div class="card-badge" style="background:#E0E7FF; color:#4338CA;">T2V</div>
+                <div class="card-icon">🎬</div>
+                <div class="card-title">文生视频</div>
+                <div class="card-desc">猫咪视频智能生成</div>
+              </div>
+
+              <div class="entrance-card" onclick="openSubpage('i2vDrawer')">
+                <div class="card-badge" style="background:#FCE7F3; color:#BE185D;">I2V</div>
+                <div class="card-icon">🖼️</div>
+                <div class="card-title">图生视频</div>
+                <div class="card-desc">猫咪静态图动效化</div>
+              </div>
+
+              <div class="entrance-card" onclick="openSubpage('ecomVideoDrawer')">
+                <div class="card-icon">🛍️</div>
+                <div class="card-title">猫咪带货视频</div>
+                <div class="card-desc">猫咪主播带货展示</div>
+              </div>
+
+              <div class="entrance-card" onclick="openSubpage('materialLibrary')">
+                <div class="card-icon">🎭</div>
+                <div class="card-title">猫咪资产库</div>
+                <div class="card-desc">前后左右视角矩阵</div>
+              </div>
+            </div>
+
+            <div class="filter-pills">
+              <div class="pill-btn active">热门</div>
+              <div class="pill-btn">猫咪带货</div>
+              <div class="pill-btn">图生视频</div>
+              <div class="pill-btn">拟人猫转圈</div>
+              <div class="pill-btn">赛博喵星</div>
+            </div>
+
+            <div class="waterfall-grid">
+              <div class="waterfall-card" onclick="playDemoVideo('拟人猫咪开心转圈', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4')">
+                <div class="cover-box">
+                  <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" class="cover-img" alt="cover">
+                  <div class="play-btn">▶</div>
+                </div>
+                <div class="card-info">
+                  <div class="title">HOT 拟人猫咪转圈</div>
+                  <div class="meta">
+                    <span>猫咪动画</span>
+                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化四足猫咪，开心转圈舞蹈')">做同款</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="waterfall-card" onclick="playDemoVideo('黑猫刺客夜行', 'https://assets.mixkit.co/videos/preview/mixkit-warrior-samurai-holding-a-sword-under-falling-leaves-41618-large.mp4')">
+                <div class="cover-box">
+                  <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400" class="cover-img" alt="cover">
+                  <div class="play-btn">▶</div>
+                </div>
+                <div class="card-info">
+                  <div class="title">HOT 黑猫刺客夜行</div>
+                  <div class="meta">
+                    <span>武侠运镜</span>
+                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('国风黑猫刺客，夜行竹林剑光闪烁')">做同款</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: 作品 -->
+          <div class="page-view" id="tabWorks">
+            <div style="padding:16px 16px 4px 16px; display:flex; justify-content:space-between; align-items:center;">
+              <h2 style="font-size:20px; font-weight:800; color:#111827;">我的作品</h2>
+              <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="renderWorksList()">🔄 刷新列表</button>
+            </div>
+
+            <div class="filter-pills" style="padding-bottom:8px;">
+              <div class="pill-btn active" onclick="filterWorks(this, 'all')">全部</div>
+              <div class="pill-btn" onclick="filterWorks(this, '漫剧视频')">漫剧视频</div>
+              <div class="pill-btn" onclick="filterWorks(this, 'AI视频')">AI视频</div>
+              <div class="pill-btn" onclick="filterWorks(this, '生成中')">生成中</div>
+            </div>
+
+            <div style="margin: 0 16px 12px 16px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; display:flex; justify-content:space-between; align-items:center;" id="noticeBanner">
+              <span>⏰ 作品云端保留 7 天，重要视频请及时保存到本地</span>
+              <span style="cursor:pointer; font-weight:bold;" onclick="document.getElementById('noticeBanner').style.display='none'">✕</span>
+            </div>
+
+            <div id="worksListContainer" style="padding: 0 16px; display:flex; flex-direction:column; gap:12px;"></div>
+          </div>
+
+          <!-- TAB 4: 我的 -->
+          <div class="page-view" id="tabMine">
+            <div class="profile-header" onclick="openWxLoginModal()" style="cursor:pointer;">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" class="profile-avatar" alt="Avatar">
+              <div class="profile-info">
+                <div class="user-name">猫咪漫剧创作者_850 <span style="font-size:11px; color:var(--primary); font-weight:normal;">[切换账号]</span></div>
+                <div class="user-id">ID: 850461</div>
+                <div class="vip-tag" id="userVipBadge">⭐ 普通会员 (可升级)</div>
+              </div>
+            </div>
+
+            <div style="margin: -10px 16px 14px 16px; background:white; border-radius:var(--radius-md); padding:12px 16px; display:flex; justify-content:space-around; box-shadow:var(--shadow-sm);">
+              <div style="text-align:center; cursor:pointer;" onclick="openSubpage('pointsCenter')">
+                <div style="font-size:16px; font-weight:800; color:var(--primary);" id="displayPoints">120</div>
+                <div style="font-size:11px; color:var(--text-sub);">积分余额</div>
+              </div>
+              <div style="width:1px; background:#E5E7EB;"></div>
+              <div style="text-align:center; cursor:pointer;" onclick="openSubpage('vipModal')">
+                <div style="font-size:16px; font-weight:800; color:#F59E0B;" id="displayCredits">5</div>
+                <div style="font-size:11px; color:var(--text-sub);">免费次数</div>
+              </div>
+            </div>
+
+            <div class="gold-vip-banner">
+              <div>
+                <div style="font-weight:800; font-size:14px;">开通尊享 VIP 会员</div>
+                <div style="font-size:10px; opacity:0.9;">解锁直接文生视频 · 专属AI风格 · 每日赠送次数</div>
+              </div>
+              <button class="btn-open-vip" onclick="openSubpage('vipModal')">立即开通</button>
+            </div>
+
+            <div class="menu-group">
+              <div class="menu-item" onclick="openSubpage('pointsCenter')">
+                <div class="left"><span class="icon">💰</span> 积分中心与充值</div>
+                <div class="right-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="openSubpage('vipModal')">
+                <div class="left"><span class="icon">👑</span> 会员套餐与次数包</div>
+                <div class="right-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="openSubpage('ordersCenter')">
+                <div class="left"><span class="icon">🧾</span> 订单中心</div>
+                <div class="right-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="openSubpage('referralModal')">
+                <div class="left"><span class="icon">🎁</span> 二级分销推广金</div>
+                <div class="right-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="showToast('视频复刻：上传参考视频提取运镜与Prompt')">
+                <div class="left"><span class="icon">📽️</span> 视频风格复刻</div>
+                <div class="right-arrow">›</div>
+              </div>
+            </div>
+
+            <div class="menu-group">
+              <div class="menu-item" onclick="showToast('微信客服已连线！')">
+                <div class="left"><span class="icon">🎧</span> 联系官方客服 / FAQ</div>
+                <div class="right-arrow">›</div>
+              </div>
+              <div class="menu-item" onclick="showToast('当前版本 v2.4.0 统一专业版')">
+                <div class="left"><span class="icon">⚙️</span> 系统设置与关于</div>
+                <div class="right-arrow">›</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SUBPAGES CONTAINER -->
+        <!-- 1. AI 写剧本 Subpage -->
+        <div class="subpage-container" id="subScriptCreation">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">AI 智能写剧本 (猫咪故事)</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="form-group">
+              <div class="form-label">
+                <span>猫咪漫剧主题/故事梗概</span>
+                <span style="color:var(--primary); font-size:11px; cursor:pointer;" onclick="fillPresetPrompt()">随机灵感 🎲</span>
+              </div>
+              <textarea class="form-textarea" id="scriptPrompt" placeholder="描述你想要的拟人化猫咪漫剧故事，例如：一只会功夫的霸道猫总，在古风客栈揭穿密室悬案..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">故事类型分类</div>
+              <select class="form-select" id="scriptCategory">
+                <option>古风仙侠猫</option>
+                <option>搞笑萌宠猫</option>
+                <option>悬疑侦探猫</option>
+                <option>热血漫剧猫</option>
+                <option>治愈日常猫</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">目标分镜集数 (5 ~ 15 集限幅)</div>
+              <div style="display:flex; gap:8px;">
+                <button class="pill-btn active" onclick="selectEpisodes(this, 5)">5 集</button>
+                <button class="pill-btn" onclick="selectEpisodes(this, 8)">8 集</button>
+                <button class="pill-btn" onclick="selectEpisodes(this, 10)">10 集</button>
+                <button class="pill-btn" onclick="selectEpisodes(this, 15)">15 集</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">台词配音语言模式</div>
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <label style="font-size:12px; display:flex; align-items:center; gap:6px;"><input type="radio" name="langMode" checked> 猫咪人话对白 (纯人类拟人配音)</label>
+                <label style="font-size:12px; display:flex; align-items:center; gap:6px;"><input type="radio" name="langMode"> 人话 + 喵喵拟声 (人类与猫咪混合)</label>
+                <label style="font-size:12px; display:flex; align-items:center; gap:6px;"><input type="radio" name="langMode"> 纯喵喵拟声 + 旁白解说</label>
+              </div>
+            </div>
+
+            <div style="background:var(--primary-bg); border:1px solid #DDD6FE; border-radius:var(--radius-sm); padding:10px 14px; font-size:11px; color:var(--primary); margin-bottom:16px;">
+              💡 预扣优先级：<b>①每日免费额度 → ②次数包 → ③积分折算</b> (10 积分/0.5 次数)
+            </div>
+
+            <div style="display:flex; gap:10px; margin-bottom:12px;">
+              <button class="btn-primary" style="flex:1;" onclick="startGenerateScript()">✨ 生成 AI 结构化专业分镜剧本</button>
+              <button style="background:white; border:1px solid var(--border-color); color:var(--text-main); border-radius:22px; padding:0 14px; font-size:12px; font-weight:600; cursor:pointer;" onclick="saveScriptDraft()">💾 存为草稿</button>
+            </div>
+
+            <!-- Generated Script Output Section -->
+            <div id="scriptOutputArea" style="margin-top:20px; display:none;">
+              <div class="section-title" style="padding-x:0;">AI 生成结构化分镜结果</div>
+              <div id="storyboardShotsList" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+              <div style="margin-top:16px; display:flex; gap:10px;">
+                <button class="btn-primary" style="background:#4F46E5; flex:1;" onclick="importToEditor()">一键导入并去分镜编排 ›</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 素材库与 360° 多视角猫咪角色生成 Subpage -->
+        <div class="subpage-container" id="subMaterialLibrary">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">猫咪资产库 (360°视角锁定)</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="filter-pills">
+              <div class="pill-btn active" onclick="switchMaterialTab(this, 'characters')">猫咪角色资产</div>
+              <div class="pill-btn" onclick="switchMaterialTab(this, 'scenes')">客栈场景资产</div>
+              <div class="pill-btn" onclick="switchMaterialTab(this, 'props')">猫咪道具资产</div>
+            </div>
+
+            <!-- Create / Upload Cat Character with 360 View Matrix -->
+            <div style="background:white; border-radius:var(--radius-md); padding:14px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+              <div class="form-label">上传猫咪源图 / 新建角色 (360° 多视角一致性三视图)</div>
+              
+              <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+                <div style="width:75px; height:75px; border:2px dashed var(--primary); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#F8FAFC;" onclick="uploadCustomCatImg()">
+                  <span style="font-size:20px;">📷</span>
+                  <span style="font-size:9px; color:var(--primary); font-weight:600; margin-top:2px;">上传猫咪图</span>
+                </div>
+                <div style="flex:1;">
+                  <input type="text" class="form-input" id="charNameInput" placeholder="猫咪角色名称 (例: 猫大厨/橘猫少爷)" style="margin-bottom:6px;">
+                  <select class="form-select" id="charSpecies">
+                    <option>拟人化猫咪 (四足站立)</option>
+                    <option>橘猫 (古风锦袍)</option>
+                    <option>黑猫刺客 (夜行衣)</option>
+                    <option>白猫仙子 (汉服霓裳)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <span style="font-size:11px; color:#4B5563;">四足站立拟人化开关:</span>
+                <input type="checkbox" checked id="charQuadruped">
+              </div>
+
+              <button class="btn-primary" style="font-size:12px; padding:10px;" onclick="generate360CatMatrix()">✨ 生成 360° 视角三视图 (前后左右/俯视仰视锁定)</button>
+            </div>
+
+            <!-- 360 Viewport Candidate Matrix Grid -->
+            <div id="matrixArea" style="display:none; margin-bottom:16px; background:white; padding:12px; border-radius:var(--radius-md);">
+              <div style="font-size:12px; font-weight:700; color:#111827; margin-bottom:4px;">🎯 猫咪全方位视角三视图 (Cross-Shot Ref 视角全锁定):</div>
+              <div style="font-size:10px; color:var(--text-sub); margin-bottom:8px;">AI 已产出该猫咪角色的 6 个标准镜头视角，后续分镜渲染将自动保真：</div>
+              
+              <div class="angle-matrix-grid" id="angleMatrixGrid"></div>
+              
+              <button class="btn-primary" style="margin-top:10px; font-size:11px; padding:8px; background:#10B981;" onclick="confirmAngleMatrixLock()">🔒 锁死该猫咪全视角形象并入库</button>
+            </div>
+
+            <div class="section-title" style="padding-x:0;">已保存猫咪资产库</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="characterMaterialPool"></div>
+          </div>
+        </div>
+
+        <!-- 3. 分镜编辑 Subpage (分镜场景概念图 + AI 智能改进) -->
+        <div class="subpage-container" id="subStoryboardEditor">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">分镜编排与场景图渲染</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div style="font-size:12px; font-weight:700; color:#374151;">分镜列表 (场景概念图 + 镜头控制):</div>
+              <div style="display:flex; gap:6px;">
+                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="openAudioPreviewModal()">🔊 配音与整剧预览</button>
+                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="addNewShot()">+ 添加镜头</button>
+              </div>
+            </div>
+
+            <div id="shotEditCardsList" style="display:flex; flex-direction:column; gap:12px;"></div>
+
+            <div style="margin-top:16px; display:flex; gap:10px;">
+              <button class="btn-primary" style="background:#10B981;" onclick="openSubpage('styleSelection')">下一步：选择风格与音效 ›</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 视频风格与音效选择 Subpage -->
+        <div class="subpage-container" id="subStyleSelection">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">画面风格与音效配音</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="form-group">
+              <div class="form-label">内置 AI 视觉风格</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="pill-btn active" style="text-align:center; padding:12px;" onclick="setStyle(this, '治愈手绘')">🎨 治愈手绘</div>
+                <div class="pill-btn" style="text-align:center; padding:12px;" onclick="setStyle(this, '热血漫画')">💥 热血漫画</div>
+                <div class="pill-btn" style="text-align:center; padding:12px;" onclick="setStyle(this, '国风水墨')">🖌️ 国风水墨</div>
+                <div class="pill-btn" style="text-align:center; padding:12px;" onclick="setStyle(this, '3D赛博')">🤖 3D 赛博</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">画幅比例</div>
+              <div style="display:flex; gap:10px;">
+                <button class="pill-btn active" style="flex:1;">📱 9:16 (竖屏)</button>
+                <button class="pill-btn" style="flex:1;">🖥️ 16:9 (横屏)</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">TTS 猫咪配音音色</div>
+              <select class="form-select">
+                <option>猫大厨 - 霸道低沉男声</option>
+                <option>白猫仙子 - 萌系可爱女声</option>
+                <option>黑猫刺客 - 冷酷傲娇音</option>
+                <option>搞笑喵喵拟声 + 旁白</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">背景音乐 BGM</div>
+              <select class="form-select">
+                <option>轻松欢快客栈 BGM</option>
+                <option>热血战斗转场 BGM</option>
+                <option>悬疑惊悚解密 BGM</option>
+              </select>
+            </div>
+
+            <button class="btn-primary" onclick="startSynthesisPipeline()">🚀 确认并一键合成猫咪漫剧</button>
+          </div>
+        </div>
+
+        <!-- 5. 文生视频 T2V Drawer -->
+        <div class="subpage-container" id="subT2vDrawer">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">文生视频 (T2V)</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="form-group">
+              <div class="form-label">猫咪视频提示词 (T2V Prompt)</div>
+              <textarea class="form-textarea" id="t2vPromptInput" placeholder="描述你想要直接合成的猫咪视频画面内容..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">负向提示词 (Negative Prompt)</div>
+              <input type="text" class="form-input" value="模糊, 变形, 低画质, 缺失肢体">
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">运动幅度 (Motion Intensity: <span id="motionVal">5</span>)</div>
+              <input type="range" min="1" max="10" value="5" style="width:100%;" oninput="document.getElementById('motionVal').innerText=this.value">
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">视频时长</div>
+              <div style="display:flex; gap:8px;">
+                <button class="pill-btn active" style="flex:1;">5 秒</button>
+                <button class="pill-btn" style="flex:1;">10 秒 (VIP)</button>
+              </div>
+            </div>
+
+            <div style="background:var(--primary-bg); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--primary); margin-bottom:16px;">
+              💰 预计消耗：<b>20 积分</b> / 1 次视频生成额度
+            </div>
+
+            <button class="btn-primary" onclick="startSingleVideoGen('T2V文生视频')">🎬 开始生成 AI 猫咪视频</button>
+          </div>
+        </div>
+
+        <!-- 6. 图生视频 I2V Drawer -->
+        <div class="subpage-container" id="subI2vDrawer">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">图生视频 (I2V)</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="form-group">
+              <div class="form-label">选择/上传猫咪源图片</div>
+              <div style="background:white; border:2px dashed #CBD5E1; border-radius:var(--radius-md); padding:20px; text-align:center; cursor:pointer;" onclick="showToast('已从资产库选取猫大厨图片')">
+                <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200" style="width:100px; height:100px; object-fit:cover; border-radius:8px;">
+                <div style="font-size:11px; color:var(--primary); margin-top:6px;">点击更换猫咪源图 (已关联资产库 360° 视角锁)</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">动效控制描述</div>
+              <input type="text" class="form-input" value="猫咪角色挥舞厨刀，做出招牌掂锅烹饪动作">
+            </div>
+
+            <button class="btn-primary" onclick="startSingleVideoGen('I2V图生视频')">✨ 动效图生视频</button>
+          </div>
+        </div>
+
+        <!-- 6.5 猫咪带货视频 Ecom Drawer -->
+        <div class="subpage-container" id="subEcomVideoDrawer">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">猫咪带货视频创作 (虚拟猫咪主播)</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="form-group">
+              <div class="form-label">上传商品主图 / 选自资产库</div>
+              <div style="display:flex; gap:10px; align-items:center;">
+                <div style="position:relative; width:80px; height:80px; border-radius:8px; overflow:hidden; border:2px solid var(--primary);">
+                  <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200" style="width:100%; height:100%; object-fit:cover;">
+                  <span style="position:absolute; bottom:2px; right:2px; background:rgba(0,0,0,0.6); color:white; font-size:8px; padding:1px 3px; border-radius:3px;">白桃乌龙</span>
+                </div>
+                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:8px 12px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="showToast('已更换为资产库【猫咪罐头商品图】')">📷 更换商品主图</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">内置虚拟猫咪带货主播形象 (全部为猫咪角色)</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <button class="pill-btn active" style="text-align:center; padding:10px;">🐱 3D猫大厨主播</button>
+                <button class="pill-btn" style="text-align:center; padding:10px;">🐱 橘猫少爷主播</button>
+                <button class="pill-btn" style="text-align:center; padding:10px;">🐱 酷盖黑猫主播</button>
+                <button class="pill-btn" style="text-align:center; padding:10px;">🐱 软萌白猫主播</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">
+                <span>商品卖点与口播文案</span>
+                <span style="color:var(--primary); font-size:11px; cursor:pointer;" onclick="generateEcomScript()">✨ AI 自动生成爆款文案</span>
+              </div>
+              <textarea class="form-textarea" id="ecomScriptArea" placeholder="输入商品卖点，或点击右上角 AI 自动生成带货口播台词...">喵星人看过来！今天这款【猫大厨联名白桃乌龙茶】真的绝了！冷萃留香、无糖清爽，限量立减 20 元，先到先得！</textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">直播间促销标签挂件</div>
+              <div style="display:flex; gap:8px; overflow-x:auto;">
+                <span style="background:#FEE2E2; color:#EF4444; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #FCA5A5;">🔥 限时特惠 ¥39.9</span>
+                <span style="background:#FEF3C7; color:#D97706; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #FCD34D;">🎁 买一送一</span>
+                <span style="background:#D1FAE5; color:#059669; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #6EE7B7;">⚡ 热销 10w+ 件</span>
+              </div>
+            </div>
+
+            <div style="background:var(--primary-bg); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--primary); margin-bottom:16px;">
+              💰 预计消耗：<b>20 积分</b> / 1 次电商带货视频生成
+            </div>
+
+            <button class="btn-primary" onclick="startSingleVideoGen('猫咪带货视频')">🚀 一键生成猫咪带货视频</button>
+          </div>
+        </div>
+
+        <!-- 7. 积分中心 Subpage -->
+        <div class="subpage-container" id="subPointsCenter">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">积分中心与明细</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div style="background:linear-gradient(135deg, #7C3AED 0%, #C084FC 100%); border-radius:var(--radius-lg); padding:20px; color:white; margin-bottom:16px;">
+              <div style="font-size:12px; opacity:0.9;">当前积分总额度</div>
+              <div style="font-size:32px; font-weight:900;" id="pointsCenterVal">120</div>
+              <div style="font-size:10px; opacity:0.8; margin-top:4px;" id="frozenDisplay">冻结中: 0 积分 (两阶段事务保护中)</div>
+            </div>
+
+            <div class="filter-pills" style="padding-x:0;">
+              <div class="pill-btn active" onclick="switchPointsSubTab(this, 'recharge')">积分充值</div>
+              <div class="pill-btn" onclick="switchPointsSubTab(this, 'convert')">积分兑换</div>
+              <div class="pill-btn" onclick="switchPointsSubTab(this, 'gift')">好友转赠</div>
+              <div class="pill-btn" onclick="switchPointsSubTab(this, 'logs')">流水明细</div>
+            </div>
+
+            <div id="pointsRechargeView">
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+                <div style="background:white; border:1.5px solid var(--primary); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="buyPoints(600, 60)">
+                  <div style="font-size:18px; font-weight:800; color:var(--primary);">600 积分</div>
+                  <div style="font-size:13px; color:#DC2626; font-weight:700; margin-top:4px;">¥60.00</div>
+                </div>
+
+                <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="buyPoints(1200, 100)">
+                  <div style="font-size:18px; font-weight:800; color:var(--primary);">1200 积分</div>
+                  <div style="font-size:13px; color:#DC2626; font-weight:700; margin-top:4px;">¥100.00</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="pointsConvertView" style="display:none; background:white; border-radius:var(--radius-md); padding:14px;">
+              <div class="form-label">积分兑换生成次数包</div>
+              <div style="font-size:12px; color:var(--text-sub); margin-bottom:10px;">兑换比例：100 积分 = 1 次数包 (永久有效)</div>
+              <button class="btn-primary" onclick="convertPointsToCredits()">兑换 1 次生成包 (消耗 100 积分)</button>
+            </div>
+
+            <div id="pointsGiftView" style="display:none; background:white; border-radius:var(--radius-md); padding:14px;">
+              <div class="form-label">受赠好友微信 ID</div>
+              <input type="text" class="form-input" placeholder="输入好友的用户 ID (例: 928104)" id="giftUserId">
+              <div class="form-label" style="margin-top:10px;">转赠积分数量 (单日限额 500)</div>
+              <input type="number" class="form-input" value="50" id="giftAmount">
+              <button class="btn-primary" style="margin-top:12px;" onclick="transferGiftPoints()">确认好友转赠 (原子事务)</button>
+            </div>
+
+            <div id="pointsLogsView" style="display:none; display:flex; flex-direction:column; gap:8px;" id="pointsHistoryList"></div>
+          </div>
+        </div>
+
+        <!-- 8. VIP 会员与次数包 Subpage -->
+        <div class="subpage-container" id="subVipModal">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">会员套餐与次数包</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="gold-vip-banner" style="margin:0 0 16px 0;">
+              <div>
+                <div style="font-weight:800; font-size:16px;">VIP 尊享权益</div>
+                <div style="font-size:11px;">每日赠送10次生成 · 优先队列排队 · 直接文生视频</div>
+              </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+              <div style="background:white; border:2px solid #F59E0B; border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:800; font-size:15px;">连续包月 VIP</div>
+                  <div style="font-size:11px; color:var(--text-sub);">送 300 积分/月</div>
+                </div>
+                <div>
+                  <span style="font-size:18px; font-weight:900; color:#D97706;">¥39</span> /月
+                  <button style="margin-left:8px; background:#F59E0B; color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('月卡会员', 39)">开通</button>
+                </div>
+              </div>
+
+              <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:800; font-size:15px;">一次性 10 次生成包</div>
+                  <div style="font-size:11px; color:var(--text-sub);">永久有效</div>
+                </div>
+                <div>
+                  <span style="font-size:18px; font-weight:900; color:#111827;">¥19</span>
+                  <button style="margin-left:8px; background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('10次包', 19)">购买</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9. 分销推广 Subpage -->
+        <div class="subpage-container" id="subReferralModal">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">分销推广收益</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div style="background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border-radius:var(--radius-lg); padding:20px; margin-bottom:16px;">
+              <div style="font-size:12px;">我的推广累计收益</div>
+              <div style="font-size:28px; font-weight:900;">¥ 128.50</div>
+              <div style="font-size:10px; opacity:0.8; margin-top:4px;">一级佣金 (15%) + 二级佣金 (5%)</div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">专属邀请码</div>
+              <div style="display:flex; gap:8px;">
+                <input type="text" class="form-input" value="REF-850461-AI" readonly>
+                <button class="pill-btn active" onclick="showToast('邀请链接与专属海报已复制！')">复制海报</button>
+              </div>
+            </div>
+
+            <div class="section-title" style="padding-x:0;">下线推荐记录 (≤2级约束)</div>
+            <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;" id="referralList"></div>
+
+            <button class="btn-primary" style="background:#059669;" onclick="showToast('提现申请已提交！将在1-3个工作日打入微信零钱')">申请提现至微信零钱</button>
+          </div>
+        </div>
+
+        <!-- 10. 订单中心 Subpage -->
+        <div class="subpage-container" id="subOrdersCenter">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title">订单中心</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <div class="filter-pills" style="padding-x:0;">
+              <div class="pill-btn active">全部订单</div>
+              <div class="pill-btn">已支付</div>
+              <div class="pill-btn">待支付</div>
+              <div class="pill-btn">已退款</div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;" id="ordersList"></div>
+          </div>
+        </div>
+
+        <!-- Bottom TabBar - Exactly 4 Tabs -->
+        <div class="tab-bar">
+          <div class="tab-item active" onclick="switchTab('tabComic', 'AI漫剧', this)">
+            <svg viewBox="0 0 24 24"><path d="M4 6.47C4 5.66 4.66 5 5.47 5h13.06c.81 0 1.47.66 1.47 1.47v11.06c0 .81-.66 1.47-1.47 1.47H5.47C4.66 19 4 18.34 4 17.53V6.47zm2 1.5v3h4v-3H6zm6 0v3h6v-3h-6zm-6 5v3h6v-3H6zm8 0v3h4v-3h-4z"/></svg>
+            <span>漫剧</span>
+          </div>
+
+          <div class="tab-item" onclick="switchTab('tabVideo', 'AI视频', this)">
+            <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            <span>AI视频</span>
+          </div>
+
+          <div class="tab-item" onclick="switchTab('tabWorks', '我的作品', this)">
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            <span>作品</span>
+          </div>
+
+          <div class="tab-item" onclick="switchTab('tabMine', '个人中心', this)">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            <span>我的</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VIDEO PLAYER MODAL -->
+      <div class="video-player-modal" id="videoPlayerModal">
+        <div style="padding:10px 16px; color:white; display:flex; justify-content:space-between; align-items:center; z-index:20;">
+          <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="closeVideoPlayer()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            <span style="font-size:14px; font-weight:700;" id="playerTitle">漫剧播放</span>
+          </div>
+          <span style="font-size:22px; cursor:pointer;" onclick="closeVideoPlayer()">✕</span>
+        </div>
+
+        <div class="video-viewport">
+          <video id="htmlVideoElement" style="width:100%; max-height:100%; object-fit:contain;" controls loop autoplay>
+            <source id="videoSource" src="https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4" type="video/mp4">
+          </video>
+          <div class="video-watermark">AI 生成</div>
+        </div>
+
+        <div class="player-controls-bar">
+          <div style="display:flex; justify-content:space-between; font-size:12px;">
+            <span>选集：第 1 集 (全 5 集)</span>
+            <span style="color:var(--primary-light); cursor:pointer;" onclick="showToast('点赞成功！推荐指数 +1')">❤️ 点赞 (1.2k)</span>
+          </div>
+          <button class="btn-primary" style="font-size:12px; padding:8px;" onclick="showToast('已复制该漫剧结构与Prompt，开始创作同款！'); closeVideoPlayer(); openSubpage('scriptCreation');">✨ 做同款漫剧</button>
+        </div>
+      </div>
+
+      <!-- AI SHOT REFINER & IMPROVEMENT MODAL -->
+      <div class="modal-overlay" id="aiShotRefineModal">
+        <div class="bottom-sheet">
+          <div class="sheet-header">
+            <div class="sheet-title" id="refineShotTitle">✨ AI 智能改进分镜</div>
+            <div class="close-btn" onclick="closeShotRefineModal()">✕</div>
+          </div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:12px;" id="refineShotDesc">AI 正在为该分镜提供专业视听升级建议：</div>
+          
+          <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+            <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(0)">
+              <div style="font-size:12px; font-weight:700; color:var(--primary);">💡 方案①：【电影级运镜与光影对比】</div>
+              <div style="font-size:11px; color:#475569; margin-top:3px;">将景别提升为黄金分割大特写，增加逆光丁达尔效应，强化猫咪胡须细节。</div>
+            </div>
+            
+            <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(1)">
+              <div style="font-size:12px; font-weight:700; color:#059669;">🔥 方案②：【戏剧冲突与爆款台词升级】</div>
+              <div style="font-size:11px; color:#475569; margin-top:3px;">增加猫大厨眼神一闪微表情，强化拟人化台词语调爆发力。</div>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(2)">
+              <div style="font-size:12px; font-weight:700; color:#D97706;">🎨 方案③：【国风水墨意境润色】</div>
+              <div style="font-size:11px; color:#475569; margin-top:3px;">在场景中融入烟雨江景氛围，渲染水墨挥洒颗粒质感。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AUDIO & SEQUENCE PREVIEW MODAL -->
+      <div class="modal-overlay" id="audioPreviewModal">
+        <div class="bottom-sheet">
+          <div class="sheet-header">
+            <div class="sheet-title">整剧序列预览与配音试听</div>
+            <div class="close-btn" onclick="closeAudioPreviewModal()">✕</div>
+          </div>
+          <div style="padding:10px 0;">
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">TTS 音色试听: 【猫大厨 - 霸道低沉男声】</div>
+            <audio controls style="width:100%; margin-bottom:12px;">
+              <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+            </audio>
+            <div style="font-size:12px; color:var(--text-sub);">正在预览分镜序列 1 ~ 5 配音对白试听...</div>
+          </div>
+          <button class="btn-primary" onclick="closeAudioPreviewModal()">关闭预览</button>
+        </div>
+      </div>
+
+      <!-- WX LOGIN AUTHORIZATION MODAL -->
+      <div class="modal-overlay" id="wxLoginModal">
+        <div class="bottom-sheet">
+          <div class="sheet-header">
+            <div class="sheet-title">微信快捷登录</div>
+            <div class="close-btn" onclick="closeWxLoginModal()">✕</div>
+          </div>
+          <div style="text-align:center; padding:16px 0;">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" style="width:70px; height:70px; border-radius:50%; margin-bottom:10px;">
+            <div style="font-size:15px; font-weight:700;">微信账号：猫咪漫剧创作者_850</div>
+            <div style="font-size:11px; color:var(--text-sub); margin-top:4px;">使用微信号一键快捷无感续期登录</div>
+          </div>
+          <button class="btn-primary" style="background:#07C160;" onclick="confirmWxLogin()">🟢 微信一键授权登录</button>
+        </div>
+      </div>
+
+      <!-- SYNTHESIS PROGRESS MODAL -->
+      <div class="modal-overlay" id="synthesisModal">
+        <div class="bottom-sheet">
+          <div class="sheet-header">
+            <div class="sheet-title">漫剧合成中 (多镜头/TTS配音/BGM)</div>
+          </div>
+
+          <div class="synthesis-progress">
+            <div class="stage-item done"><div class="stage-icon">✓</div><span>① AI 结构化剧本解构解包 (100%)</span></div>
+            <div class="stage-item done"><div class="stage-icon">✓</div><span>② 逐镜场景文生图 + 360° 猫咪视角形象一致性校验 (100%)</span></div>
+            <div class="stage-item done"><div class="stage-icon">✓</div><span>③ 猫咪多角色 TTS 配音生成与拟声处理 (100%)</span></div>
+            <div class="stage-item active" id="stageCompose"><div class="stage-icon"><div class="spinner"></div></div><span>④ ffmpeg 视频拼接 + 转场 + 水印烧录 (85%)</span></div>
+          </div>
+          <div style="font-size:11px; color:var(--text-muted); text-align:center;">任务已放入 BullMQ 异步队列，预计需要 3 秒...</div>
+        </div>
+      </div>
+
+      <!-- WX PAY SIMULATE MODAL -->
+      <div class="modal-overlay" id="wxPayModal">
+        <div class="bottom-sheet">
+          <div class="sheet-header">
+            <div class="sheet-title">微信支付</div>
+            <div class="close-btn" onclick="closeWxPay()">✕</div>
+          </div>
+          <div style="text-align:center; padding:10px 0;">
+            <div style="font-size:12px; color:var(--text-sub);" id="payItemName">VIP 会员套餐</div>
+            <div style="font-size:32px; font-weight:900; color:#111827; margin:6px 0;" id="payItemPrice">¥ 39.00</div>
+            <div style="font-size:11px; color:var(--text-muted);">收款方：AI漫剧小程序商户号</div>
+          </div>
+          <button class="btn-primary" style="background:#07C160;" onclick="confirmWxPay()">🟢 确认支付</button>
+        </div>
+      </div>
+
+      <!-- TOAST NOTIFICATION -->
+      <div class="toast-msg" id="toastMsg">操作成功</div>
+
+    </div>
+  </div>
+
+  <script>
+    // State Data: All Built-in Characters are CATS
+    const state = {
+      points: 120,
+      credits: 5,
+      frozenPoints: 0,
+      isVip: false,
+      activeTab: 'tabComic',
+      historyStack: [],
+      currentEditingShotIndex: 0,
+      // Storyboard Shots with Scene Concept Images & AI Prompts
+      storyboardShots: [
+        {
+          id: 1,
+          no: 1,
+          camera: '推镜头 · 特写',
+          scene: '汴京烟火客栈后厨，大锅滚水蒸腾，白雾升华。',
+          action: '四足拟人化【猫大厨】身着金丝滚边汉服古装、头戴白高帽，双爪紧握玄铁切肉刀，眼神锐利凝视砧板上的红烧肉。',
+          dialogue: '猫大厨（低沉严厉）：「这红烧肉要炖出九分火候、三息收汁！差一秒，便失去了客栈百年的灵魂！」',
+          prompt: 'cinematic close up, anthropomorphic cat chef in ancient Chinese Hanfu, kitchen steam, 8k resolution render',
+          role: '猫大厨',
+          mode: '文生图(默认)',
+          img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400'
+        },
+        {
+          id: 2,
+          no: 2,
+          camera: '中景 · 突发动作',
+          scene: '客栈雕花木窗崩碎，一道黑影破窗而入，木屑纷飞。',
+          action: '四足拟人化【黑猫刺客】身穿夜行黑衣，双爪拔出短剑，落地后压低身体做出刺杀预备姿势。',
+          dialogue: '黑猫刺客（冷笑）：「喵！猫大厨，识相的就把祖传红烧肉秘方卷轴交出来！」',
+          prompt: 'anthropomorphic black cat ninja breaking through window, martial arts, wood splinters flying, action scene',
+          role: '黑猫刺客',
+          mode: '文生图(默认)',
+          img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400'
+        },
+        {
+          id: 3,
+          no: 3,
+          camera: '全景 · 高潮对峙',
+          scene: '客栈大堂正中央，红木桌椅东倒西歪，气氛凝重至极。',
+          action: '猫大厨左爪举起玄铁掂锅铲挡在胸前，黑猫刺客剑尖指向猫大厨，两猫在灯火阑珊中对峙。',
+          dialogue: '猫大厨（豪迈大笑）：「想抢秘方？先问问我手中这柄三尺玄铁锅铲答应不答应！」',
+          prompt: 'full shot, cat chef facing black cat assassin in ancient inn, wok paddle shield, epic battle lighting',
+          role: '猫大厨',
+          mode: '直接文生视频(VIP)',
+          img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400'
+        },
+        {
+          id: 4,
+          no: 4,
+          camera: '特写 · 技能爆发',
+          scene: '灶台火苗猛烈迸发，红蓝相间的火焰顺着锅铲盘旋升腾。',
+          action: '猫大厨双爪发力挥舞锅铲，施展「太极颠锅式」，炽热的火焰化作一条火龙向刺客扑去。',
+          dialogue: '旁白（激昂解说）：「猫大厨起手颠锅，火焰如游龙出海，这一式乃是客栈镇店之宝！」',
+          prompt: 'fire dragon out of wok, cat chef casting martial art technique, blazing flames, magical particle effects',
+          role: '猫大厨',
+          mode: '文生图(默认)',
+          img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400'
+        },
+        {
+          id: 5,
+          no: 5,
+          camera: '远景 · 胜利收尾',
+          scene: '晨曦初露，阳光透过破损的木窗洒入大堂。',
+          action: '猫大厨收刀入鞘，端起一钵香气四溢的古风红烧肉，客栈外小萌宠猫咪食客们纷纷欢呼围拢。',
+          dialogue: '猫大厨（微笑道别）：「美味方能安抚江湖人心，下一集，我们去洛阳开新店！」',
+          prompt: 'peaceful morning in ancient Chinese inn, cat chef holding delicious food, happy ending anime scene',
+          role: '猫大厨',
+          mode: '文生图(默认)',
+          img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400'
+        }
+      ],
+      materials: {
+        characters: [
+          { id: 'c1', name: '猫大厨 师傅', species: '拟人猫咪', isRef: true, img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200' },
+          { id: 'c2', name: '橘猫少爷', species: '拟人猫咪', isRef: true, img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200' },
+          { id: 'c3', name: '黑猫刺客', species: '拟人猫咪', isRef: true, img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200' }
+        ],
+        scenes: [
+          { id: 's1', name: '汴京烟火客栈大堂', img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200' },
+          { id: 's2', name: '夜色竹林密道', img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200' }
+        ],
+        props: [
+          { id: 'p1', name: '玄铁掂锅铲', img: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200' },
+          { id: 'p2', name: '祖传秘方卷轴', img: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200' }
+        ]
+      },
+      pointsLogs: [
+        { type: 'consume', title: '漫剧整剧合成预扣冻结', points: -60, date: '2026-08-10 13:00' },
+        { type: 'buy', title: '微信支付购买 600 积分包', points: +600, date: '2026-08-10 12:30' }
+      ],
+      works: [
+        { id: 'w1', title: '猫大厨的秘密武器', type: '漫剧视频', duration: '01:15', status: '已完成', cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', cost: '60积分' },
+        { id: 'w2', title: '赛博夜色 - 喵汪战队', type: 'AI视频', duration: '00:05', status: '已完成', cover: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', cost: '20积分' }
+      ],
+      orders: [
+        { id: 'ORD-20260810-8504', name: '充值 600 积分包', amount: '¥60.00', status: '已支付', date: '2026-08-10 13:00' },
+        { id: 'ORD-20260809-1239', name: '连续包月 VIP 会员', amount: '¥39.00', status: '已支付', date: '2026-08-09 10:15' }
+      ],
+      referrals: [
+        { user: '用户_9281', level: '一级 (15%)', reward: '¥ 15.00', date: '2026-08-10' },
+        { user: '用户_4031', level: '二级 (5%)', reward: '¥ 5.00', date: '2026-08-09' }
+      ]
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateTime();
+      setInterval(updateTime, 1000);
+      renderWorksList();
+      renderShotEditCards();
+      renderMaterialPool('characters');
+      renderPointsLogs();
+      renderOrdersList();
+      renderReferrals();
+    });
+
+    function updateTime() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${h}:${m}`;
+    }
+
+    function toggleFrameSize() {
+      document.getElementById('deviceFrame').classList.toggle('fullscreen-mode');
+    }
+
+    function switchTab(tabId, title, el) {
+      document.querySelectorAll('.subpage-container').forEach(sp => sp.classList.remove('active'));
+      document.getElementById('btnBack').style.display = 'none';
+
+      document.querySelectorAll('.page-view').forEach(pv => pv.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      document.getElementById('pageTitle').innerText = title;
+      document.querySelectorAll('.tab-item').forEach(ti => ti.classList.remove('active'));
+      el.classList.add('active');
+
+      state.activeTab = tabId;
+      state.historyStack = [];
+    }
+
+    function openSubpage(subId) {
+      const subEl = document.getElementById('sub' + subId.charAt(0).toUpperCase() + subId.slice(1));
+      if (subEl) {
+        subEl.classList.add('active');
+        document.getElementById('btnBack').style.display = 'flex';
+        state.historyStack.push(subId);
+      }
+    }
+
+    function goBack() {
+      if (state.historyStack.length > 0) {
+        const last = state.historyStack.pop();
+        const subEl = document.getElementById('sub' + last.charAt(0).toUpperCase() + last.slice(1));
+        if (subEl) subEl.classList.remove('active');
+
+        if (state.historyStack.length === 0) {
+          document.getElementById('btnBack').style.display = 'none';
+        }
+      }
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    }
+
+    function deductPoints(cost, reason) {
+      if (state.credits > 0) {
+        state.credits -= 1;
+        document.getElementById('displayCredits').innerText = state.credits;
+        showToast(`优先扣减 1 次免费生成额度 (${reason})`);
+        return true;
+      } else if (state.points >= cost) {
+        state.points -= cost;
+        state.pointsLogs.unshift({ type: 'consume', title: reason, points: -cost, date: '刚刚' });
+        document.getElementById('displayPoints').innerText = state.points;
+        document.getElementById('pointsCenterVal').innerText = state.points;
+        renderPointsLogs();
+        showToast(`预扣冻结 ${cost} 积分成功 (${reason})`);
+        return true;
+      } else {
+        showToast('额度与积分不足！请先充值积分或购买VIP');
+        openSubpage('pointsCenter');
+        return false;
+      }
+    }
+
+    function openDraftOrContinue() {
+      showToast('已成功载入未完成的猫咪分镜草稿！');
+      openSubpage('storyboardEditor');
+    }
+
+    function saveScriptDraft() {
+      showToast('剧本已保存至草稿箱！随时可在首页继续创作');
+    }
+
+    // Render Professional Realistic Storyboard Script Output
+    function startGenerateScript() {
+      if (!deductPoints(10, 'LLM分镜剧本生成')) return;
+
+      showToast('AI 正在按专业分镜语言生成猫咪剧本 (含景别、动作、对白、Prompt)...');
+      setTimeout(() => {
+        document.getElementById('scriptOutputArea').style.display = 'block';
+        const list = document.getElementById('storyboardShotsList');
+        list.innerHTML = state.storyboardShots.map(shot => `
+          <div class="shot-card-rich">
+            <div class="shot-card-header">
+              <span class="shot-card-badge">镜头 ${shot.no}</span>
+              <span class="shot-camera-tag">🎥 ${shot.camera}</span>
+            </div>
+            <div class="shot-card-body">
+              <div class="shot-field-row"><label>📍 场景:</label> ${shot.scene}</div>
+              <div class="shot-field-row"><label>🎭 猫咪动作表情:</label> ${shot.action}</div>
+              <div class="shot-field-row"><label>🗣️ 对白旁白:</label> ${shot.dialogue}</div>
+              <div class="shot-field-row" style="margin-top:6px;">
+                <label style="font-size:11px; color:var(--primary);">✨ AI 生图 Prompt 关键词:</label>
+                <div class="shot-prompt-code">${shot.prompt}</div>
+              </div>
+            </div>
+          </div>
+        `).join('');
+      }, 1000);
+    }
+
+    function importToEditor() {
+      showToast('专业结构化分镜已全量导入场景图编排窗口！');
+      renderShotEditCards();
+      openSubpage('storyboardEditor');
+    }
+
+    // Storyboard Shot Editor Cards: Display Scene Concept Image + AI Shot Improvement Button
+    function renderShotEditCards() {
+      const list = document.getElementById('shotEditCardsList');
+      if (!list) return;
+      list.innerHTML = state.storyboardShots.map((shot, idx) => `
+        <div style="background:white; border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <span style="font-size:13px; font-weight:800; color:var(--primary);">镜头 ${shot.no} (${shot.camera})</span>
+            <div style="display:flex; gap:6px;">
+              <button style="border:none; background:#F3F4F6; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" onclick="moveShot(${idx}, -1)">▲</button>
+              <button style="border:none; background:#F3F4F6; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" onclick="moveShot(${idx}, 1)">▼</button>
+              <button style="border:none; background:#FEE2E2; color:#EF4444; padding:2px 6px; border-radius:4px; font-size:10px; cursor:pointer;" onclick="deleteShot(${idx})">✕</button>
+            </div>
+          </div>
+
+          <!-- Scene Concept Image Preview & Actions -->
+          <div style="display:flex; gap:10px; margin-bottom:8px;">
+            <div style="position:relative; width:90px; height:75px; border-radius:6px; overflow:hidden; background:#000;">
+              <img src="${shot.img}" style="width:100%; height:100%; object-fit:cover;">
+              <span style="position:absolute; bottom:2px; left:2px; background:rgba(0,0,0,0.6); color:white; font-size:8px; padding:1px 3px; border-radius:2px;">分镜场景图</span>
+            </div>
+            <div style="flex:1;">
+              <div style="font-size:11px; color:var(--text-sub);">景别手法: 
+                <select class="form-select" style="padding:2px 4px; font-size:11px; display:inline-block; width:auto;" onchange="updateShotCamera(${idx}, this.value)">
+                  <option ${shot.camera.includes('推')?'selected':''}>推镜头 · 特写</option>
+                  <option ${shot.camera.includes('中景')?'selected':''}>中景 · 突发动作</option>
+                  <option ${shot.camera.includes('全景')?'selected':''}>全景 · 高潮对峙</option>
+                  <option ${shot.camera.includes('技能')||shot.camera.includes('爆发')?'selected':''}>特写 · 技能爆发</option>
+                  <option ${shot.camera.includes('远景')?'selected':''}>远景 · 胜利收尾</option>
+                </select>
+              </div>
+              <input type="text" class="form-input" style="padding:4px; font-size:11px; margin-top:4px;" value="${shot.dialogue}" onchange="updateShotDialogue(${idx}, this.value)">
+            </div>
+          </div>
+
+          <div style="font-size:10px; color:#6B7280; background:#F8FAFC; padding:4px 6px; border-radius:4px; margin-bottom:6px;">
+            🎬 <b>画面动作:</b> ${shot.action}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; gap:6px;">
+              <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 8px; border-radius:10px; font-size:10px; font-weight:600; cursor:pointer;" onclick="openShotRefineModal(${idx})">✨ AI 智能改进分镜</button>
+            </div>
+            <button style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:10px; font-size:10px; cursor:pointer;" onclick="regenSingleShot(${idx})">🔄 重新生成场景图 (10分)</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function moveShot(idx, dir) {
+      if (idx + dir < 0 || idx + dir >= state.storyboardShots.length) return;
+      const temp = state.storyboardShots[idx];
+      state.storyboardShots[idx] = state.storyboardShots[idx + dir];
+      state.storyboardShots[idx + dir] = temp;
+      state.storyboardShots.forEach((s, i) => s.no = i + 1);
+      renderShotEditCards();
+    }
+
+    function deleteShot(idx) {
+      state.storyboardShots.splice(idx, 1);
+      state.storyboardShots.forEach((s, i) => s.no = i + 1);
+      renderShotEditCards();
+    }
+
+    function updateShotCamera(idx, value) {
+      if (state.storyboardShots[idx]) {
+        state.storyboardShots[idx].camera = value;
+        showToast(`镜头 ${idx + 1} 运镜已设为：${value}`);
+      }
+    }
+
+    function updateShotDialogue(idx, value) {
+      if (state.storyboardShots[idx]) {
+        state.storyboardShots[idx].dialogue = value;
+        showToast(`镜头 ${idx + 1} 对白已更新`);
+      }
+    }
+
+    function addNewShot() {
+      const nextNo = state.storyboardShots.length + 1;
+      state.storyboardShots.push({
+        id: Date.now(),
+        no: nextNo,
+        camera: '中景 · 突发动作',
+        scene: '客栈庭院深处，风起云涌。',
+        action: '四足拟人化【猫大厨】一跃飞起，双爪在空中划出火光亮痕。',
+        dialogue: '猫大厨：「看我这一招绝杀颠锅！」',
+        prompt: 'anthropomorphic cat chef jumping in mid-air, wok fire effects, martial arts pose, 8k resolution render',
+        role: '猫大厨',
+        mode: '文生图(默认)',
+        img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400'
+      });
+      renderShotEditCards();
+      showToast(`已新增专业分镜场景图 ${nextNo}`);
+    }
+
+    function regenSingleShot(idx) {
+      if (!deductPoints(10, `重生成镜头 ${idx+1} 场景图`)) return;
+      showToast(`镜头 ${idx+1} 场景图重新生成中...`);
+      setTimeout(() => {
+        state.storyboardShots[idx].img = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400';
+        renderShotEditCards();
+        showToast(`镜头 ${idx+1} 场景图重生成完毕！`);
+      }, 1000);
+    }
+
+    // AI Shot Refinement Drawer Logic
+    function openShotRefineModal(idx) {
+      state.currentEditingShotIndex = idx;
+      document.getElementById('refineShotTitle').innerText = `✨ AI 智能改进镜头 ${idx + 1}`;
+      document.getElementById('aiShotRefineModal').classList.add('active');
+    }
+
+    function closeShotRefineModal() {
+      document.getElementById('aiShotRefineModal').classList.remove('active');
+    }
+
+    function applyRefinement(typeIndex) {
+      const idx = state.currentEditingShotIndex;
+      closeShotRefineModal();
+      showToast('AI 已成功改进分镜画面与运镜参数！场景图重新生成中...');
+      setTimeout(() => {
+        if (typeIndex === 0) {
+          state.storyboardShots[idx].camera = '推镜头 · 大特写 (黄金分割)';
+          state.storyboardShots[idx].prompt += ', god rays backlight, cinematic volumetric atmosphere';
+        } else if (typeIndex === 1) {
+          state.storyboardShots[idx].action = '猫大厨胡须震颤，眼神闪过金芒，情绪张力爆棚！';
+          state.storyboardShots[idx].dialogue = '猫大厨（咆哮拟声）：「这一招颠锅，包含我二十载厨心！」';
+        } else if (typeIndex === 2) {
+          state.storyboardShots[idx].scene += ' 烟雨弥漫，泼墨古风质感。';
+        }
+        renderShotEditCards();
+        showToast(`镜头 ${idx + 1} AI 改进已成功应用！`);
+      }, 1000);
+    }
+
+    // 360 Degree Viewport Matrix Generator in Material Library
+    function uploadCustomCatImg() {
+      showToast('已从本地上传猫咪源图：[橘猫少爷.jpg]');
+      document.getElementById('charNameInput').value = '自选猫咪少爷';
+    }
+
+    function generate360CatMatrix() {
+      const name = document.getElementById('charNameInput').value || '拟人化猫咪';
+      showToast('AI 正在产出猫咪角色的前后左右/俯视仰视 360° 全视角三视图...');
+      
+      document.getElementById('matrixArea').style.display = 'block';
+      const grid = document.getElementById('angleMatrixGrid');
+      
+      grid.innerHTML = `
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200">
+          <div class="angle-label">📸 正面 (Front)</div>
+        </div>
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200">
+          <div class="angle-label">📸 背面 (Back)</div>
+        </div>
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200">
+          <div class="angle-label">📸 左侧面 (Left)</div>
+        </div>
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200">
+          <div class="angle-label">📸 右侧面 (Right)</div>
+        </div>
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200">
+          <div class="angle-label">📸 俯视 (Top-down)</div>
+        </div>
+        <div class="angle-matrix-card">
+          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200">
+          <div class="angle-label">📸 仰视 (Bottom-up)</div>
+        </div>
+      `;
+    }
+
+    function confirmAngleMatrixLock() {
+      const name = document.getElementById('charNameInput').value || '拟人猫咪主角';
+      state.materials.characters.unshift({
+        id: 'c' + Date.now(),
+        name: name + ' (360°视角锁定)',
+        species: '拟人猫咪',
+        isRef: true,
+        img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200'
+      });
+      renderMaterialPool('characters');
+      showToast(`已把 ${name} 的 360° 视角三视图锁死入库！保证后续 AI 视频 100% 形象一致`);
+      document.getElementById('matrixArea').style.display = 'none';
+    }
+
+    // Material Library Tabs
+    function switchMaterialTab(btn, cat) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMaterialPool(cat);
+    }
+
+    function renderMaterialPool(cat) {
+      const container = document.getElementById('characterMaterialPool');
+      if (!container) return;
+      const items = state.materials[cat] || [];
+      container.innerHTML = items.map(item => `
+        <div style="background:white; border-radius:var(--radius-sm); padding:8px; position:relative; box-shadow:var(--shadow-sm);">
+          <img src="${item.img}" style="width:100%; height:110px; object-fit:cover; border-radius:6px;">
+          <div style="font-size:12px; font-weight:700; margin-top:4px;">${item.name}</div>
+          ${item.isRef ? '<span style="position:absolute; top:12px; right:12px; background:var(--primary); color:white; font-size:9px; padding:2px 6px; border-radius:4px;">360°视角锁定</span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    function fillPresetPrompt() {
+      const presets = [
+        "功夫猫大厨在汴京客栈做红烧肉，遇到黑猫刺客偷秘方",
+        "拟人化白猫程序员深夜加班，发现电脑代码里走出一个机械小耗子",
+        "霸道总裁橘猫少爷与软萌狐狸小师妹在仙侠门派的搞笑日常生活"
+      ];
+      document.getElementById('scriptPrompt').value = presets[Math.floor(Math.random()*presets.length)];
+    }
+
+    function selectEpisodes(btn, count) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function setStyle(btn, styleName) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showToast(`视觉风格已切换为：${styleName}`);
+    }
+
+    function startSynthesisPipeline() {
+      if (!deductPoints(60, '漫剧整剧合成')) return;
+
+      document.getElementById('synthesisModal').classList.add('active');
+      setTimeout(() => {
+        document.getElementById('synthesisModal').classList.remove('active');
+        state.works.unshift({
+          id: 'w' + Date.now(),
+          title: '最新AI猫咪漫剧：猫大厨传奇',
+          type: '漫剧视频',
+          duration: '01:20',
+          status: '已完成',
+          cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400',
+          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4',
+          cost: '60积分'
+        });
+        renderWorksList();
+        playDemoVideo('最新AI猫咪漫剧：猫大厨传奇', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4');
+      }, 3000);
+    }
+
+    function startSingleVideoGen(typeTitle) {
+      if (!deductPoints(20, typeTitle)) return;
+      showToast('BullMQ video-generate 队列排队中...');
+      setTimeout(() => {
+        showToast('视频生成成功！已存入作品库');
+        state.works.unshift({
+          id: 'w' + Date.now(),
+          title: typeTitle + '作品',
+          type: 'AI视频',
+          duration: '00:05',
+          status: '已完成',
+          cover: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400',
+          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-swimming-jellyfish-41559-large.mp4',
+          cost: '20积分'
+        });
+        renderWorksList();
+        goBack();
+      }, 1500);
+    }
+
+    function playDemoVideo(title, url) {
+      document.getElementById('playerTitle').innerText = title;
+      const vid = document.getElementById('htmlVideoElement');
+      vid.src = url;
+      document.getElementById('videoPlayerModal').classList.add('active');
+    }
+
+    function closeVideoPlayer() {
+      const vid = document.getElementById('htmlVideoElement');
+      vid.pause();
+      document.getElementById('videoPlayerModal').classList.remove('active');
+    }
+
+    function doSamePrompt(promptText) {
+      showToast('已复制「做同款」提示词与参数配置！');
+      openSubpage('t2vDrawer');
+      document.getElementById('t2vPromptInput').value = promptText;
+    }
+
+    // Works Gallery
+    function filterWorks(btn, type) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderWorksList(type);
+    }
+
+    function renderWorksList(filter = 'all') {
+      const container = document.getElementById('worksListContainer');
+      if (!container) return;
+      let list = state.works;
+      if (filter !== 'all') {
+        list = state.works.filter(w => w.type === filter || w.status === filter);
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:40px 0; color:var(--text-muted);">🎨 暂无该分类作品</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(item => `
+        <div style="background:white; border-radius:var(--radius-md); padding:10px; display:flex; gap:12px; box-shadow:var(--shadow-sm); align-items:center;">
+          <div style="position:relative; width:90px; height:70px; border-radius:8px; overflow:hidden; background:#000;" onclick="playDemoVideo('${item.title}', '${item.videoUrl}')">
+            <img src="${item.cover}" style="width:100%; height:100%; object-fit:cover;">
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:16px;">▶</div>
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px; font-weight:700; color:#111827;">${item.title}</div>
+            <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">类型: ${item.type} | 时长: ${item.duration}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+              <span style="background:#D1FAE5; color:#059669; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">${item.status}</span>
+              <span style="font-size:10px; color:var(--text-muted);">${item.cost}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Points Center Sub-tabs & Gift Transfer & Conversion
+    function switchPointsSubTab(btn, mode) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pointsRechargeView').style.display = mode === 'recharge' ? 'block' : 'none';
+      document.getElementById('pointsConvertView').style.display = mode === 'convert' ? 'block' : 'none';
+      document.getElementById('pointsGiftView').style.display = mode === 'gift' ? 'block' : 'none';
+      document.getElementById('pointsLogsView').style.display = mode === 'logs' ? 'flex' : 'none';
+    }
+
+    function convertPointsToCredits() {
+      if (state.points < 100) {
+        showToast('积分不足 100，无法兑换次数包');
+        return;
+      }
+      state.points -= 100;
+      state.credits += 1;
+      state.pointsLogs.unshift({ type: 'convert', title: '积分兑换 1 次生成包', points: -100, date: '刚刚' });
+      document.getElementById('displayPoints').innerText = state.points;
+      document.getElementById('displayCredits').innerText = state.credits;
+      document.getElementById('pointsCenterVal').innerText = state.points;
+      renderPointsLogs();
+      showToast('成功兑换 1 次生成包！已存入余额');
+    }
+
+    function transferGiftPoints() {
+      const uid = document.getElementById('giftUserId').value.trim();
+      const amt = parseInt(document.getElementById('giftAmount').value) || 0;
+      if (!uid) { showToast('请输入受赠好友微信 ID'); return; }
+      if (amt <= 0 || amt > 500) { showToast('转赠额度单日上限为 500 积分'); return; }
+      if (state.points < amt) { showToast('积分余额不足'); return; }
+
+      state.points -= amt;
+      state.pointsLogs.unshift({ type: 'gift', title: `转赠积分给好友 ${uid}`, points: -amt, date: '刚刚' });
+      document.getElementById('displayPoints').innerText = state.points;
+      document.getElementById('pointsCenterVal').innerText = state.points;
+      renderPointsLogs();
+      showToast(`已成功转赠 ${amt} 积分给好友 ${uid}`);
+    }
+
+    function renderPointsLogs() {
+      const list = document.getElementById('pointsLogsView');
+      if (!list) return;
+      list.innerHTML = state.pointsLogs.map(log => `
+        <div style="background:white; padding:10px; border-radius:var(--radius-sm); display:flex; justify-content:space-between; font-size:12px;">
+          <div>
+            <div style="font-weight:600;">${log.title}</div>
+            <div style="font-size:10px; color:var(--text-muted);">${log.date}</div>
+          </div>
+          <div style="color:${log.points > 0 ? '#10B981' : '#EF4444'}; font-weight:700;">${log.points > 0 ? '+'+log.points : log.points} 积分</div>
+        </div>
+      `).join('');
+    }
+
+    function renderOrdersList() {
+      const container = document.getElementById('ordersList');
+      if (!container) return;
+      container.innerHTML = state.orders.map(ord => `
+        <div style="background:white; border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
+            <span style="font-weight:700; color:#111827;">${ord.name}</span>
+            <span style="color:#10B981; font-weight:700;">${ord.status}</span>
+          </div>
+          <div style="font-size:11px; color:var(--text-sub);">订单号: ${ord.id}</div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:12px;">
+            <span style="color:var(--text-muted); font-size:10px;">${ord.date}</span>
+            <span style="font-weight:800; color:#111827;">${ord.amount}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderReferrals() {
+      const container = document.getElementById('referralList');
+      if (!container) return;
+      container.innerHTML = state.referrals.map(ref => `
+        <div style="background:white; padding:10px; border-radius:8px; display:flex; justify-content:space-between; font-size:12px;">
+          <div>
+            <div style="font-weight:600;">${ref.user} (${ref.level})</div>
+            <div style="font-size:10px; color:var(--text-muted);">${ref.date}</div>
+          </div>
+          <div style="color:#059669; font-weight:700;">+ ${ref.reward}</div>
+        </div>
+      `).join('');
+    }
+
+    // WX Pay Simulation
+    function payWxSimulate(itemName, price) {
+      document.getElementById('payItemName').innerText = itemName;
+      document.getElementById('payItemPrice').innerText = `¥ ${price}.00`;
+      document.getElementById('wxPayModal').classList.add('active');
+    }
+
+    function closeWxPay() {
+      document.getElementById('wxPayModal').classList.remove('active');
+    }
+
+    function confirmWxPay() {
+      closeWxPay();
+      state.points += 600;
+      state.credits += 10;
+      state.isVip = true;
+      state.orders.unshift({ id: 'ORD-' + Date.now(), name: '充值 600 积分包', amount: '¥60.00', status: '已支付', date: '刚刚' });
+      state.pointsLogs.unshift({ type: 'buy', title: '微信支付购买 600 积分包', points: 600, date: '刚刚' });
+
+      document.getElementById('displayPoints').innerText = state.points;
+      document.getElementById('displayCredits').innerText = state.credits;
+      document.getElementById('pointsCenterVal').innerText = state.points;
+      document.getElementById('userVipBadge').innerText = '⭐ 尊享 VIP 会员';
+      renderPointsLogs();
+      renderOrdersList();
+      showToast('微信支付成功！已发放 600 积分与 VIP 权益');
+    }
+
+    function buyPoints(pts, price) {
+      payWxSimulate(`${pts} 积分包`, price);
+    }
+
+    function generateEcomScript() {
+      const scripts = [
+        "喵星人看过来！今天这款【猫大厨联名白桃乌龙茶】真的绝了！冷萃留香、无糖清爽，限量立减 20 元，先到先得！",
+        "猫咪主子同款精致茶饮，高颜值回甘无限，限时买一送一，手慢无！",
+        "猫大厨私房推荐！纯天然无添加，全网爆卖 10w+ 件，今天直播间专属特惠仅需 ¥39.9！"
+      ];
+      document.getElementById('ecomScriptArea').value = scripts[Math.floor(Math.random()*scripts.length)];
+      showToast('AI 已自动生成猫咪爆款电商口播文案！');
+    }
+
+    function openAudioPreviewModal() {
+      document.getElementById('audioPreviewModal').classList.add('active');
+    }
+
+    function closeAudioPreviewModal() {
+      document.getElementById('audioPreviewModal').classList.remove('active');
+    }
+
+    function openWxLoginModal() {
+      document.getElementById('wxLoginModal').classList.add('active');
+    }
+
+    function closeWxLoginModal() {
+      document.getElementById('wxLoginModal').classList.remove('active');
+    }
+
+    function confirmWxLogin() {
+      closeWxLoginModal();
+      showToast('微信一键登录成功！会话已安全续期');
+    }
+  </script>
+</body>
+</html>

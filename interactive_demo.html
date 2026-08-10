@@ -11,6 +11,7 @@
       --primary-bg: #F3F0FF;
       --secondary: #EC4899;
       --accent-blue: #3B82F6;
+      --accent-green: #10B981;
       --text-main: #1F2937;
       --text-sub: #6B7280;
       --text-muted: #9CA3AF;
@@ -119,7 +120,7 @@
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
     }
 
-    /* iOS Notch & Status Bar */
+    /* iOS Status Bar */
     .status-bar {
       height: 44px;
       background: transparent;
@@ -262,22 +263,58 @@
     .tab-item.active { color: var(--primary); font-weight: 600; }
     .tab-item.active svg { fill: var(--primary); }
 
-    /* Hero Banner */
-    .hero-banner {
+    /* Banner Carousel */
+    .banner-carousel {
       position: relative;
       margin: 12px 16px;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #C084FC 100%);
-      color: white;
-      padding: 20px 18px;
       box-shadow: var(--shadow-md);
     }
 
-    .hero-banner .hero-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
-    .hero-banner .hero-sub { font-size: 12px; opacity: 0.9; margin-bottom: 14px; }
-    .hero-banner .hero-tags { display: flex; gap: 8px; }
-    .hero-banner .tag-chip { background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(6px); padding: 4px 10px; border-radius: 12px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+    .banner-slides {
+      display: flex;
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .banner-slide {
+      min-width: 100%;
+      padding: 20px 18px;
+      color: white;
+      position: relative;
+    }
+
+    .banner-slide:nth-child(1) { background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #C084FC 100%); }
+    .banner-slide:nth-child(2) { background: linear-gradient(135deg, #EC4899 0%, #F59E0B 100%); }
+    .banner-slide:nth-child(3) { background: linear-gradient(135deg, #059669 0%, #0891B2 100%); }
+
+    .banner-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+    .banner-sub { font-size: 12px; opacity: 0.9; margin-bottom: 14px; }
+    .banner-tags { display: flex; gap: 8px; }
+    .tag-chip { background: rgba(255,255,255,0.22); backdrop-filter: blur(6px); padding: 4px 10px; border-radius: 12px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+
+    .banner-dots {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+
+    .banner-dot {
+      width: 5px; height: 5px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .banner-dot.active {
+      width: 16px;
+      background: white;
+      border-radius: 3px;
+    }
 
     .entrance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; margin-bottom: 14px; }
     .entrance-card { background: var(--card-bg); border-radius: var(--radius-md); padding: 14px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; border: 1px solid rgba(243, 240, 255, 0.8); }
@@ -295,7 +332,7 @@
 
     .filter-pills { display: flex; gap: 8px; padding: 4px 16px 12px 16px; overflow-x: auto; scrollbar-width: none; }
     .filter-pills::-webkit-scrollbar { display: none; }
-    .pill-btn { padding: 6px 14px; background: #EFEBF8; color: #4B5563; border-radius: 16px; font-size: 12px; white-space: nowrap; cursor: pointer; transition: all 0.2s; font-weight: 500; }
+    .pill-btn { padding: 6px 14px; background: #EFEBF8; color: #4B5563; border-radius: 16px; font-size: 12px; white-space: nowrap; cursor: pointer; transition: all 0.2s; font-weight: 500; border: none; }
     .pill-btn.active { background: var(--primary); color: white; font-weight: 600; box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3); }
 
     .waterfall-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px; }
@@ -303,13 +340,14 @@
     .waterfall-card:active { transform: scale(0.98); }
     .waterfall-card .cover-box { width: 100%; height: 180px; position: relative; background: #334155; overflow: hidden; }
     .waterfall-card .cover-img { width: 100%; height: 100%; object-fit: cover; }
-    .waterfall-card .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 1.5px solid rgba(255,255,255,0.7); }
+    .waterfall-card .play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 38px; height: 38px; background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(4px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; border: 1.5px solid rgba(255,255,255,0.7); font-size: 12px; }
     .waterfall-card .badge-hot { position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; font-size: 10px; padding: 2px 6px; border-radius: 6px; font-weight: 700; }
+    .waterfall-card .badge-ai { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.65); color: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.3); font-size: 9px; padding: 2px 5px; border-radius: 3px; font-weight: 700; letter-spacing: 0.5px; }
     .waterfall-card .duration-tag { position: absolute; bottom: 8px; right: 8px; background: rgba(0, 0, 0, 0.65); color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
     .waterfall-card .card-info { padding: 10px; }
     .waterfall-card .title { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 4px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     .waterfall-card .meta { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-muted); }
-    .waterfall-card .btn-do-same { background: var(--primary-bg); color: var(--primary); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+    .waterfall-card .btn-do-same { background: var(--primary-bg); color: var(--primary); padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; border: none; cursor: pointer; }
 
     /* Profile Page Styles */
     .profile-header { background: linear-gradient(180deg, #DDD6FE 0%, #F3F0FF 60%, var(--bg-app) 100%); padding: 16px 20px 24px 20px; display: flex; align-items: center; gap: 14px; }
@@ -390,6 +428,7 @@
 
     .btn-primary { width: 100%; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none; padding: 12px; border-radius: 22px; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); display: flex; align-items: center; justify-content: center; gap: 6px; }
     .btn-primary:active { opacity: 0.9; }
+    .btn-secondary { background: white; border: 1.5px solid var(--primary); color: var(--primary); border-radius: 22px; padding: 10px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
 
     /* Modals & Overlays */
     .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 200; display: none; justify-content: flex-end; flex-direction: column; animation: fadeIn 0.2s ease; }
@@ -400,7 +439,24 @@
 
     .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .sheet-title { font-size: 16px; font-weight: 700; color: #111827; }
-    .close-btn { font-size: 20px; color: #9CA3AF; cursor: pointer; }
+    .close-btn { font-size: 20px; color: #9CA3AF; cursor: pointer; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #F3F4F6; }
+
+    /* Center Modal (for confirm dialogs) */
+    .center-modal-overlay {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+      z-index: 250; display: none; align-items: center; justify-content: center;
+    }
+    .center-modal-overlay.active { display: flex; }
+    .center-modal-box {
+      background: white; border-radius: 20px; padding: 20px;
+      width: calc(100% - 48px); max-width: 340px;
+      animation: zoomIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes zoomIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
     .video-player-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 300; display: none; flex-direction: column; }
     .video-player-modal.active { display: flex; }
@@ -408,18 +464,29 @@
     .video-watermark { position: absolute; bottom: 20px; right: 16px; background: rgba(0, 0, 0, 0.6); color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.3); padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 1px; pointer-events: none; z-index: 10; }
     .player-controls-bar { padding: 16px; background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%); color: white; display: flex; flex-direction: column; gap: 10px; }
 
+    /* Episode selector */
+    .episode-selector { display: flex; gap: 8px; overflow-x: auto; padding: 6px 0; scrollbar-width: none; }
+    .episode-selector::-webkit-scrollbar { display: none; }
+    .ep-chip { padding: 5px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1.5px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.7); white-space: nowrap; background: transparent; }
+    .ep-chip.active { background: var(--primary); border-color: var(--primary); color: white; }
+
     .synthesis-progress { padding: 20px 0; text-align: center; }
     .stage-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 13px; color: #4B5563; }
     .stage-item.done { color: #10B981; font-weight: 600; }
     .stage-item.active { color: var(--primary); font-weight: 700; }
-    .stage-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #E5E7EB; }
+    .stage-item.failed { color: #EF4444; font-weight: 700; }
+    .stage-icon { width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; background: #E5E7EB; flex-shrink: 0; }
     .stage-item.done .stage-icon { background: #D1FAE5; color: #10B981; }
     .stage-item.active .stage-icon { background: #F3F0FF; color: var(--primary); border: 2px solid var(--primary); }
+    .stage-item.failed .stage-icon { background: #FEE2E2; color: #EF4444; }
+
+    .progress-bar-outer { background: #E5E7EB; border-radius: 6px; height: 6px; margin-top: 4px; overflow: hidden; }
+    .progress-bar-inner { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--primary) 0%, #C084FC 100%); transition: width 0.4s ease; }
 
     .spinner { width: 14px; height: 14px; border: 2px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .toast-msg { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: rgba(17, 24, 39, 0.88); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 500; display: none; backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .toast-msg { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: rgba(17, 24, 39, 0.88); color: white; padding: 8px 16px; border-radius: 20px; font-size: 12px; z-index: 500; display: none; backdrop-filter: blur(8px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); white-space: nowrap; }
 
     /* Rich Storyboard Shot Card Styling */
     .shot-card-rich {
@@ -455,19 +522,9 @@
       border-radius: 4px;
       font-weight: 600;
     }
-    .shot-card-body {
-      font-size: 12px;
-      line-height: 1.5;
-      color: #374151;
-    }
-    .shot-field-row {
-      margin-bottom: 4px;
-    }
-    .shot-field-row label {
-      font-weight: 700;
-      color: #111827;
-      margin-right: 4px;
-    }
+    .shot-card-body { font-size: 12px; line-height: 1.5; color: #374151; }
+    .shot-field-row { margin-bottom: 4px; }
+    .shot-field-row label { font-weight: 700; color: #111827; margin-right: 4px; }
     .shot-prompt-code {
       background: #F8FAFC;
       border: 1px solid #E2E8F0;
@@ -478,7 +535,23 @@
       color: #475569;
       word-break: break-all;
     }
-    
+
+    /* Generation mode toggle */
+    .mode-toggle { display: flex; gap: 6px; margin-top: 6px; }
+    .mode-btn { flex: 1; padding: 5px; border: 1.5px solid #E5E7EB; border-radius: 8px; font-size: 10px; font-weight: 600; cursor: pointer; text-align: center; background: white; color: #6B7280; transition: all 0.2s; }
+    .mode-btn.active { border-color: var(--primary); background: var(--primary-bg); color: var(--primary); }
+    .mode-btn.vip-mode { border-color: #F59E0B; color: #D97706; background: #FFFBEB; }
+    .mode-btn.vip-mode.active { border-color: #F59E0B; background: #FEF3C7; }
+
+    /* Character ref selector */
+    .char-ref-row { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; margin-top: 6px; }
+    .char-ref-row::-webkit-scrollbar { display: none; }
+    .char-ref-chip { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; flex-shrink: 0; }
+    .char-ref-chip img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid transparent; transition: border-color 0.2s; }
+    .char-ref-chip.selected img { border-color: var(--primary); }
+    .char-ref-chip .char-name { font-size: 9px; color: #6B7280; font-weight: 600; max-width: 44px; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .char-ref-badge { position: absolute; top: -2px; right: -2px; width: 14px; height: 14px; background: var(--primary); color: white; border-radius: 50%; font-size: 9px; display: flex; align-items: center; justify-content: center; }
+
     /* 360 Degree Viewport Angle Matrix Grid */
     .angle-matrix-grid {
       display: grid;
@@ -505,13 +578,63 @@
       font-weight: 700;
       color: var(--primary);
     }
+
+    /* VIP Comparison Table */
+    .vip-compare-table { width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 16px; }
+    .vip-compare-table th { padding: 8px 6px; text-align: center; font-weight: 700; font-size: 12px; }
+    .vip-compare-table td { padding: 7px 6px; text-align: center; border-bottom: 1px solid #F3F4F6; }
+    .vip-compare-table tr:last-child td { border-bottom: none; }
+    .vip-compare-table .feature-name { text-align: left; color: #374151; font-weight: 500; }
+    .check-yes { color: #10B981; font-size: 14px; font-weight: 700; }
+    .check-no { color: #D1D5DB; font-size: 14px; }
+    .vip-plan-header { text-align: center; }
+    .vip-plan-header .plan-price { font-size: 16px; font-weight: 900; color: #D97706; }
+    .vip-plan-header .plan-label { font-size: 10px; color: #78350F; font-weight: 700; }
+    .plan-best { background: linear-gradient(135deg,#7C3AED,#C084FC); color: white; border-radius: 4px; padding: 1px 4px; font-size: 9px; font-weight: 700; }
+
+    /* Insufficient Credits Modal */
+    .insuff-options { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+    .insuff-option { display: flex; align-items: center; gap: 12px; background: #F8FAFC; border: 1.5px solid #E5E7EB; border-radius: 12px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+    .insuff-option:active { border-color: var(--primary); background: var(--primary-bg); }
+    .insuff-option .opt-icon { font-size: 24px; width: 40px; text-align: center; }
+    .insuff-option .opt-text .opt-title { font-size: 13px; font-weight: 700; color: #111827; }
+    .insuff-option .opt-text .opt-sub { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
+
+    /* Synthesis Cost Confirm */
+    .cost-breakdown { background: #F8FAFC; border-radius: 10px; padding: 12px; margin-bottom: 16px; }
+    .cost-row { display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0; color: #374151; }
+    .cost-row.total { font-weight: 800; color: #111827; border-top: 1px solid #E5E7EB; margin-top: 6px; padding-top: 8px; }
+    .cost-row .cost-label { color: var(--text-sub); }
+
+    /* Generation Result Page */
+    .result-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .result-action-btn { flex: 1; min-width: 80px; padding: 9px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; border: 1.5px solid var(--border-color); background: white; color: #374151; }
+    .result-action-btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+    .result-action-btn.green { background: #10B981; color: white; border-color: #10B981; }
+
+    /* Works Square styles */
+    .square-stat { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-muted); }
+    .ai-badge-sm { background: rgba(124,58,237,0.1); color: var(--primary); font-size: 9px; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+
+    /* Retry failed shot */
+    .failed-shot-row { background: #FEF2F2; border: 1px solid #FECACA; border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 8px; }
+    .failed-shot-row .retry-btn { background: #EF4444; color: white; border: none; padding: 4px 10px; border-radius: 8px; font-size: 11px; cursor: pointer; font-weight: 600; }
+
+    /* Toggle switch */
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+    .toggle-switch { position: relative; width: 44px; height: 24px; }
+    .toggle-switch input { display: none; }
+    .toggle-track { display: block; width: 44px; height: 24px; background: #D1D5DB; border-radius: 12px; cursor: pointer; transition: background 0.2s; }
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); pointer-events: none; }
+    .toggle-switch input:checked ~ .toggle-thumb { left: 23px; }
   </style>
 </head>
 <body>
 
   <div class="viewport-wrapper">
     <div class="top-toolbar">
-      <div class="title-info">AI漫剧创作 <span>统一专业版</span></div>
+      <div class="title-info">AI漫剧创作 <span>统一专业版 v3.0</span></div>
       <button class="btn-toggle-frame" onclick="toggleFrameSize()">📱 切换全屏模式</button>
     </div>
 
@@ -524,7 +647,6 @@
         <span id="currentTime">13:09</span>
         <div style="display:flex; gap: 6px; align-items:center;">
           <span>5G</span>
-          <svg width="16" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.4-.4-.4-1.02 0-1.41l1.41-1.41c.39-.39 1.02-.39 1.41 0l7.07 7.07c.39.39.39 1.02 0 1.41l-1.41 1.41c-.39.39-1.02.39-1.41 0l-1.78-1.78C9.57 23.63 7.85 24 6 24 2.69 24 0 21.31 0 18c0-3.31 2.69-6 6-6 1.85 0 3.57.84 4.73 2.17l4.86-4.86C16.93 7.04 14.63 6 12 6c-3.31 0-6 2.69-6 6 0 .8.16 1.56.45 2.26L4.8 15.91C4.28 14.71 4 13.39 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 2.21-.9 4.21-2.34 5.66l1.41 1.41C20.9 17.24 22 14.74 22 12c0-5.52-4.48-10-10-10z"/></svg>
           <svg width="18" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
         </div>
       </div>
@@ -532,7 +654,7 @@
       <!-- App Content Screen -->
       <div class="app-screen">
         <div class="wx-header" id="wxHeader">
-          <div class="nav-back" id="btnBack" onclick="goBack()" style="display:none;">
+          <div class="nav-back" id="btnBack" onclick="goBack()" style="display:none; align-items:center; gap:4px; color:var(--primary); font-size:14px; font-weight:600; cursor:pointer;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
             <span>返回</span>
           </div>
@@ -549,13 +671,40 @@
 
           <!-- TAB 1: 漫剧 (Home) -->
           <div class="page-view active" id="tabComic">
-            <div class="hero-banner">
-              <div class="hero-title">让猫咪故事动起来</div>
-              <div class="hero-sub">轻松制作 你的专属AI拟人化猫咪漫剧</div>
-              <div class="hero-tags">
-                <div class="tag-chip">⚡ 拟人猫咪</div>
-                <div class="tag-chip">🎨 360°视角锁定</div>
-                <div class="tag-chip">🎬 一键生成</div>
+
+            <!-- P2: Banner Carousel (3 slides) -->
+            <div class="banner-carousel" id="bannerCarousel">
+              <div class="banner-slides" id="bannerSlides">
+                <div class="banner-slide">
+                  <div class="banner-title">让猫咪故事动起来</div>
+                  <div class="banner-sub">轻松制作 你的专属AI拟人化猫咪漫剧</div>
+                  <div class="banner-tags">
+                    <div class="tag-chip">⚡ 拟人猫咪</div>
+                    <div class="tag-chip">🎨 360°视角锁定</div>
+                    <div class="tag-chip">🎬 一键生成</div>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <div class="banner-title">角色一致性全链路</div>
+                  <div class="banner-sub">跨镜头形象保真，每个分镜都与角色高度一致</div>
+                  <div class="banner-tags">
+                    <div class="tag-chip">🔒 形象锁定</div>
+                    <div class="tag-chip">🖼️ Ref图携带</div>
+                  </div>
+                </div>
+                <div class="banner-slide">
+                  <div class="banner-title">VIP直接文生视频</div>
+                  <div class="banner-sub">会员专属高级能力，直接从文字生成视频片段</div>
+                  <div class="banner-tags">
+                    <div class="tag-chip">👑 VIP专属</div>
+                    <div class="tag-chip">🚀 优先队列</div>
+                  </div>
+                </div>
+              </div>
+              <div class="banner-dots" id="bannerDots">
+                <div class="banner-dot active" onclick="goToSlide(0)"></div>
+                <div class="banner-dot" onclick="goToSlide(1)"></div>
+                <div class="banner-dot" onclick="goToSlide(2)"></div>
               </div>
             </div>
 
@@ -577,7 +726,7 @@
               <div class="entrance-card full-width" onclick="openDraftOrContinue()">
                 <div>
                   <div class="card-title">继续草稿 / 开始创作</div>
-                  <div class="card-desc">载入上次未完成的分镜草稿</div>
+                  <div class="card-desc" id="draftHintText">载入上次未完成的分镜草稿</div>
                 </div>
                 <div style="font-size:24px;">🚀</div>
               </div>
@@ -585,50 +734,20 @@
 
             <div class="section-title">
               <span>猫咪漫剧精选广场</span>
-              <span class="more-link">全部分类 ›</span>
+              <span class="more-link" onclick="switchTab('tabWorks','作品',document.querySelectorAll('.tab-item')[2])">全部分类 ›</span>
             </div>
 
-            <div class="filter-pills">
-              <div class="pill-btn active">热门</div>
-              <div class="pill-btn">拟人萌宠</div>
-              <div class="pill-btn">古风猫客栈</div>
-              <div class="pill-btn">悬疑侦探</div>
-              <div class="pill-btn">赛博喵星</div>
+            <!-- P2: Category tabs with content filtering -->
+            <div class="filter-pills" id="homeFilterPills">
+              <div class="pill-btn active" onclick="filterHomeFeed(this,'hot')">热门</div>
+              <div class="pill-btn" onclick="filterHomeFeed(this,'anthro')">拟人萌宠</div>
+              <div class="pill-btn" onclick="filterHomeFeed(this,'ancient')">古风猫客栈</div>
+              <div class="pill-btn" onclick="filterHomeFeed(this,'mystery')">悬疑侦探</div>
+              <div class="pill-btn" onclick="filterHomeFeed(this,'cyber')">赛博喵星</div>
             </div>
 
-            <div class="waterfall-grid">
-              <div class="waterfall-card" onclick="playDemoVideo('《猫大厨：汴京客栈》', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4')">
-                <div class="cover-box">
-                  <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" class="cover-img" alt="cover">
-                  <div class="badge-hot">热播</div>
-                  <div class="play-btn">▶</div>
-                  <div class="duration-tag">01:28</div>
-                </div>
-                <div class="card-info">
-                  <div class="title">《猫大厨：汴京客栈》</div>
-                  <div class="meta">
-                    <span>古风/拟人猫</span>
-                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化猫大厨，古风客栈烹饪红烧肉')">做同款</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="waterfall-card" onclick="playDemoVideo('《橘猫少爷大冒险》', 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4')">
-                <div class="cover-box">
-                  <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400" class="cover-img" alt="cover">
-                  <div class="badge-hot">热播</div>
-                  <div class="play-btn">▶</div>
-                  <div class="duration-tag">01:22</div>
-                </div>
-                <div class="card-info">
-                  <div class="title">《橘猫少爷大冒险》</div>
-                  <div class="meta">
-                    <span>赛博/萌宠</span>
-                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化橘猫少爷，赛博朋克风街头')">做同款</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="waterfall-grid" id="homeWaterfallGrid"></div>
+            <div style="height:12px;"></div>
           </div>
 
           <!-- TAB 2: AI视频 -->
@@ -675,56 +794,80 @@
             </div>
 
             <div class="waterfall-grid">
-              <div class="waterfall-card" onclick="playDemoVideo('拟人猫咪开心转圈', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4')">
+              <div class="waterfall-card" onclick="playDemoVideo('拟人猫咪开心转圈', videoData[0].url, videoData[0].episodes)">
                 <div class="cover-box">
                   <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400" class="cover-img" alt="cover">
                   <div class="play-btn">▶</div>
+                  <div class="badge-ai">AI 生成</div>
                 </div>
                 <div class="card-info">
                   <div class="title">HOT 拟人猫咪转圈</div>
                   <div class="meta">
                     <span>猫咪动画</span>
-                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化四足猫咪，开心转圈舞蹈')">做同款</span>
+                    <button class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('拟人化四足猫咪，开心转圈舞蹈')">做同款</button>
                   </div>
                 </div>
               </div>
 
-              <div class="waterfall-card" onclick="playDemoVideo('黑猫刺客夜行', 'https://assets.mixkit.co/videos/preview/mixkit-warrior-samurai-holding-a-sword-under-falling-leaves-41618-large.mp4')">
+              <div class="waterfall-card" onclick="playDemoVideo('黑猫刺客夜行', videoData[1].url, videoData[1].episodes)">
                 <div class="cover-box">
                   <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400" class="cover-img" alt="cover">
                   <div class="play-btn">▶</div>
+                  <div class="badge-ai">AI 生成</div>
                 </div>
                 <div class="card-info">
                   <div class="title">HOT 黑猫刺客夜行</div>
                   <div class="meta">
                     <span>武侠运镜</span>
-                    <span class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('国风黑猫刺客，夜行竹林剑光闪烁')">做同款</span>
+                    <button class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('国风黑猫刺客，夜行竹林剑光闪烁')">做同款</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- TAB 3: 作品 -->
+          <!-- TAB 3: 作品 (我的作品 + 广场) -->
           <div class="page-view" id="tabWorks">
             <div style="padding:16px 16px 4px 16px; display:flex; justify-content:space-between; align-items:center;">
-              <h2 style="font-size:20px; font-weight:800; color:#111827;">我的作品</h2>
-              <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="renderWorksList()">🔄 刷新列表</button>
+              <h2 style="font-size:20px; font-weight:800; color:#111827;">作品</h2>
+              <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="renderWorksList()">🔄 刷新</button>
             </div>
 
+            <!-- Works sub-tabs: 我的 vs 广场 -->
             <div class="filter-pills" style="padding-bottom:8px;">
-              <div class="pill-btn active" onclick="filterWorks(this, 'all')">全部</div>
-              <div class="pill-btn" onclick="filterWorks(this, '漫剧视频')">漫剧视频</div>
-              <div class="pill-btn" onclick="filterWorks(this, 'AI视频')">AI视频</div>
-              <div class="pill-btn" onclick="filterWorks(this, '生成中')">生成中</div>
+              <div class="pill-btn active" onclick="switchWorksTab(this,'mine')">我的作品</div>
+              <div class="pill-btn" onclick="switchWorksTab(this,'square')">作品广场</div>
             </div>
 
-            <div style="margin: 0 16px 12px 16px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; display:flex; justify-content:space-between; align-items:center;" id="noticeBanner">
-              <span>⏰ 作品云端保留 7 天，重要视频请及时保存到本地</span>
-              <span style="cursor:pointer; font-weight:bold;" onclick="document.getElementById('noticeBanner').style.display='none'">✕</span>
+            <!-- 我的作品 -->
+            <div id="myWorksPanel">
+              <div class="filter-pills" style="padding-top:0;">
+                <div class="pill-btn active" onclick="filterWorks(this, 'all')">全部</div>
+                <div class="pill-btn" onclick="filterWorks(this, '漫剧视频')">漫剧视频</div>
+                <div class="pill-btn" onclick="filterWorks(this, 'AI视频')">AI视频</div>
+                <div class="pill-btn" onclick="filterWorks(this, '生成中')">生成中</div>
+              </div>
+
+              <div style="margin: 0 16px 12px 16px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:var(--radius-sm); font-size:11px; display:flex; justify-content:space-between; align-items:center;" id="noticeBanner">
+                <span>⏰ 作品云端保留 7 天，重要视频请及时保存本地</span>
+                <span style="cursor:pointer; font-weight:bold;" onclick="document.getElementById('noticeBanner').style.display='none'">✕</span>
+              </div>
+
+              <div id="worksListContainer" style="padding: 0 16px; display:flex; flex-direction:column; gap:12px;"></div>
             </div>
 
-            <div id="worksListContainer" style="padding: 0 16px; display:flex; flex-direction:column; gap:12px;"></div>
+            <!-- 作品广场 (P1: 新增) -->
+            <div id="squarePanel" style="display:none;">
+              <div class="filter-pills" style="padding-top:0;">
+                <div class="pill-btn active">全部</div>
+                <div class="pill-btn">拟人萌宠</div>
+                <div class="pill-btn">古风</div>
+                <div class="pill-btn">热血</div>
+                <div class="pill-btn">治愈</div>
+              </div>
+              <div class="waterfall-grid" id="squareGrid"></div>
+              <div style="height:12px;"></div>
+            </div>
           </div>
 
           <!-- TAB 4: 我的 -->
@@ -738,15 +881,21 @@
               </div>
             </div>
 
+            <!-- 3资源余额展示 (P0修复：分离三种资源) -->
             <div style="margin: -10px 16px 14px 16px; background:white; border-radius:var(--radius-md); padding:12px 16px; display:flex; justify-content:space-around; box-shadow:var(--shadow-sm);">
               <div style="text-align:center; cursor:pointer;" onclick="openSubpage('pointsCenter')">
                 <div style="font-size:16px; font-weight:800; color:var(--primary);" id="displayPoints">120</div>
-                <div style="font-size:11px; color:var(--text-sub);">积分余额</div>
+                <div style="font-size:11px; color:var(--text-sub);">积分</div>
               </div>
               <div style="width:1px; background:#E5E7EB;"></div>
               <div style="text-align:center; cursor:pointer;" onclick="openSubpage('vipModal')">
-                <div style="font-size:16px; font-weight:800; color:#F59E0B;" id="displayCredits">5</div>
-                <div style="font-size:11px; color:var(--text-sub);">免费次数</div>
+                <div style="font-size:16px; font-weight:800; color:#F59E0B;" id="displayMemberCredits">0</div>
+                <div style="font-size:11px; color:var(--text-sub);">会员额度</div>
+              </div>
+              <div style="width:1px; background:#E5E7EB;"></div>
+              <div style="text-align:center; cursor:pointer;" onclick="openSubpage('vipModal')">
+                <div style="font-size:16px; font-weight:800; color:#10B981;" id="displayPackageCredits">5</div>
+                <div style="font-size:11px; color:var(--text-sub);">次数包</div>
               </div>
             </div>
 
@@ -786,7 +935,7 @@
                 <div class="left"><span class="icon">🎧</span> 联系官方客服 / FAQ</div>
                 <div class="right-arrow">›</div>
               </div>
-              <div class="menu-item" onclick="showToast('当前版本 v2.4.0 统一专业版')">
+              <div class="menu-item" onclick="showToast('当前版本 v3.0 统一专业版')">
                 <div class="left"><span class="icon">⚙️</span> 系统设置与关于</div>
                 <div class="right-arrow">›</div>
               </div>
@@ -795,7 +944,10 @@
 
         </div>
 
+        <!-- ============================================================ -->
         <!-- SUBPAGES CONTAINER -->
+        <!-- ============================================================ -->
+
         <!-- 1. AI 写剧本 Subpage -->
         <div class="subpage-container" id="subScriptCreation">
           <div class="subpage-header">
@@ -803,7 +955,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               <span>返回</span>
             </div>
-            <div class="subpage-title">AI 智能写剧本 (猫咪故事)</div>
+            <div class="subpage-title">AI 智能写剧本</div>
             <div class="subpage-capsule-spacer"></div>
           </div>
 
@@ -827,6 +979,7 @@
               </select>
             </div>
 
+            <!-- P2: 集数选择联动实际生成分镜数量 -->
             <div class="form-group">
               <div class="form-label">目标分镜集数 (5 ~ 15 集限幅)</div>
               <div style="display:flex; gap:8px;">
@@ -846,18 +999,19 @@
               </div>
             </div>
 
+            <!-- 消耗说明（正确三级优先级） -->
             <div style="background:var(--primary-bg); border:1px solid #DDD6FE; border-radius:var(--radius-sm); padding:10px 14px; font-size:11px; color:var(--primary); margin-bottom:16px;">
-              💡 预扣优先级：<b>①每日免费额度 → ②次数包 → ③积分折算</b> (10 积分/0.5 次数)
+              💡 预扣优先级：<b>①会员免费额度 → ②次数包 → ③积分折算</b>（每次AI生成按类型计费）
             </div>
 
             <div style="display:flex; gap:10px; margin-bottom:12px;">
               <button class="btn-primary" style="flex:1;" onclick="startGenerateScript()">✨ 生成 AI 结构化专业分镜剧本</button>
-              <button style="background:white; border:1px solid var(--border-color); color:var(--text-main); border-radius:22px; padding:0 14px; font-size:12px; font-weight:600; cursor:pointer;" onclick="saveScriptDraft()">💾 存为草稿</button>
+              <button style="background:white; border:1px solid var(--border-color); color:var(--text-main); border-radius:22px; padding:0 14px; font-size:12px; font-weight:600; cursor:pointer;" onclick="saveScriptDraft()">💾 存草稿</button>
             </div>
 
             <!-- Generated Script Output Section -->
             <div id="scriptOutputArea" style="margin-top:20px; display:none;">
-              <div class="section-title" style="padding-x:0;">AI 生成结构化分镜结果</div>
+              <div class="section-title" style="padding:0 0 8px 0;">AI 生成结构化分镜结果</div>
               <div id="storyboardShotsList" style="display:flex; flex-direction:column; gap:12px;"></div>
 
               <div style="margin-top:16px; display:flex; gap:10px;">
@@ -885,10 +1039,10 @@
               <div class="pill-btn" onclick="switchMaterialTab(this, 'props')">猫咪道具资产</div>
             </div>
 
-            <!-- Create / Upload Cat Character with 360 View Matrix -->
+            <!-- Create / Upload Cat Character -->
             <div style="background:white; border-radius:var(--radius-md); padding:14px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
               <div class="form-label">上传猫咪源图 / 新建角色 (360° 多视角一致性三视图)</div>
-              
+
               <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
                 <div style="width:75px; height:75px; border:2px dashed var(--primary); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; background:#F8FAFC;" onclick="uploadCustomCatImg()">
                   <span style="font-size:20px;">📷</span>
@@ -896,6 +1050,8 @@
                 </div>
                 <div style="flex:1;">
                   <input type="text" class="form-input" id="charNameInput" placeholder="猫咪角色名称 (例: 猫大厨/橘猫少爷)" style="margin-bottom:6px;">
+                  <!-- P0: 增加描述字段 -->
+                  <textarea class="form-textarea" id="charDescInput" placeholder="角色外貌描述，例：穿金丝滚边汉服，头戴高帽，眼神锐利..." style="height:52px; font-size:12px; margin-bottom:6px;"></textarea>
                   <select class="form-select" id="charSpecies">
                     <option>拟人化猫咪 (四足站立)</option>
                     <option>橘猫 (古风锦袍)</option>
@@ -905,30 +1061,43 @@
                 </div>
               </div>
 
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                <span style="font-size:11px; color:#4B5563;">四足站立拟人化开关:</span>
-                <input type="checkbox" checked id="charQuadruped">
+              <div class="toggle-row" style="margin-bottom:10px;">
+                <span style="font-size:11px; color:#4B5563; font-weight:600;">拟人化四足站立模式:</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" checked id="charQuadruped">
+                  <span class="toggle-track"></span>
+                  <span class="toggle-thumb"></span>
+                </label>
               </div>
 
-              <button class="btn-primary" style="font-size:12px; padding:10px;" onclick="generate360CatMatrix()">✨ 生成 360° 视角三视图 (前后左右/俯视仰视锁定)</button>
+              <!-- P0: 文生图4候选 -->
+              <button class="btn-primary" style="font-size:12px; padding:10px; margin-bottom:10px;" onclick="generateCat4Candidates()">✨ 文生图 · 生成 4 候选图</button>
+
+              <!-- 4候选图网格 -->
+              <div id="candidateArea" style="display:none; margin-bottom:10px;">
+                <div style="font-size:11px; color:var(--text-sub); margin-bottom:6px;">选择最满意的候选图入库：</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;" id="candidateGrid"></div>
+              </div>
+
+              <button class="btn-primary" style="font-size:12px; padding:10px;" onclick="generate360CatMatrix()">🔄 生成 360° 视角三视图 (前后左右/俯视仰视锁定)</button>
             </div>
 
             <!-- 360 Viewport Candidate Matrix Grid -->
             <div id="matrixArea" style="display:none; margin-bottom:16px; background:white; padding:12px; border-radius:var(--radius-md);">
               <div style="font-size:12px; font-weight:700; color:#111827; margin-bottom:4px;">🎯 猫咪全方位视角三视图 (Cross-Shot Ref 视角全锁定):</div>
               <div style="font-size:10px; color:var(--text-sub); margin-bottom:8px;">AI 已产出该猫咪角色的 6 个标准镜头视角，后续分镜渲染将自动保真：</div>
-              
+
               <div class="angle-matrix-grid" id="angleMatrixGrid"></div>
-              
+
               <button class="btn-primary" style="margin-top:10px; font-size:11px; padding:8px; background:#10B981;" onclick="confirmAngleMatrixLock()">🔒 锁死该猫咪全视角形象并入库</button>
             </div>
 
-            <div class="section-title" style="padding-x:0;">已保存猫咪资产库</div>
+            <div class="section-title" style="padding:0 0 8px 0;">已保存猫咪资产库</div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="characterMaterialPool"></div>
           </div>
         </div>
 
-        <!-- 3. 分镜编辑 Subpage (分镜场景概念图 + AI 智能改进) -->
+        <!-- 3. 分镜编辑 Subpage -->
         <div class="subpage-container" id="subStoryboardEditor">
           <div class="subpage-header">
             <div class="subpage-back" onclick="goBack()">
@@ -941,10 +1110,10 @@
 
           <div style="padding:16px; flex:1; overflow-y:auto;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <div style="font-size:12px; font-weight:700; color:#374151;">分镜列表 (场景概念图 + 镜头控制):</div>
+              <div style="font-size:12px; font-weight:700; color:#374151;">分镜列表 (<span id="shotCountLabel">5</span> 个镜头):</div>
               <div style="display:flex; gap:6px;">
-                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="openAudioPreviewModal()">🔊 配音与整剧预览</button>
-                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="addNewShot()">+ 添加镜头</button>
+                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="openAudioPreviewModal()">🔊 整剧预览</button>
+                <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer;" onclick="addNewShot()">+ 添加</button>
               </div>
             </div>
 
@@ -981,9 +1150,19 @@
             <div class="form-group">
               <div class="form-label">画幅比例</div>
               <div style="display:flex; gap:10px;">
-                <button class="pill-btn active" style="flex:1;">📱 9:16 (竖屏)</button>
-                <button class="pill-btn" style="flex:1;">🖥️ 16:9 (横屏)</button>
+                <button class="pill-btn active" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">📱 9:16 (竖屏)</button>
+                <button class="pill-btn" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">🖥️ 16:9 (横屏)</button>
               </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">转场特效</div>
+              <select class="form-select">
+                <option>淡入淡出 (推荐)</option>
+                <option>划入划出</option>
+                <option>闪光切换</option>
+                <option>无转场</option>
+              </select>
             </div>
 
             <div class="form-group">
@@ -1005,7 +1184,8 @@
               </select>
             </div>
 
-            <button class="btn-primary" onclick="startSynthesisPipeline()">🚀 确认并一键合成猫咪漫剧</button>
+            <!-- P1: 合成前展示预计消耗弹层 -->
+            <button class="btn-primary" onclick="showSynthesisCostConfirm()">🚀 确认并一键合成猫咪漫剧</button>
           </div>
         </div>
 
@@ -1028,7 +1208,7 @@
 
             <div class="form-group">
               <div class="form-label">负向提示词 (Negative Prompt)</div>
-              <input type="text" class="form-input" value="模糊, 变形, 低画质, 缺失肢体">
+              <input type="text" class="form-input" id="t2vNegPrompt" value="模糊, 变形, 低画质, 缺失肢体">
             </div>
 
             <div class="form-group">
@@ -1039,16 +1219,24 @@
             <div class="form-group">
               <div class="form-label">视频时长</div>
               <div style="display:flex; gap:8px;">
-                <button class="pill-btn active" style="flex:1;">5 秒</button>
-                <button class="pill-btn" style="flex:1;">10 秒 (VIP)</button>
+                <button class="pill-btn active" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">5 秒</button>
+                <button class="pill-btn" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">10 秒 (VIP)</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">画幅比例</div>
+              <div style="display:flex; gap:8px;">
+                <button class="pill-btn active" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">📱 9:16</button>
+                <button class="pill-btn" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">🖥️ 16:9</button>
               </div>
             </div>
 
             <div style="background:var(--primary-bg); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--primary); margin-bottom:16px;">
-              💰 预计消耗：<b>20 积分</b> / 1 次视频生成额度
+              💰 预计消耗：<b>20 积分</b> / 1 次视频生成额度（优先扣会员额度→次数包→积分）
             </div>
 
-            <button class="btn-primary" onclick="startSingleVideoGen('T2V文生视频')">🎬 开始生成 AI 猫咪视频</button>
+            <button class="btn-primary" onclick="startSingleVideoGen('T2V文生视频', 20)">🎬 开始生成 AI 猫咪视频</button>
           </div>
         </div>
 
@@ -1077,7 +1265,73 @@
               <input type="text" class="form-input" value="猫咪角色挥舞厨刀，做出招牌掂锅烹饪动作">
             </div>
 
-            <button class="btn-primary" onclick="startSingleVideoGen('I2V图生视频')">✨ 动效图生视频</button>
+            <!-- P1: I2V 增加运动强度滑块 -->
+            <div class="form-group">
+              <div class="form-label">运动强度 (Motion Strength: <span id="i2vStrengthVal">6</span>)</div>
+              <input type="range" min="1" max="10" value="6" style="width:100%;" oninput="document.getElementById('i2vStrengthVal').innerText=this.value">
+              <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); margin-top:2px;">
+                <span>轻微抖动</span><span>剧烈运动</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label">视频时长</div>
+              <div style="display:flex; gap:8px;">
+                <button class="pill-btn active" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">5 秒</button>
+                <button class="pill-btn" style="flex:1;" onclick="this.parentElement.querySelectorAll('.pill-btn').forEach(b=>b.classList.remove('active')); this.classList.add('active')">10 秒 (VIP)</button>
+              </div>
+            </div>
+
+            <div style="background:var(--primary-bg); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--primary); margin-bottom:16px;">
+              💰 预计消耗：<b>20 积分</b> / 1 次图生视频额度
+            </div>
+
+            <button class="btn-primary" onclick="startSingleVideoGen('I2V图生视频', 20)">✨ 动效图生视频</button>
+          </div>
+        </div>
+
+        <!-- P1: 生成结果页 (T2V/I2V共用) -->
+        <div class="subpage-container" id="subVideoResult">
+          <div class="subpage-header">
+            <div class="subpage-back" onclick="goBack()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+              <span>返回</span>
+            </div>
+            <div class="subpage-title" id="videoResultTitle">生成结果</div>
+            <div class="subpage-capsule-spacer"></div>
+          </div>
+
+          <div style="padding:16px; flex:1; overflow-y:auto;">
+            <!-- 视频预览 -->
+            <div style="position:relative; background:#000; border-radius:var(--radius-md); overflow:hidden; margin-bottom:16px; aspect-ratio:9/16; max-height:320px; display:flex; align-items:center; justify-content:center;">
+              <video id="resultVideoEl" style="width:100%; max-height:100%; object-fit:contain;" controls loop>
+                <source src="" type="video/mp4">
+              </video>
+              <div style="position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,0.6); color:rgba(255,255,255,0.9); border:1px solid rgba(255,255,255,0.3); padding:3px 7px; border-radius:3px; font-size:10px; font-weight:700; letter-spacing:1px;">AI 生成</div>
+            </div>
+
+            <!-- 结果信息 -->
+            <div style="background:white; border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm); margin-bottom:16px;">
+              <div style="font-size:13px; font-weight:700; color:#111827;" id="resultVideoTitle">AI 猫咪视频作品</div>
+              <div style="font-size:11px; color:var(--text-sub); margin-top:4px;" id="resultVideoMeta">时长: 5秒 | 消耗: 20积分</div>
+              <div style="margin-top:8px; display:flex; gap:6px; align-items:center;">
+                <div style="background:#D1FAE5; color:#059669; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">✅ 已完成</div>
+                <div style="background:rgba(124,58,237,0.1); color:var(--primary); font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">AI 生成</div>
+                <div style="background:#FEF3C7; color:#92400E; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;" id="resultVisibilityBadge">🔒 私密</div>
+              </div>
+            </div>
+
+            <!-- 结果操作按钮组 (P1: 补充完整操作) -->
+            <div class="result-actions">
+              <button class="result-action-btn primary" onclick="resultSetPublic()">🌐 设为公开</button>
+              <button class="result-action-btn green" onclick="resultSaveMaterial()">💾 存为素材</button>
+              <button class="result-action-btn" onclick="resultUseInStoryboard()">🎬 用于漫剧分镜</button>
+              <button class="result-action-btn" onclick="resultDownload()">⬇️ 下载本地</button>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:12px;">
+              <button class="btn-secondary" onclick="resultRegenerate()">🔄 重新生成</button>
+            </div>
           </div>
         </div>
 
@@ -1088,7 +1342,7 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
               <span>返回</span>
             </div>
-            <div class="subpage-title">猫咪带货视频创作 (虚拟猫咪主播)</div>
+            <div class="subpage-title">猫咪带货视频创作</div>
             <div class="subpage-capsule-spacer"></div>
           </div>
 
@@ -1105,7 +1359,7 @@
             </div>
 
             <div class="form-group">
-              <div class="form-label">内置虚拟猫咪带货主播形象 (全部为猫咪角色)</div>
+              <div class="form-label">内置虚拟猫咪带货主播形象</div>
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <button class="pill-btn active" style="text-align:center; padding:10px;">🐱 3D猫大厨主播</button>
                 <button class="pill-btn" style="text-align:center; padding:10px;">🐱 橘猫少爷主播</button>
@@ -1122,20 +1376,11 @@
               <textarea class="form-textarea" id="ecomScriptArea" placeholder="输入商品卖点，或点击右上角 AI 自动生成带货口播台词...">喵星人看过来！今天这款【猫大厨联名白桃乌龙茶】真的绝了！冷萃留香、无糖清爽，限量立减 20 元，先到先得！</textarea>
             </div>
 
-            <div class="form-group">
-              <div class="form-label">直播间促销标签挂件</div>
-              <div style="display:flex; gap:8px; overflow-x:auto;">
-                <span style="background:#FEE2E2; color:#EF4444; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #FCA5A5;">🔥 限时特惠 ¥39.9</span>
-                <span style="background:#FEF3C7; color:#D97706; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #FCD34D;">🎁 买一送一</span>
-                <span style="background:#D1FAE5; color:#059669; font-size:11px; padding:4px 8px; border-radius:6px; font-weight:700; border:1px solid #6EE7B7;">⚡ 热销 10w+ 件</span>
-              </div>
-            </div>
-
             <div style="background:var(--primary-bg); padding:10px; border-radius:var(--radius-sm); font-size:11px; color:var(--primary); margin-bottom:16px;">
               💰 预计消耗：<b>20 积分</b> / 1 次电商带货视频生成
             </div>
 
-            <button class="btn-primary" onclick="startSingleVideoGen('猫咪带货视频')">🚀 一键生成猫咪带货视频</button>
+            <button class="btn-primary" onclick="startSingleVideoGen('猫咪带货视频', 20)">🚀 一键生成猫咪带货视频</button>
           </div>
         </div>
 
@@ -1157,7 +1402,7 @@
               <div style="font-size:10px; opacity:0.8; margin-top:4px;" id="frozenDisplay">冻结中: 0 积分 (两阶段事务保护中)</div>
             </div>
 
-            <div class="filter-pills" style="padding-x:0;">
+            <div class="filter-pills" style="padding:0 0 12px 0;">
               <div class="pill-btn active" onclick="switchPointsSubTab(this, 'recharge')">积分充值</div>
               <div class="pill-btn" onclick="switchPointsSubTab(this, 'convert')">积分兑换</div>
               <div class="pill-btn" onclick="switchPointsSubTab(this, 'gift')">好友转赠</div>
@@ -1169,11 +1414,22 @@
                 <div style="background:white; border:1.5px solid var(--primary); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="buyPoints(600, 60)">
                   <div style="font-size:18px; font-weight:800; color:var(--primary);">600 积分</div>
                   <div style="font-size:13px; color:#DC2626; font-weight:700; margin-top:4px;">¥60.00</div>
+                  <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">约¥0.1/积分</div>
                 </div>
-
                 <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="buyPoints(1200, 100)">
                   <div style="font-size:18px; font-weight:800; color:var(--primary);">1200 积分</div>
                   <div style="font-size:13px; color:#DC2626; font-weight:700; margin-top:4px;">¥100.00</div>
+                  <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">约¥0.08/积分 <span style="background:#FEE2E2; color:#EF4444; padding:0 4px; border-radius:3px; font-weight:700;">优惠</span></div>
+                </div>
+                <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="buyPoints(3000, 199)">
+                  <div style="font-size:18px; font-weight:800; color:var(--primary);">3000 积分</div>
+                  <div style="font-size:13px; color:#DC2626; font-weight:700; margin-top:4px;">¥199.00</div>
+                  <div style="font-size:9px; color:var(--text-muted); margin-top:2px;">约¥0.066/积分 <span style="background:#FEE2E2; color:#EF4444; padding:0 4px; border-radius:3px; font-weight:700;">超值</span></div>
+                </div>
+                <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; text-align:center; cursor:pointer;" onclick="showToast('看激励广告即可获得 5 积分')">
+                  <div style="font-size:24px;">📺</div>
+                  <div style="font-size:13px; font-weight:700; color:#111827; margin-top:4px;">看广告得积分</div>
+                  <div style="font-size:10px; color:#10B981; font-weight:600;">+5 积分/次</div>
                 </div>
               </div>
             </div>
@@ -1181,22 +1437,29 @@
             <div id="pointsConvertView" style="display:none; background:white; border-radius:var(--radius-md); padding:14px;">
               <div class="form-label">积分兑换生成次数包</div>
               <div style="font-size:12px; color:var(--text-sub); margin-bottom:10px;">兑换比例：100 积分 = 1 次数包 (永久有效)</div>
+              <div style="background:#F8FAFC; border-radius:8px; padding:10px; margin-bottom:10px; font-size:12px; color:#374151;">
+                当前积分: <b id="convertFromPoints">120</b> 积分 → 可兑换 <b id="convertToCredits">1</b> 次数包
+              </div>
               <button class="btn-primary" onclick="convertPointsToCredits()">兑换 1 次生成包 (消耗 100 积分)</button>
             </div>
 
             <div id="pointsGiftView" style="display:none; background:white; border-radius:var(--radius-md); padding:14px;">
               <div class="form-label">受赠好友微信 ID</div>
               <input type="text" class="form-input" placeholder="输入好友的用户 ID (例: 928104)" id="giftUserId">
-              <div class="form-label" style="margin-top:10px;">转赠积分数量 (单日限额 500)</div>
+              <!-- P1: 单日累计限额显示 -->
+              <div class="form-label" style="margin-top:10px;">
+                <span>转赠积分数量</span>
+                <span style="font-size:11px; color:var(--text-muted);">今日已转赠: <b id="todayGiftTotal">0</b>/500</span>
+              </div>
               <input type="number" class="form-input" value="50" id="giftAmount">
               <button class="btn-primary" style="margin-top:12px;" onclick="transferGiftPoints()">确认好友转赠 (原子事务)</button>
             </div>
 
-            <div id="pointsLogsView" style="display:none; display:flex; flex-direction:column; gap:8px;" id="pointsHistoryList"></div>
+            <div id="pointsLogsView" style="display:none; flex-direction:column; gap:8px;" id="pointsHistoryList"></div>
           </div>
         </div>
 
-        <!-- 8. VIP 会员与次数包 Subpage -->
+        <!-- 8. VIP 会员与次数包 Subpage (P2: 补充完整对比表) -->
         <div class="subpage-container" id="subVipModal">
           <div class="subpage-header">
             <div class="subpage-back" onclick="goBack()">
@@ -1208,33 +1471,106 @@
           </div>
 
           <div style="padding:16px; flex:1; overflow-y:auto;">
-            <div class="gold-vip-banner" style="margin:0 0 16px 0;">
-              <div>
-                <div style="font-weight:800; font-size:16px;">VIP 尊享权益</div>
-                <div style="font-size:11px;">每日赠送10次生成 · 优先队列排队 · 直接文生视频</div>
-              </div>
+            <!-- VIP权益对比表 -->
+            <div style="background:white; border-radius:var(--radius-md); padding:12px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+              <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:12px;">👑 权益对比</div>
+              <table class="vip-compare-table">
+                <thead>
+                  <tr>
+                    <th class="feature-name" style="text-align:left;">权益项目</th>
+                    <th><div class="vip-plan-header"><div class="plan-label">免费</div></div></th>
+                    <th><div class="vip-plan-header"><div class="plan-price">¥39</div><div class="plan-label">/月</div></div></th>
+                    <th><div class="vip-plan-header"><div class="plan-price" style="font-size:13px;">¥98</div><div class="plan-label">/季 <span class="plan-best">推荐</span></div></div></th>
+                    <th><div class="vip-plan-header"><div class="plan-price" style="font-size:13px;">¥328</div><div class="plan-label">/年</div></div></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="feature-name">每日生成次数</td>
+                    <td>3次</td><td>30次</td><td>40次</td><td>60次</td>
+                  </tr>
+                  <tr>
+                    <td class="feature-name">文生视频直出</td>
+                    <td class="check-no">✕</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td>
+                  </tr>
+                  <tr>
+                    <td class="feature-name">高级AI风格</td>
+                    <td class="check-no">✕</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td>
+                  </tr>
+                  <tr>
+                    <td class="feature-name">优先队列</td>
+                    <td class="check-no">✕</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td>
+                  </tr>
+                  <tr>
+                    <td class="feature-name">去广告</td>
+                    <td class="check-no">✕</td><td class="check-yes">✓</td><td class="check-yes">✓</td><td class="check-yes">✓</td>
+                  </tr>
+                  <tr>
+                    <td class="feature-name">每月赠积分</td>
+                    <td>—</td><td>300</td><td>400</td><td>600</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
-            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+            <!-- 订阅按钮 -->
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
               <div style="background:white; border:2px solid #F59E0B; border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
                 <div>
                   <div style="font-weight:800; font-size:15px;">连续包月 VIP</div>
-                  <div style="font-size:11px; color:var(--text-sub);">送 300 积分/月</div>
+                  <div style="font-size:11px; color:var(--text-sub);">送 300 积分/月 · 每日 30 次</div>
                 </div>
                 <div>
                   <span style="font-size:18px; font-weight:900; color:#D97706;">¥39</span> /月
-                  <button style="margin-left:8px; background:#F59E0B; color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('月卡会员', 39)">开通</button>
+                  <button style="margin-left:8px; background:#F59E0B; color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('月卡VIP会员', 39, 'vip_month')">开通</button>
+                </div>
+              </div>
+
+              <div style="background:white; border:2px solid var(--primary); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center; position:relative; overflow:hidden;">
+                <div style="position:absolute; top:0; right:0; background:linear-gradient(135deg,var(--primary),#C084FC); color:white; font-size:9px; padding:3px 10px; font-weight:700; border-bottom-left-radius:8px;">推荐</div>
+                <div>
+                  <div style="font-weight:800; font-size:15px;">季度 VIP</div>
+                  <div style="font-size:11px; color:var(--text-sub);">送 400 积分/季 · 相当¥32.7/月</div>
+                </div>
+                <div>
+                  <span style="font-size:18px; font-weight:900; color:var(--primary);">¥98</span> /季
+                  <button style="margin-left:8px; background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('季度VIP会员', 98, 'vip_season')">开通</button>
                 </div>
               </div>
 
               <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                  <div style="font-weight:800; font-size:15px;">一次性 10 次生成包</div>
-                  <div style="font-size:11px; color:var(--text-sub);">永久有效</div>
+                  <div style="font-weight:800; font-size:15px;">年度 VIP</div>
+                  <div style="font-size:11px; color:var(--text-sub);">送 600 积分/年 · 相当¥27.3/月</div>
+                </div>
+                <div>
+                  <span style="font-size:18px; font-weight:900; color:#111827;">¥328</span> /年
+                  <button style="margin-left:8px; background:#374151; color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('年度VIP会员', 328, 'vip_year')">开通</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 次数包 -->
+            <div style="font-size:13px; font-weight:700; color:#111827; margin-bottom:10px;">一次性次数包（永久有效）</div>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+              <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:800; font-size:15px;">10 次生成包</div>
+                  <div style="font-size:11px; color:var(--text-sub);">永久有效，含赠送使用</div>
                 </div>
                 <div>
                   <span style="font-size:18px; font-weight:900; color:#111827;">¥19</span>
-                  <button style="margin-left:8px; background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('10次包', 19)">购买</button>
+                  <button style="margin-left:8px; background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('10次生成包', 19, 'pkg_10')">购买</button>
+                </div>
+              </div>
+              <div style="background:white; border:1px solid var(--border-color); border-radius:var(--radius-md); padding:14px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <div style="font-weight:800; font-size:15px;">50 次生成包</div>
+                  <div style="font-size:11px; color:var(--text-sub);">永久有效，批量优惠价</div>
+                </div>
+                <div>
+                  <span style="font-size:18px; font-weight:900; color:#111827;">¥79</span>
+                  <button style="margin-left:8px; background:var(--primary); color:white; border:none; padding:4px 10px; border-radius:12px; font-size:11px; cursor:pointer;" onclick="payWxSimulate('50次生成包', 79, 'pkg_50')">购买</button>
                 </div>
               </div>
             </div>
@@ -1256,7 +1592,7 @@
             <div style="background:linear-gradient(135deg, #10B981 0%, #059669 100%); color:white; border-radius:var(--radius-lg); padding:20px; margin-bottom:16px;">
               <div style="font-size:12px;">我的推广累计收益</div>
               <div style="font-size:28px; font-weight:900;">¥ 128.50</div>
-              <div style="font-size:10px; opacity:0.8; margin-top:4px;">一级佣金 (15%) + 二级佣金 (5%)</div>
+              <div style="font-size:10px; opacity:0.8; margin-top:4px;">一级佣金 (15%) + 二级佣金 (5%) · 强制 ≤2 级</div>
             </div>
 
             <div class="form-group">
@@ -1267,7 +1603,7 @@
               </div>
             </div>
 
-            <div class="section-title" style="padding-x:0;">下线推荐记录 (≤2级约束)</div>
+            <div class="section-title" style="padding:0 0 8px 0;">下线推荐记录 (≤2级约束)</div>
             <div style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;" id="referralList"></div>
 
             <button class="btn-primary" style="background:#059669;" onclick="showToast('提现申请已提交！将在1-3个工作日打入微信零钱')">申请提现至微信零钱</button>
@@ -1286,14 +1622,13 @@
           </div>
 
           <div style="padding:16px; flex:1; overflow-y:auto;">
-            <div class="filter-pills" style="padding-x:0;">
-              <div class="pill-btn active">全部订单</div>
-              <div class="pill-btn">已支付</div>
-              <div class="pill-btn">待支付</div>
-              <div class="pill-btn">已退款</div>
+            <div class="filter-pills" style="padding:0 0 12px 0;">
+              <div class="pill-btn active" onclick="filterOrders(this, 'all')">全部订单</div>
+              <div class="pill-btn" onclick="filterOrders(this, '已支付')">已支付</div>
+              <div class="pill-btn" onclick="filterOrders(this, '待支付')">待支付</div>
+              <div class="pill-btn" onclick="filterOrders(this, '已退款')">已退款</div>
             </div>
-
-            <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;" id="ordersList"></div>
+            <div style="display:flex; flex-direction:column; gap:10px;" id="ordersList"></div>
           </div>
         </div>
 
@@ -1309,7 +1644,7 @@
             <span>AI视频</span>
           </div>
 
-          <div class="tab-item" onclick="switchTab('tabWorks', '我的作品', this)">
+          <div class="tab-item" onclick="switchTab('tabWorks', '作品', this)">
             <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
             <span>作品</span>
           </div>
@@ -1322,7 +1657,9 @@
 
       </div>
 
+      <!-- ============================================================ -->
       <!-- VIDEO PLAYER MODAL -->
+      <!-- ============================================================ -->
       <div class="video-player-modal" id="videoPlayerModal">
         <div style="padding:10px 16px; color:white; display:flex; justify-content:space-between; align-items:center; z-index:20;">
           <div style="display:flex; align-items:center; gap:6px; cursor:pointer;" onclick="closeVideoPlayer()">
@@ -1334,40 +1671,46 @@
 
         <div class="video-viewport">
           <video id="htmlVideoElement" style="width:100%; max-height:100%; object-fit:contain;" controls loop autoplay>
-            <source id="videoSource" src="https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4" type="video/mp4">
+            <source id="videoSource" src="" type="video/mp4">
           </video>
           <div class="video-watermark">AI 生成</div>
         </div>
 
         <div class="player-controls-bar">
-          <div style="display:flex; justify-content:space-between; font-size:12px;">
-            <span>选集：第 1 集 (全 5 集)</span>
-            <span style="color:var(--primary-light); cursor:pointer;" onclick="showToast('点赞成功！推荐指数 +1')">❤️ 点赞 (1.2k)</span>
+          <!-- P2: 选集功能真实交互 -->
+          <div style="font-size:11px; color:rgba(255,255,255,0.7); margin-bottom:4px;">选集</div>
+          <div class="episode-selector" id="episodeSelector"></div>
+
+          <div style="display:flex; justify-content:space-between; font-size:12px; margin-top:6px;">
+            <span id="playerEpInfo">第 1 集</span>
+            <span style="color:#C084FC; cursor:pointer;" onclick="showToast('点赞成功！推荐指数 +1')">❤️ 点赞 (1.2k)</span>
           </div>
-          <button class="btn-primary" style="font-size:12px; padding:8px;" onclick="showToast('已复制该漫剧结构与Prompt，开始创作同款！'); closeVideoPlayer(); openSubpage('scriptCreation');">✨ 做同款漫剧</button>
+          <button class="btn-primary" style="font-size:12px; padding:8px;" onclick="doSameFromPlayer()">✨ 做同款漫剧</button>
         </div>
       </div>
 
-      <!-- AI SHOT REFINER & IMPROVEMENT MODAL -->
+      <!-- ============================================================ -->
+      <!-- MODALS (Bottom Sheets) -->
+      <!-- ============================================================ -->
+
+      <!-- AI Shot Refine Modal -->
       <div class="modal-overlay" id="aiShotRefineModal">
         <div class="bottom-sheet">
           <div class="sheet-header">
             <div class="sheet-title" id="refineShotTitle">✨ AI 智能改进分镜</div>
             <div class="close-btn" onclick="closeShotRefineModal()">✕</div>
           </div>
-          <div style="font-size:12px; color:var(--text-sub); margin-bottom:12px;" id="refineShotDesc">AI 正在为该分镜提供专业视听升级建议：</div>
-          
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:12px;">AI 正在为该分镜提供专业视听升级建议：</div>
+
           <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
             <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(0)">
               <div style="font-size:12px; font-weight:700; color:var(--primary);">💡 方案①：【电影级运镜与光影对比】</div>
               <div style="font-size:11px; color:#475569; margin-top:3px;">将景别提升为黄金分割大特写，增加逆光丁达尔效应，强化猫咪胡须细节。</div>
             </div>
-            
             <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(1)">
               <div style="font-size:12px; font-weight:700; color:#059669;">🔥 方案②：【戏剧冲突与爆款台词升级】</div>
               <div style="font-size:11px; color:#475569; margin-top:3px;">增加猫大厨眼神一闪微表情，强化拟人化台词语调爆发力。</div>
             </div>
-
             <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:10px; border-radius:8px; cursor:pointer;" onclick="applyRefinement(2)">
               <div style="font-size:12px; font-weight:700; color:#D97706;">🎨 方案③：【国风水墨意境润色】</div>
               <div style="font-size:11px; color:#475569; margin-top:3px;">在场景中融入烟雨江景氛围，渲染水墨挥洒颗粒质感。</div>
@@ -1376,25 +1719,26 @@
         </div>
       </div>
 
-      <!-- AUDIO & SEQUENCE PREVIEW MODAL -->
+      <!-- Audio & Sequence Preview Modal -->
       <div class="modal-overlay" id="audioPreviewModal">
         <div class="bottom-sheet">
           <div class="sheet-header">
             <div class="sheet-title">整剧序列预览与配音试听</div>
             <div class="close-btn" onclick="closeAudioPreviewModal()">✕</div>
           </div>
-          <div style="padding:10px 0;">
-            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">TTS 音色试听: 【猫大厨 - 霸道低沉男声】</div>
-            <audio controls style="width:100%; margin-bottom:12px;">
-              <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
-            </audio>
-            <div style="font-size:12px; color:var(--text-sub);">正在预览分镜序列 1 ~ 5 配音对白试听...</div>
-          </div>
-          <button class="btn-primary" onclick="closeAudioPreviewModal()">关闭预览</button>
+          <!-- 分镜序列缩略图 -->
+          <div style="font-size:12px; font-weight:700; margin-bottom:8px;">分镜序列缩略图:</div>
+          <div style="display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:12px;" id="previewShotStrip"></div>
+          <div style="font-size:13px; font-weight:700; margin-bottom:8px;">TTS 音色试听: 【猫大厨 - 霸道低沉男声】</div>
+          <audio controls style="width:100%; margin-bottom:12px;">
+            <source src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" type="audio/mpeg">
+          </audio>
+          <div style="font-size:12px; color:var(--text-sub);">正在预览分镜序列 1 ~ <span id="previewShotCount">5</span> 配音对白试听...</div>
+          <button class="btn-primary" style="margin-top:12px;" onclick="closeAudioPreviewModal()">关闭预览</button>
         </div>
       </div>
 
-      <!-- WX LOGIN AUTHORIZATION MODAL -->
+      <!-- WX Login Modal -->
       <div class="modal-overlay" id="wxLoginModal">
         <div class="bottom-sheet">
           <div class="sheet-header">
@@ -1410,7 +1754,7 @@
         </div>
       </div>
 
-      <!-- SYNTHESIS PROGRESS MODAL -->
+      <!-- Synthesis Progress Modal -->
       <div class="modal-overlay" id="synthesisModal">
         <div class="bottom-sheet">
           <div class="sheet-header">
@@ -1418,16 +1762,48 @@
           </div>
 
           <div class="synthesis-progress">
-            <div class="stage-item done"><div class="stage-icon">✓</div><span>① AI 结构化剧本解构解包 (100%)</span></div>
-            <div class="stage-item done"><div class="stage-icon">✓</div><span>② 逐镜场景文生图 + 360° 猫咪视角形象一致性校验 (100%)</span></div>
-            <div class="stage-item done"><div class="stage-icon">✓</div><span>③ 猫咪多角色 TTS 配音生成与拟声处理 (100%)</span></div>
-            <div class="stage-item active" id="stageCompose"><div class="stage-icon"><div class="spinner"></div></div><span>④ ffmpeg 视频拼接 + 转场 + 水印烧录 (85%)</span></div>
+            <div class="stage-item" id="synthStage1">
+              <div class="stage-icon">1</div>
+              <div style="flex:1;">
+                <div>① AI 结构化剧本解构解包</div>
+                <div class="progress-bar-outer" style="margin-top:4px;"><div class="progress-bar-inner" id="synthBar1" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="stage-item" id="synthStage2">
+              <div class="stage-icon">2</div>
+              <div style="flex:1;">
+                <div>② 逐镜场景文生图 + 360° 一致性校验</div>
+                <div class="progress-bar-outer" style="margin-top:4px;"><div class="progress-bar-inner" id="synthBar2" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="stage-item" id="synthStage3">
+              <div class="stage-icon">3</div>
+              <div style="flex:1;">
+                <div>③ 猫咪多角色 TTS 配音生成</div>
+                <div class="progress-bar-outer" style="margin-top:4px;"><div class="progress-bar-inner" id="synthBar3" style="width:0%"></div></div>
+              </div>
+            </div>
+            <div class="stage-item" id="synthStage4">
+              <div class="stage-icon">4</div>
+              <div style="flex:1;">
+                <div>④ ffmpeg 拼接 + 转场 + AI水印烧录</div>
+                <div class="progress-bar-outer" style="margin-top:4px;"><div class="progress-bar-inner" id="synthBar4" style="width:0%"></div></div>
+              </div>
+            </div>
           </div>
-          <div style="font-size:11px; color:var(--text-muted); text-align:center;">任务已放入 BullMQ 异步队列，预计需要 3 秒...</div>
+
+          <!-- 失败重试区 (P1) -->
+          <div id="failedShotsArea" style="display:none; margin-top:8px;">
+            <div style="font-size:12px; font-weight:700; color:#EF4444; margin-bottom:6px;">⚠️ 以下镜头生成失败（自动重试已用完）：</div>
+            <div id="failedShotsList"></div>
+            <button class="btn-primary" style="background:#EF4444; margin-top:8px;" onclick="retryAllFailed()">整体重新合成</button>
+          </div>
+
+          <div style="font-size:11px; color:var(--text-muted); text-align:center; margin-top:8px;" id="synthStatusText">任务已放入 BullMQ 异步队列...</div>
         </div>
       </div>
 
-      <!-- WX PAY SIMULATE MODAL -->
+      <!-- WX Pay Modal (P0修复: 按商品类型发放) -->
       <div class="modal-overlay" id="wxPayModal">
         <div class="bottom-sheet">
           <div class="sheet-header">
@@ -1438,90 +1814,180 @@
             <div style="font-size:12px; color:var(--text-sub);" id="payItemName">VIP 会员套餐</div>
             <div style="font-size:32px; font-weight:900; color:#111827; margin:6px 0;" id="payItemPrice">¥ 39.00</div>
             <div style="font-size:11px; color:var(--text-muted);">收款方：AI漫剧小程序商户号</div>
+            <!-- 权益说明 -->
+            <div style="background:#F0FDF4; border-radius:8px; padding:8px 12px; margin-top:10px; font-size:11px; color:#059669; text-align:left;" id="payBenefitDesc"></div>
           </div>
           <button class="btn-primary" style="background:#07C160;" onclick="confirmWxPay()">🟢 确认支付</button>
         </div>
       </div>
 
-      <!-- TOAST NOTIFICATION -->
+      <!-- ============================================================ -->
+      <!-- CENTER MODALS (Confirm dialogs) -->
+      <!-- ============================================================ -->
+
+      <!-- P0: 额度不足三选一引导弹层 -->
+      <div class="center-modal-overlay" id="insufficientModal">
+        <div class="center-modal-box">
+          <div style="text-align:center; margin-bottom:16px;">
+            <div style="font-size:32px; margin-bottom:8px;">😿</div>
+            <div style="font-size:16px; font-weight:800; color:#111827;">额度不足</div>
+            <div style="font-size:12px; color:var(--text-sub); margin-top:4px;" id="insuffDesc">当前会员额度、次数包、积分均不足，无法完成本次生成</div>
+          </div>
+          <div class="insuff-options">
+            <div class="insuff-option" onclick="closeInsufficientModal(); openSubpage('vipModal')">
+              <div class="opt-icon">👑</div>
+              <div class="opt-text">
+                <div class="opt-title">开通 VIP 会员</div>
+                <div class="opt-sub">每日赠送 30 次 · 直接文生视频</div>
+              </div>
+            </div>
+            <div class="insuff-option" onclick="closeInsufficientModal(); openSubpage('vipModal'); setTimeout(()=>document.querySelector('#subVipModal .filter-pills'),200)">
+              <div class="opt-icon">🎟️</div>
+              <div class="opt-text">
+                <div class="opt-title">购买次数包</div>
+                <div class="opt-sub">10次 ¥19 · 永久有效</div>
+              </div>
+            </div>
+            <div class="insuff-option" onclick="closeInsufficientModal(); openSubpage('pointsCenter')">
+              <div class="opt-icon">💰</div>
+              <div class="opt-text">
+                <div class="opt-title">充值积分 / 兑换额度</div>
+                <div class="opt-sub">100积分兑换1次生成包</div>
+              </div>
+            </div>
+          </div>
+          <button style="width:100%; margin-top:12px; background:none; border:none; color:var(--text-muted); font-size:13px; cursor:pointer;" onclick="closeInsufficientModal()">暂不处理</button>
+        </div>
+      </div>
+
+      <!-- P1: 合成前预计消耗确认弹层 -->
+      <div class="center-modal-overlay" id="synthCostConfirmModal">
+        <div class="center-modal-box">
+          <div style="font-size:16px; font-weight:800; color:#111827; margin-bottom:4px;">确认合成消耗</div>
+          <div style="font-size:12px; color:var(--text-sub); margin-bottom:16px;">以下为本次漫剧合成预计消耗，确认后开始生成：</div>
+
+          <div class="cost-breakdown" id="costBreakdownContent"></div>
+
+          <div style="display:flex; gap:10px; margin-top:16px;">
+            <button class="btn-secondary" onclick="closeSynthCostConfirm()">取消</button>
+            <button class="btn-primary" onclick="closeSynthCostConfirm(); startSynthesisPipeline()">确认并合成</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Toast -->
       <div class="toast-msg" id="toastMsg">操作成功</div>
 
     </div>
   </div>
 
   <script>
-    // State Data: All Built-in Characters are CATS
+    // ================================================================
+    // STATE - 三级资源分离 (P0修复)
+    // ================================================================
     const state = {
       points: 120,
-      credits: 5,
+      memberCredits: 0,      // VIP 会员免费额度（isVip时按日/月发放）
+      packageCredits: 5,     // 次数包额度（一次性、永久有效）
       frozenPoints: 0,
       isVip: false,
+      vipExpiredAt: null,
       activeTab: 'tabComic',
       historyStack: [],
       currentEditingShotIndex: 0,
-      // Storyboard Shots with Scene Concept Images & AI Prompts
+      selectedEpisodeCount: 5,        // P2: 集数选择
+      currentPayItemType: '',         // P0: 支付商品类型
+      currentVideoResultData: null,   // P1: 当前生成结果
+      currentPlayerVideoData: null,   // 当前播放视频数据
+      todayGiftTotal: 0,              // P1: 单日转赠累计
+      currentSynthFailedShots: [],    // P1: 合成失败镜头
+      currentWorksFilter: 'all',
+      bannerIndex: 0,
+      bannerTimer: null,
+
       storyboardShots: [
         {
-          id: 1,
-          no: 1,
-          camera: '推镜头 · 特写',
+          id: 1, no: 1, camera: '推镜头 · 特写',
           scene: '汴京烟火客栈后厨，大锅滚水蒸腾，白雾升华。',
           action: '四足拟人化【猫大厨】身着金丝滚边汉服古装、头戴白高帽，双爪紧握玄铁切肉刀，眼神锐利凝视砧板上的红烧肉。',
           dialogue: '猫大厨（低沉严厉）：「这红烧肉要炖出九分火候、三息收汁！差一秒，便失去了客栈百年的灵魂！」',
           prompt: 'cinematic close up, anthropomorphic cat chef in ancient Chinese Hanfu, kitchen steam, 8k resolution render',
           role: '猫大厨',
-          mode: '文生图(默认)',
+          refCharacterId: 'c1',
+          refCharacterImg: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+          seed: 42,
+          generationMode: 'text2img',
+          generationStatus: 'done',
+          retryCount: 0,
+          ai_marked: true,
           img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400'
         },
         {
-          id: 2,
-          no: 2,
-          camera: '中景 · 突发动作',
+          id: 2, no: 2, camera: '中景 · 突发动作',
           scene: '客栈雕花木窗崩碎，一道黑影破窗而入，木屑纷飞。',
           action: '四足拟人化【黑猫刺客】身穿夜行黑衣，双爪拔出短剑，落地后压低身体做出刺杀预备姿势。',
           dialogue: '黑猫刺客（冷笑）：「喵！猫大厨，识相的就把祖传红烧肉秘方卷轴交出来！」',
           prompt: 'anthropomorphic black cat ninja breaking through window, martial arts, wood splinters flying, action scene',
           role: '黑猫刺客',
-          mode: '文生图(默认)',
+          refCharacterId: 'c3',
+          refCharacterImg: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200',
+          seed: 88,
+          generationMode: 'text2img',
+          generationStatus: 'done',
+          retryCount: 0,
+          ai_marked: true,
           img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400'
         },
         {
-          id: 3,
-          no: 3,
-          camera: '全景 · 高潮对峙',
+          id: 3, no: 3, camera: '全景 · 高潮对峙',
           scene: '客栈大堂正中央，红木桌椅东倒西歪，气氛凝重至极。',
           action: '猫大厨左爪举起玄铁掂锅铲挡在胸前，黑猫刺客剑尖指向猫大厨，两猫在灯火阑珊中对峙。',
           dialogue: '猫大厨（豪迈大笑）：「想抢秘方？先问问我手中这柄三尺玄铁锅铲答应不答应！」',
           prompt: 'full shot, cat chef facing black cat assassin in ancient inn, wok paddle shield, epic battle lighting',
           role: '猫大厨',
-          mode: '直接文生视频(VIP)',
+          refCharacterId: 'c1',
+          refCharacterImg: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+          seed: 77,
+          generationMode: 'text2video',
+          generationStatus: 'done',
+          retryCount: 0,
+          ai_marked: true,
           img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400'
         },
         {
-          id: 4,
-          no: 4,
-          camera: '特写 · 技能爆发',
+          id: 4, no: 4, camera: '特写 · 技能爆发',
           scene: '灶台火苗猛烈迸发，红蓝相间的火焰顺着锅铲盘旋升腾。',
           action: '猫大厨双爪发力挥舞锅铲，施展「太极颠锅式」，炽热的火焰化作一条火龙向刺客扑去。',
           dialogue: '旁白（激昂解说）：「猫大厨起手颠锅，火焰如游龙出海，这一式乃是客栈镇店之宝！」',
           prompt: 'fire dragon out of wok, cat chef casting martial art technique, blazing flames, magical particle effects',
           role: '猫大厨',
-          mode: '文生图(默认)',
+          refCharacterId: 'c1',
+          refCharacterImg: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+          seed: 55,
+          generationMode: 'text2img',
+          generationStatus: 'done',
+          retryCount: 0,
+          ai_marked: true,
           img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400'
         },
         {
-          id: 5,
-          no: 5,
-          camera: '远景 · 胜利收尾',
+          id: 5, no: 5, camera: '远景 · 胜利收尾',
           scene: '晨曦初露，阳光透过破损的木窗洒入大堂。',
           action: '猫大厨收刀入鞘，端起一钵香气四溢的古风红烧肉，客栈外小萌宠猫咪食客们纷纷欢呼围拢。',
           dialogue: '猫大厨（微笑道别）：「美味方能安抚江湖人心，下一集，我们去洛阳开新店！」',
           prompt: 'peaceful morning in ancient Chinese inn, cat chef holding delicious food, happy ending anime scene',
           role: '猫大厨',
-          mode: '文生图(默认)',
+          refCharacterId: 'c1',
+          refCharacterImg: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+          seed: 33,
+          generationMode: 'text2img',
+          generationStatus: 'done',
+          retryCount: 0,
+          ai_marked: true,
           img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400'
         }
       ],
+
       materials: {
         characters: [
           { id: 'c1', name: '猫大厨 师傅', species: '拟人猫咪', isRef: true, img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200' },
@@ -1537,64 +2003,143 @@
           { id: 'p2', name: '祖传秘方卷轴', img: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=200' }
         ]
       },
+
+      // P1修复: 流水记录增加余额快照
       pointsLogs: [
-        { type: 'consume', title: '漫剧整剧合成预扣冻结', points: -60, date: '2026-08-10 13:00' },
-        { type: 'buy', title: '微信支付购买 600 积分包', points: +600, date: '2026-08-10 12:30' }
+        { type: 'consume', title: '漫剧整剧合成', points: -60, balance: 120, date: '2026-08-10 13:00' },
+        { type: 'buy', title: '微信支付购买 600 积分包', points: +600, balance: 180, date: '2026-08-10 12:30' }
       ],
+
+      // P1修复: 作品增加 ai_marked / visibility / reviewStatus
       works: [
-        { id: 'w1', title: '猫大厨的秘密武器', type: '漫剧视频', duration: '01:15', status: '已完成', cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', cost: '60积分' },
-        { id: 'w2', title: '赛博夜色 - 喵汪战队', type: 'AI视频', duration: '00:05', status: '已完成', cover: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', cost: '20积分' }
+        { id: 'w1', title: '猫大厨的秘密武器', type: '漫剧视频', duration: '01:15', status: '已完成', cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', cost: '60积分', ai_marked: true, visibility: 'public', reviewStatus: 'approved', episodes: 5 },
+        { id: 'w2', title: '赛博夜色 - 喵汪战队', type: 'AI视频', duration: '00:05', status: '已完成', cover: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400', videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', cost: '20积分', ai_marked: true, visibility: 'private', reviewStatus: 'pending', episodes: 1 }
       ],
+
       orders: [
         { id: 'ORD-20260810-8504', name: '充值 600 积分包', amount: '¥60.00', status: '已支付', date: '2026-08-10 13:00' },
         { id: 'ORD-20260809-1239', name: '连续包月 VIP 会员', amount: '¥39.00', status: '已支付', date: '2026-08-09 10:15' }
       ],
+
       referrals: [
         { user: '用户_9281', level: '一级 (15%)', reward: '¥ 15.00', date: '2026-08-10' },
         { user: '用户_4031', level: '二级 (5%)', reward: '¥ 5.00', date: '2026-08-09' }
       ]
     };
 
+    // P2: 首页瀑布流数据（分类）
+    const homeFeedData = {
+      hot: [
+        { title: '《猫大厨：汴京客栈》', cat: '古风/拟人猫', cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', hot: true, duration: '01:28', prompt: '拟人化猫大厨，古风客栈烹饪红烧肉', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 5 },
+        { title: '《橘猫少爷大冒险》', cat: '赛博/萌宠', cover: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=400', hot: true, duration: '01:22', prompt: '拟人化橘猫少爷，赛博朋克风街头', url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', episodes: 3 }
+      ],
+      anthro: [
+        { title: '《拟人喵学园》', cat: '校园/拟人猫', cover: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400', hot: false, duration: '00:58', prompt: '拟人化猫咪高中生，校园日常', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 2 },
+        { title: '《萌宠联盟》', cat: '萌宠/拟人', cover: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400', hot: false, duration: '01:05', prompt: '多种拟人萌宠组队冒险', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 4 }
+      ],
+      ancient: [
+        { title: '《江湖客栈秘录》', cat: '古风/江湖', cover: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400', hot: true, duration: '01:45', prompt: '古风江湖客栈，猫咪武侠', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 8 },
+        { title: '《仙猫山庄》', cat: '古风/仙侠', cover: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400', hot: false, duration: '01:10', prompt: '仙侠古风猫咪，山庄日常', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 6 }
+      ],
+      mystery: [
+        { title: '《猫探侦柯南宇》', cat: '悬疑/推理', cover: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400', hot: true, duration: '02:03', prompt: '悬疑侦探猫咪，解密案件', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 10 },
+        { title: '《密室之猫》', cat: '悬疑/密室', cover: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400', hot: false, duration: '01:38', prompt: '拟人化猫咪被困密室', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 5 }
+      ],
+      cyber: [
+        { title: '《赛博喵星球》', cat: '赛博/科幻', cover: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400', hot: true, duration: '01:15', prompt: '赛博朋克喵星球猫咪冒险', url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', episodes: 7 },
+        { title: '《机械猫战队》', cat: '赛博/战斗', cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400', hot: false, duration: '00:55', prompt: '机械装甲猫咪战队', url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', episodes: 4 }
+      ]
+    };
+
+    const videoData = [
+      { url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 1 },
+      { url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', episodes: 1 }
+    ];
+
+    // ================================================================
+    // INIT
+    // ================================================================
     document.addEventListener('DOMContentLoaded', () => {
       updateTime();
       setInterval(updateTime, 1000);
       renderWorksList();
+      renderSquareGrid();
       renderShotEditCards();
       renderMaterialPool('characters');
       renderPointsLogs();
       renderOrdersList();
       renderReferrals();
+      renderHomeFeed('hot');
+      startBannerAuto();
+      updateBalanceDisplay();
+      updateDraftHint();
     });
 
+    // ================================================================
+    // UTILITIES
+    // ================================================================
     function updateTime() {
       const now = new Date();
-      const h = String(now.getHours()).padStart(2, '0');
-      const m = String(now.getMinutes()).padStart(2, '0');
-      document.getElementById('currentTime').innerText = `${h}:${m}`;
+      document.getElementById('currentTime').innerText =
+        String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0');
     }
 
     function toggleFrameSize() {
       document.getElementById('deviceFrame').classList.toggle('fullscreen-mode');
     }
 
+    function showToast(msg) {
+      const toast = document.getElementById('toastMsg');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2400);
+    }
+
+    function updateBalanceDisplay() {
+      document.getElementById('displayPoints').innerText = state.points;
+      document.getElementById('displayMemberCredits').innerText = state.memberCredits;
+      document.getElementById('displayPackageCredits').innerText = state.packageCredits;
+      document.getElementById('pointsCenterVal').innerText = state.points;
+      const frozen = document.getElementById('frozenDisplay');
+      if (frozen) frozen.innerText = `冻结中: ${state.frozenPoints} 积分 (两阶段事务保护中)`;
+      const conv = document.getElementById('convertFromPoints');
+      const convTo = document.getElementById('convertToCredits');
+      if (conv) conv.innerText = state.points;
+      if (convTo) convTo.innerText = Math.floor(state.points / 100);
+    }
+
+    function updateDraftHint() {
+      const el = document.getElementById('draftHintText');
+      if (el) {
+        el.innerText = state.storyboardShots.length > 0
+          ? `已有 ${state.storyboardShots.length} 个分镜草稿，点击继续编排`
+          : '暂无草稿，点击开始新建漫剧';
+      }
+    }
+
+    // ================================================================
+    // NAVIGATION
+    // ================================================================
     function switchTab(tabId, title, el) {
       document.querySelectorAll('.subpage-container').forEach(sp => sp.classList.remove('active'));
       document.getElementById('btnBack').style.display = 'none';
-
       document.querySelectorAll('.page-view').forEach(pv => pv.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
-
       document.getElementById('pageTitle').innerText = title;
       document.querySelectorAll('.tab-item').forEach(ti => ti.classList.remove('active'));
       el.classList.add('active');
-
       state.activeTab = tabId;
       state.historyStack = [];
     }
 
     function openSubpage(subId) {
-      const subEl = document.getElementById('sub' + subId.charAt(0).toUpperCase() + subId.slice(1));
+      // Close any active subpages first to prevent stacking issues
+      const capId = 'sub' + subId.charAt(0).toUpperCase() + subId.slice(1);
+      const subEl = document.getElementById(capId);
       if (subEl) {
+        // If already in stack, remove duplicates
+        const existIdx = state.historyStack.indexOf(subId);
+        if (existIdx !== -1) state.historyStack.splice(existIdx, 1);
         subEl.classList.add('active');
         document.getElementById('btnBack').style.display = 'flex';
         state.historyStack.push(subId);
@@ -1604,58 +2149,216 @@
     function goBack() {
       if (state.historyStack.length > 0) {
         const last = state.historyStack.pop();
-        const subEl = document.getElementById('sub' + last.charAt(0).toUpperCase() + last.slice(1));
+        const capId = 'sub' + last.charAt(0).toUpperCase() + last.slice(1);
+        const subEl = document.getElementById(capId);
         if (subEl) subEl.classList.remove('active');
-
         if (state.historyStack.length === 0) {
           document.getElementById('btnBack').style.display = 'none';
         }
       }
     }
 
-    function showToast(msg) {
-      const toast = document.getElementById('toastMsg');
-      toast.innerText = msg;
-      toast.style.display = 'block';
-      setTimeout(() => { toast.style.display = 'none'; }, 2200);
+    // ================================================================
+    // P0 FIX: 三级扣减优先级
+    // ①会员免费额度 → ②次数包 → ③积分 → ④拦截
+    // ================================================================
+    function deductPoints(cost, reason) {
+      if (state.memberCredits > 0) {
+        state.memberCredits -= 1;
+        updateBalanceDisplay();
+        showToast(`优先扣减 1 次会员免费额度 (${reason})`);
+        addPointsLog('consume', `会员额度消耗 · ${reason}`, 0, state.points);
+        return true;
+      }
+      if (state.packageCredits > 0) {
+        state.packageCredits -= 1;
+        updateBalanceDisplay();
+        showToast(`优先扣减 1 次次数包额度 (${reason})`);
+        addPointsLog('consume', `次数包消耗 · ${reason}`, 0, state.points);
+        return true;
+      }
+      if (state.points >= cost) {
+        state.frozenPoints += cost;
+        state.points -= cost;
+        updateBalanceDisplay();
+        addPointsLog('consume', reason, -cost, state.points);
+        showToast(`预扣冻结 ${cost} 积分 (${reason})`);
+        return true;
+      }
+      // P0修复：三选一引导弹层
+      showInsufficientModal(`当前会员额度 ${state.memberCredits} 次、次数包 ${state.packageCredits} 次、积分 ${state.points} 均不足以完成本次生成（需 ${cost} 积分）`);
+      return false;
     }
 
-    function deductPoints(cost, reason) {
-      if (state.credits > 0) {
-        state.credits -= 1;
-        document.getElementById('displayCredits').innerText = state.credits;
-        showToast(`优先扣减 1 次免费生成额度 (${reason})`);
-        return true;
-      } else if (state.points >= cost) {
-        state.points -= cost;
-        state.pointsLogs.unshift({ type: 'consume', title: reason, points: -cost, date: '刚刚' });
-        document.getElementById('displayPoints').innerText = state.points;
-        document.getElementById('pointsCenterVal').innerText = state.points;
-        renderPointsLogs();
-        showToast(`预扣冻结 ${cost} 积分成功 (${reason})`);
-        return true;
+    function addPointsLog(type, title, pts, balance) {
+      const now = new Date();
+      const dateStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+      state.pointsLogs.unshift({ type, title, points: pts, balance, date: dateStr });
+      renderPointsLogs();
+    }
+
+    // ================================================================
+    // INSUFFICIENT MODAL (P0)
+    // ================================================================
+    function showInsufficientModal(desc) {
+      document.getElementById('insuffDesc').innerText = desc || '当前会员额度、次数包、积分均不足，无法完成本次生成';
+      document.getElementById('insufficientModal').classList.add('active');
+    }
+
+    function closeInsufficientModal() {
+      document.getElementById('insufficientModal').classList.remove('active');
+    }
+
+    // ================================================================
+    // BANNER CAROUSEL (P2)
+    // ================================================================
+    function startBannerAuto() {
+      state.bannerTimer = setInterval(() => {
+        state.bannerIndex = (state.bannerIndex + 1) % 3;
+        applyBannerSlide();
+      }, 3500);
+    }
+
+    function goToSlide(idx) {
+      clearInterval(state.bannerTimer);
+      state.bannerIndex = idx;
+      applyBannerSlide();
+      startBannerAuto();
+    }
+
+    function applyBannerSlide() {
+      const slides = document.getElementById('bannerSlides');
+      if (slides) slides.style.transform = `translateX(-${state.bannerIndex * 100}%)`;
+      document.querySelectorAll('.banner-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === state.bannerIndex);
+      });
+    }
+
+    // ================================================================
+    // HOME FEED (P2: 分类tab联动)
+    // ================================================================
+    function filterHomeFeed(btn, category) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHomeFeed(category);
+    }
+
+    function renderHomeFeed(category) {
+      const grid = document.getElementById('homeWaterfallGrid');
+      if (!grid) return;
+      const items = homeFeedData[category] || homeFeedData.hot;
+      grid.innerHTML = items.map(item => `
+        <div class="waterfall-card" onclick="playDemoVideo('${item.title}', '${item.url}', ${item.episodes})">
+          <div class="cover-box">
+            <img src="${item.cover}" class="cover-img" alt="cover">
+            ${item.hot ? '<div class="badge-hot">热播</div>' : ''}
+            <div class="play-btn">▶</div>
+            <div class="badge-ai">AI 生成</div>
+            <div class="duration-tag">${item.duration}</div>
+          </div>
+          <div class="card-info">
+            <div class="title">${item.title}</div>
+            <div class="meta">
+              <span>${item.cat}</span>
+              <button class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('${item.prompt}')">做同款</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ================================================================
+    // WORKS TAB: 我的作品 vs 广场 (P1)
+    // ================================================================
+    function switchWorksTab(btn, tab) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('myWorksPanel').style.display = tab === 'mine' ? 'block' : 'none';
+      document.getElementById('squarePanel').style.display = tab === 'square' ? 'block' : 'none';
+    }
+
+    function renderSquareGrid() {
+      const grid = document.getElementById('squareGrid');
+      if (!grid) return;
+      // 公开已审核作品 + 其他用户作品
+      const squareItems = [
+        { title: '《功夫猫大侠》', cat: '古风', cover: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400', likes: '2.3k', views: '18k', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 3 },
+        { title: '《赛博喵球》', cat: '赛博', cover: 'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400', likes: '1.1k', views: '9k', url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-robotic-arm-in-a-cyberpunk-laboratory-43553-large.mp4', episodes: 5 },
+        { title: '《萌宠喵侦探》', cat: '悬疑', cover: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400', likes: '876', views: '7.2k', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 8 },
+        { title: '《仙猫游学记》', cat: '古风', cover: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400', likes: '4.5k', views: '33k', url: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4', episodes: 12 }
+      ];
+      grid.innerHTML = squareItems.map(item => `
+        <div class="waterfall-card" onclick="playDemoVideo('${item.title}','${item.url}',${item.episodes})">
+          <div class="cover-box">
+            <img src="${item.cover}" class="cover-img" alt="">
+            <div class="play-btn">▶</div>
+            <div class="badge-ai">AI 生成</div>
+          </div>
+          <div class="card-info">
+            <div class="title">${item.title}</div>
+            <div class="meta">
+              <div style="display:flex; gap:6px;">
+                <span class="square-stat">❤️ ${item.likes}</span>
+                <span class="square-stat">👁 ${item.views}</span>
+              </div>
+              <button class="btn-do-same" onclick="event.stopPropagation(); doSamePrompt('${item.title}')">做同款</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ================================================================
+    // DRAFT LOGIC (P2: 草稿判断)
+    // ================================================================
+    function openDraftOrContinue() {
+      if (state.storyboardShots.length > 0) {
+        showToast(`已载入草稿：${state.storyboardShots.length} 个分镜`);
+        openSubpage('storyboardEditor');
       } else {
-        showToast('额度与积分不足！请先充值积分或购买VIP');
-        openSubpage('pointsCenter');
-        return false;
+        showToast('暂无草稿，已跳转剧本创作');
+        openSubpage('scriptCreation');
       }
     }
 
-    function openDraftOrContinue() {
-      showToast('已成功载入未完成的猫咪分镜草稿！');
-      openSubpage('storyboardEditor');
-    }
-
+    // ================================================================
+    // SCRIPT CREATION
+    // ================================================================
     function saveScriptDraft() {
       showToast('剧本已保存至草稿箱！随时可在首页继续创作');
     }
 
-    // Render Professional Realistic Storyboard Script Output
+    function fillPresetPrompt() {
+      const presets = [
+        "功夫猫大厨在汴京客栈做红烧肉，遇到黑猫刺客偷秘方",
+        "拟人化白猫程序员深夜加班，发现电脑代码里走出一个机械小耗子",
+        "霸道总裁橘猫少爷与软萌狐狸小师妹在仙侠门派的搞笑日常"
+      ];
+      document.getElementById('scriptPrompt').value = presets[Math.floor(Math.random()*presets.length)];
+    }
+
+    // P2: 集数选择联动实际生成分镜数量
+    function selectEpisodes(btn, count) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.selectedEpisodeCount = count;
+    }
+
     function startGenerateScript() {
       if (!deductPoints(10, 'LLM分镜剧本生成')) return;
-
-      showToast('AI 正在按专业分镜语言生成猫咪剧本 (含景别、动作、对白、Prompt)...');
+      showToast(`AI 正在按专业分镜语言生成 ${state.selectedEpisodeCount} 集猫咪剧本...`);
       setTimeout(() => {
+        // P2: 根据集数调整生成的shots数量
+        const count = state.selectedEpisodeCount;
+        const baseShots = state.storyboardShots.slice(0, Math.min(count, state.storyboardShots.length));
+        // 如果需要更多，复制末尾
+        while (baseShots.length < count) {
+          const copy = { ...state.storyboardShots[state.storyboardShots.length - 1] };
+          copy.id = Date.now() + baseShots.length;
+          copy.no = baseShots.length + 1;
+          baseShots.push(copy);
+        }
+        state.storyboardShots = baseShots.map((s, i) => ({ ...s, no: i + 1 }));
         document.getElementById('scriptOutputArea').style.display = 'block';
         const list = document.getElementById('storyboardShotsList');
         list.innerHTML = state.storyboardShots.map(shot => `
@@ -1669,13 +2372,14 @@
               <div class="shot-field-row"><label>🎭 猫咪动作表情:</label> ${shot.action}</div>
               <div class="shot-field-row"><label>🗣️ 对白旁白:</label> ${shot.dialogue}</div>
               <div class="shot-field-row" style="margin-top:6px;">
-                <label style="font-size:11px; color:var(--primary);">✨ AI 生图 Prompt 关键词:</label>
+                <label style="font-size:11px; color:var(--primary);">✨ AI Prompt:</label>
                 <div class="shot-prompt-code">${shot.prompt}</div>
               </div>
             </div>
           </div>
         `).join('');
-      }, 1000);
+        showToast(`已生成 ${count} 个结构化分镜剧本！`);
+      }, 1200);
     }
 
     function importToEditor() {
@@ -1684,10 +2388,15 @@
       openSubpage('storyboardEditor');
     }
 
-    // Storyboard Shot Editor Cards: Display Scene Concept Image + AI Shot Improvement Button
+    // ================================================================
+    // STORYBOARD EDITOR (P0: 角色选择器 + 生成方式切换)
+    // ================================================================
     function renderShotEditCards() {
       const list = document.getElementById('shotEditCardsList');
       if (!list) return;
+      const label = document.getElementById('shotCountLabel');
+      if (label) label.innerText = state.storyboardShots.length;
+
       list.innerHTML = state.storyboardShots.map((shot, idx) => `
         <div style="background:white; border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -1699,50 +2408,91 @@
             </div>
           </div>
 
-          <!-- Scene Concept Image Preview & Actions -->
+          <!-- Scene image + camera control -->
           <div style="display:flex; gap:10px; margin-bottom:8px;">
-            <div style="position:relative; width:90px; height:75px; border-radius:6px; overflow:hidden; background:#000;">
+            <div style="position:relative; width:90px; height:75px; border-radius:6px; overflow:hidden; background:#000; flex-shrink:0;">
               <img src="${shot.img}" style="width:100%; height:100%; object-fit:cover;">
               <span style="position:absolute; bottom:2px; left:2px; background:rgba(0,0,0,0.6); color:white; font-size:8px; padding:1px 3px; border-radius:2px;">分镜场景图</span>
+              ${shot.ai_marked ? '<span style="position:absolute; top:2px; right:2px; background:rgba(124,58,237,0.8); color:white; font-size:8px; padding:1px 3px; border-radius:2px;">AI</span>' : ''}
             </div>
             <div style="flex:1;">
-              <div style="font-size:11px; color:var(--text-sub);">景别手法: 
-                <select class="form-select" style="padding:2px 4px; font-size:11px; display:inline-block; width:auto;" onchange="updateShotCamera(${idx}, this.value)">
-                  <option ${shot.camera.includes('推')?'selected':''}>推镜头 · 特写</option>
-                  <option ${shot.camera.includes('中景')?'selected':''}>中景 · 突发动作</option>
-                  <option ${shot.camera.includes('全景')?'selected':''}>全景 · 高潮对峙</option>
-                  <option ${shot.camera.includes('技能')||shot.camera.includes('爆发')?'selected':''}>特写 · 技能爆发</option>
-                  <option ${shot.camera.includes('远景')?'selected':''}>远景 · 胜利收尾</option>
+              <div style="font-size:11px; color:var(--text-sub); margin-bottom:4px;">景别手法:
+                <select class="form-select" style="padding:2px 4px; font-size:11px; display:inline-block; width:auto; margin-left:4px;" onchange="updateShotCamera(${idx}, this.value)">
+                  <option ${shot.camera.includes('推') ? 'selected' : ''}>推镜头 · 特写</option>
+                  <option ${shot.camera.includes('中景') ? 'selected' : ''}>中景 · 突发动作</option>
+                  <option ${shot.camera.includes('全景') ? 'selected' : ''}>全景 · 高潮对峙</option>
+                  <option ${shot.camera.includes('技能') || shot.camera.includes('爆发') ? 'selected' : ''}>特写 · 技能爆发</option>
+                  <option ${shot.camera.includes('远景') ? 'selected' : ''}>远景 · 胜利收尾</option>
                 </select>
               </div>
-              <input type="text" class="form-input" style="padding:4px; font-size:11px; margin-top:4px;" value="${shot.dialogue}" onchange="updateShotDialogue(${idx}, this.value)">
+              <!-- P0: 画面生成方式切换 -->
+              <div style="font-size:11px; color:var(--text-sub); margin-bottom:2px;">画面生成方式:</div>
+              <div class="mode-toggle">
+                <button class="mode-btn ${shot.generationMode === 'text2img' ? 'active' : ''}" onclick="updateShotMode(${idx}, 'text2img', this)">🖼 文生图</button>
+                <button class="mode-btn vip-mode ${shot.generationMode === 'text2video' ? 'active' : ''}" onclick="updateShotMode(${idx}, 'text2video', this)">🎬 直接T2V ${state.isVip ? '' : '(VIP)'}</button>
+              </div>
             </div>
           </div>
 
-          <div style="font-size:10px; color:#6B7280; background:#F8FAFC; padding:4px 6px; border-radius:4px; margin-bottom:6px;">
+          <!-- P0: 角色选择器（关联素材库ref图） -->
+          <div style="font-size:11px; color:var(--text-sub); margin-bottom:4px;">关联角色 (ref图参考，保跨镜一致性):</div>
+          <div class="char-ref-row">
+            <div class="char-ref-chip" onclick="selectShotRef(${idx}, null)" title="无角色">
+              <div style="width:40px; height:40px; border-radius:50%; background:#F3F4F6; display:flex; align-items:center; justify-content:center; font-size:18px; border:2px solid ${!shot.refCharacterId ? 'var(--primary)' : 'transparent'};">—</div>
+              <div class="char-name">无</div>
+            </div>
+            ${state.materials.characters.map(ch => `
+              <div class="char-ref-chip ${shot.refCharacterId === ch.id ? 'selected' : ''}" onclick="selectShotRef(${idx}, '${ch.id}')" title="${ch.name}">
+                <img src="${ch.img}" alt="${ch.name}">
+                <div class="char-name">${ch.name}</div>
+              </div>
+            `).join('')}
+          </div>
+          ${shot.refCharacterId ? `<div style="font-size:10px; color:var(--primary); margin-top:2px; font-weight:600;">🔒 已携带「${state.materials.characters.find(c=>c.id===shot.refCharacterId)?.name || ''}」ref图，跨镜形象一致</div>` : ''}
+
+          <input type="text" class="form-input" style="padding:4px; font-size:11px; margin-top:6px;" value="${shot.dialogue}" onchange="updateShotDialogue(${idx}, this.value)">
+
+          <div style="font-size:10px; color:#6B7280; background:#F8FAFC; padding:4px 6px; border-radius:4px; margin:6px 0;">
             🎬 <b>画面动作:</b> ${shot.action}
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; gap:6px;">
-              <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 8px; border-radius:10px; font-size:10px; font-weight:600; cursor:pointer;" onclick="openShotRefineModal(${idx})">✨ AI 智能改进分镜</button>
-            </div>
-            <button style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:10px; font-size:10px; cursor:pointer;" onclick="regenSingleShot(${idx})">🔄 重新生成场景图 (10分)</button>
+            <button style="background:var(--primary-bg); color:var(--primary); border:none; padding:4px 8px; border-radius:10px; font-size:10px; font-weight:600; cursor:pointer;" onclick="openShotRefineModal(${idx})">✨ AI 智能改进</button>
+            <button style="background:var(--primary); color:white; border:none; padding:4px 8px; border-radius:10px; font-size:10px; cursor:pointer;" onclick="regenSingleShot(${idx})">🔄 重生成 (10分)</button>
           </div>
         </div>
       `).join('');
     }
 
+    function selectShotRef(idx, charId) {
+      const char = state.materials.characters.find(c => c.id === charId);
+      state.storyboardShots[idx].refCharacterId = charId;
+      state.storyboardShots[idx].refCharacterImg = char ? char.img : null;
+      renderShotEditCards();
+      showToast(char ? `镜头${idx+1}已关联角色「${char.name}」ref图，跨镜一致性已启用` : `镜头${idx+1}已取消角色关联`);
+    }
+
+    function updateShotMode(idx, mode, btn) {
+      if (mode === 'text2video' && !state.isVip) {
+        showToast('直接文生视频为VIP专属能力，请先开通会员');
+        return;
+      }
+      state.storyboardShots[idx].generationMode = mode;
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      showToast(`镜头${idx+1}已切换为「${mode === 'text2img' ? '文生图' : '直接文生视频'}」`);
+    }
+
     function moveShot(idx, dir) {
       if (idx + dir < 0 || idx + dir >= state.storyboardShots.length) return;
-      const temp = state.storyboardShots[idx];
-      state.storyboardShots[idx] = state.storyboardShots[idx + dir];
-      state.storyboardShots[idx + dir] = temp;
+      [state.storyboardShots[idx], state.storyboardShots[idx + dir]] = [state.storyboardShots[idx + dir], state.storyboardShots[idx]];
       state.storyboardShots.forEach((s, i) => s.no = i + 1);
       renderShotEditCards();
     }
 
     function deleteShot(idx) {
+      if (state.storyboardShots.length <= 1) { showToast('至少保留一个分镜'); return; }
       state.storyboardShots.splice(idx, 1);
       state.storyboardShots.forEach((s, i) => s.no = i + 1);
       renderShotEditCards();
@@ -1764,33 +2514,49 @@
 
     function addNewShot() {
       const nextNo = state.storyboardShots.length + 1;
+      if (nextNo > 15) { showToast('最多支持 15 个分镜'); return; }
       state.storyboardShots.push({
-        id: Date.now(),
-        no: nextNo,
-        camera: '中景 · 突发动作',
+        id: Date.now(), no: nextNo, camera: '中景 · 突发动作',
         scene: '客栈庭院深处，风起云涌。',
         action: '四足拟人化【猫大厨】一跃飞起，双爪在空中划出火光亮痕。',
         dialogue: '猫大厨：「看我这一招绝杀颠锅！」',
-        prompt: 'anthropomorphic cat chef jumping in mid-air, wok fire effects, martial arts pose, 8k resolution render',
+        prompt: 'anthropomorphic cat chef jumping, wok fire, martial arts, 8k',
         role: '猫大厨',
-        mode: '文生图(默认)',
+        refCharacterId: 'c1',
+        refCharacterImg: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+        seed: Math.floor(Math.random() * 9999),
+        generationMode: 'text2img',
+        generationStatus: 'pending',
+        retryCount: 0,
+        ai_marked: true,
         img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=400'
       });
       renderShotEditCards();
-      showToast(`已新增专业分镜场景图 ${nextNo}`);
+      showToast(`已新增分镜 ${nextNo}`);
     }
 
     function regenSingleShot(idx) {
       if (!deductPoints(10, `重生成镜头 ${idx+1} 场景图`)) return;
-      showToast(`镜头 ${idx+1} 场景图重新生成中...`);
+      const shot = state.storyboardShots[idx];
+      shot.generationStatus = 'generating';
+      showToast(`镜头 ${idx+1} 场景图重新生成中... (携带ref图: ${shot.refCharacterId || '无'})`);
       setTimeout(() => {
-        state.storyboardShots[idx].img = 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400';
+        const imgs = [
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400',
+          'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400',
+          'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400'
+        ];
+        shot.img = imgs[Math.floor(Math.random() * imgs.length)];
+        shot.seed = Math.floor(Math.random() * 9999);
+        shot.generationStatus = 'done';
         renderShotEditCards();
         showToast(`镜头 ${idx+1} 场景图重生成完毕！`);
-      }, 1000);
+      }, 1200);
     }
 
-    // AI Shot Refinement Drawer Logic
+    // ================================================================
+    // AI SHOT REFINE
+    // ================================================================
     function openShotRefineModal(idx) {
       state.currentEditingShotIndex = idx;
       document.getElementById('refineShotTitle').innerText = `✨ AI 智能改进镜头 ${idx + 1}`;
@@ -1804,7 +2570,6 @@
     function applyRefinement(typeIndex) {
       const idx = state.currentEditingShotIndex;
       closeShotRefineModal();
-      showToast('AI 已成功改进分镜画面与运镜参数！场景图重新生成中...');
       setTimeout(() => {
         if (typeIndex === 0) {
           state.storyboardShots[idx].camera = '推镜头 · 大特写 (黄金分割)';
@@ -1812,155 +2577,293 @@
         } else if (typeIndex === 1) {
           state.storyboardShots[idx].action = '猫大厨胡须震颤，眼神闪过金芒，情绪张力爆棚！';
           state.storyboardShots[idx].dialogue = '猫大厨（咆哮拟声）：「这一招颠锅，包含我二十载厨心！」';
-        } else if (typeIndex === 2) {
+        } else {
           state.storyboardShots[idx].scene += ' 烟雨弥漫，泼墨古风质感。';
         }
         renderShotEditCards();
         showToast(`镜头 ${idx + 1} AI 改进已成功应用！`);
-      }, 1000);
+      }, 600);
     }
 
-    // 360 Degree Viewport Matrix Generator in Material Library
-    function uploadCustomCatImg() {
-      showToast('已从本地上传猫咪源图：[橘猫少爷.jpg]');
-      document.getElementById('charNameInput').value = '自选猫咪少爷';
-    }
-
-    function generate360CatMatrix() {
-      const name = document.getElementById('charNameInput').value || '拟人化猫咪';
-      showToast('AI 正在产出猫咪角色的前后左右/俯视仰视 360° 全视角三视图...');
-      
-      document.getElementById('matrixArea').style.display = 'block';
-      const grid = document.getElementById('angleMatrixGrid');
-      
-      grid.innerHTML = `
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200">
-          <div class="angle-label">📸 正面 (Front)</div>
-        </div>
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200">
-          <div class="angle-label">📸 背面 (Back)</div>
-        </div>
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200">
-          <div class="angle-label">📸 左侧面 (Left)</div>
-        </div>
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200">
-          <div class="angle-label">📸 右侧面 (Right)</div>
-        </div>
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200">
-          <div class="angle-label">📸 俯视 (Top-down)</div>
-        </div>
-        <div class="angle-matrix-card">
-          <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200">
-          <div class="angle-label">📸 仰视 (Bottom-up)</div>
-        </div>
-      `;
-    }
-
-    function confirmAngleMatrixLock() {
-      const name = document.getElementById('charNameInput').value || '拟人猫咪主角';
-      state.materials.characters.unshift({
-        id: 'c' + Date.now(),
-        name: name + ' (360°视角锁定)',
-        species: '拟人猫咪',
-        isRef: true,
-        img: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200'
-      });
-      renderMaterialPool('characters');
-      showToast(`已把 ${name} 的 360° 视角三视图锁死入库！保证后续 AI 视频 100% 形象一致`);
-      document.getElementById('matrixArea').style.display = 'none';
-    }
-
-    // Material Library Tabs
-    function switchMaterialTab(btn, cat) {
-      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderMaterialPool(cat);
-    }
-
-    function renderMaterialPool(cat) {
-      const container = document.getElementById('characterMaterialPool');
-      if (!container) return;
-      const items = state.materials[cat] || [];
-      container.innerHTML = items.map(item => `
-        <div style="background:white; border-radius:var(--radius-sm); padding:8px; position:relative; box-shadow:var(--shadow-sm);">
-          <img src="${item.img}" style="width:100%; height:110px; object-fit:cover; border-radius:6px;">
-          <div style="font-size:12px; font-weight:700; margin-top:4px;">${item.name}</div>
-          ${item.isRef ? '<span style="position:absolute; top:12px; right:12px; background:var(--primary); color:white; font-size:9px; padding:2px 6px; border-radius:4px;">360°视角锁定</span>' : ''}
-        </div>
-      `).join('');
-    }
-
-    function fillPresetPrompt() {
-      const presets = [
-        "功夫猫大厨在汴京客栈做红烧肉，遇到黑猫刺客偷秘方",
-        "拟人化白猫程序员深夜加班，发现电脑代码里走出一个机械小耗子",
-        "霸道总裁橘猫少爷与软萌狐狸小师妹在仙侠门派的搞笑日常生活"
-      ];
-      document.getElementById('scriptPrompt').value = presets[Math.floor(Math.random()*presets.length)];
-    }
-
-    function selectEpisodes(btn, count) {
-      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-    }
-
+    // ================================================================
+    // STYLE SELECTION → SYNTHESIS COST CONFIRM (P1)
+    // ================================================================
     function setStyle(btn, styleName) {
       btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       showToast(`视觉风格已切换为：${styleName}`);
     }
 
-    function startSynthesisPipeline() {
-      if (!deductPoints(60, '漫剧整剧合成')) return;
+    function showSynthesisCostConfirm() {
+      // 动态计算消耗
+      const shots = state.storyboardShots;
+      const t2imgCount = shots.filter(s => s.generationMode === 'text2img').length;
+      const t2vCount = shots.filter(s => s.generationMode === 'text2video').length;
+      const ttsLines = shots.reduce((acc, s) => acc + (s.dialogue ? 1 : 0), 0);
+      const t2imgCost = t2imgCount * 10;   // 文生图 10积分/镜
+      const i2vCost = t2imgCount * 20;     // 图生视频 20积分/镜
+      const t2vDirectCost = t2vCount * 20; // 直接文生视频 20积分/镜
+      const ttsCost = Math.floor(ttsLines * 5); // TTS 5积分/条
+      const total = t2imgCost + i2vCost + t2vDirectCost + ttsCost;
 
-      document.getElementById('synthesisModal').classList.add('active');
-      setTimeout(() => {
-        document.getElementById('synthesisModal').classList.remove('active');
-        state.works.unshift({
-          id: 'w' + Date.now(),
-          title: '最新AI猫咪漫剧：猫大厨传奇',
-          type: '漫剧视频',
-          duration: '01:20',
-          status: '已完成',
-          cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400',
-          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4',
-          cost: '60积分'
-        });
-        renderWorksList();
-        playDemoVideo('最新AI猫咪漫剧：猫大厨传奇', 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4');
-      }, 3000);
+      document.getElementById('costBreakdownContent').innerHTML = `
+        <div class="cost-row"><span class="cost-label">文生图 (${t2imgCount}镜 × 10积分)</span><span>${t2imgCost} 积分</span></div>
+        <div class="cost-row"><span class="cost-label">图生视频 (${t2imgCount}镜 × 20积分)</span><span>${i2vCost} 积分</span></div>
+        ${t2vCount > 0 ? `<div class="cost-row"><span class="cost-label">直接文生视频 (${t2vCount}镜 × 20积分)</span><span>${t2vDirectCost} 积分</span></div>` : ''}
+        <div class="cost-row"><span class="cost-label">TTS配音 (${ttsLines}条 × 5积分)</span><span>${ttsCost} 积分</span></div>
+        <div class="cost-row total"><span>本次合成预计消耗</span><span style="color:var(--primary);">${total} 积分</span></div>
+        <div style="margin-top:6px; font-size:10px; color:var(--text-muted);">当前余额: ${state.points}积分 · 会员额度: ${state.memberCredits}次 · 次数包: ${state.packageCredits}次</div>
+      `;
+      // store total for actual deduction
+      window._synthTotalCost = total;
+      document.getElementById('synthCostConfirmModal').classList.add('active');
     }
 
-    function startSingleVideoGen(typeTitle) {
-      if (!deductPoints(20, typeTitle)) return;
+    function closeSynthCostConfirm() {
+      document.getElementById('synthCostConfirmModal').classList.remove('active');
+    }
+
+    // ================================================================
+    // SYNTHESIS PIPELINE (P1: 失败状态 + 重试)
+    // ================================================================
+    function startSynthesisPipeline() {
+      const cost = window._synthTotalCost || 60;
+      if (!deductPoints(cost, '漫剧整剧合成')) return;
+
+      const modal = document.getElementById('synthesisModal');
+      modal.classList.add('active');
+      state.currentSynthFailedShots = [];
+      document.getElementById('failedShotsArea').style.display = 'none';
+
+      // Reset stages
+      ['synthStage1','synthStage2','synthStage3','synthStage4'].forEach(id => {
+        const el = document.getElementById(id);
+        el.className = 'stage-item';
+        el.querySelector('.stage-icon').innerHTML = id.slice(-1);
+      });
+      ['synthBar1','synthBar2','synthBar3','synthBar4'].forEach(id => {
+        document.getElementById(id).style.width = '0%';
+      });
+
+      const statusText = document.getElementById('synthStatusText');
+      statusText.innerText = '任务已放入 BullMQ 异步队列...';
+
+      // Simulate stage progression
+      const stages = [
+        { stageId: 'synthStage1', barId: 'synthBar1', label: '① 剧本解构解包 完成', duration: 800 },
+        { stageId: 'synthStage2', barId: 'synthBar2', label: '② 逐镜文生图+一致性校验 进行中...', duration: 1500 },
+        { stageId: 'synthStage3', barId: 'synthBar3', label: '③ TTS多角色配音 进行中...', duration: 1200 },
+        { stageId: 'synthStage4', barId: 'synthBar4', label: '④ ffmpeg拼接+水印烧录 进行中...', duration: 1800 }
+      ];
+
+      let delay = 0;
+      stages.forEach((stage, i) => {
+        setTimeout(() => {
+          // Mark previous as done
+          if (i > 0) {
+            document.getElementById(stages[i-1].stageId).className = 'stage-item done';
+            document.getElementById(stages[i-1].stageId).querySelector('.stage-icon').innerHTML = '✓';
+            document.getElementById(stages[i-1].barId).style.width = '100%';
+          }
+          // Current as active
+          document.getElementById(stage.stageId).className = 'stage-item active';
+          document.getElementById(stage.stageId).querySelector('.stage-icon').innerHTML = '<div class="spinner"></div>';
+          statusText.innerText = stage.label;
+
+          // Animate progress bar
+          let pct = 0;
+          const barInterval = setInterval(() => {
+            pct += 5;
+            document.getElementById(stage.barId).style.width = Math.min(pct, 90) + '%';
+            if (pct >= 90) clearInterval(barInterval);
+          }, stage.duration / 20);
+        }, delay);
+        delay += stage.duration;
+      });
+
+      // Final: Simulate possible failure on shot 2 (random)
+      setTimeout(() => {
+        const randomFail = Math.random() > 0.6; // 40% chance of one shot failure
+        document.getElementById(stages[stages.length-1].stageId).className = 'stage-item done';
+        document.getElementById(stages[stages.length-1].stageId).querySelector('.stage-icon').innerHTML = '✓';
+        document.getElementById(stages[stages.length-1].barId).style.width = '100%';
+
+        if (randomFail) {
+          // P1: 失败重试机制
+          state.currentSynthFailedShots = [2]; // 镜头2失败（已重试2次）
+          document.getElementById('failedShotsArea').style.display = 'block';
+          const fList = document.getElementById('failedShotsList');
+          fList.innerHTML = state.currentSynthFailedShots.map(n => `
+            <div class="failed-shot-row">
+              <span>镜头 ${n}：已自动重试 2 次，生成失败</span>
+              <button class="retry-btn" onclick="retrySingleFailed(${n})">单独重试</button>
+            </div>
+          `).join('');
+          statusText.innerText = '合成完成（有1个镜头失败，其余成片正常）';
+          showToast('漫剧合成完成！有1个镜头失败，请查看详情');
+          // 添加作品（带失败标记）
+          addCompletedWork(true);
+        } else {
+          statusText.innerText = '✅ 全部分镜合成成功！AI水印已烧录';
+          setTimeout(() => {
+            modal.classList.remove('active');
+            addCompletedWork(false);
+          }, 1500);
+        }
+      }, delay);
+    }
+
+    function addCompletedWork(hasFailed) {
+      state.works.unshift({
+        id: 'w' + Date.now(),
+        title: '最新AI猫咪漫剧：猫大厨传奇',
+        type: '漫剧视频',
+        duration: '01:20',
+        status: hasFailed ? '部分失败' : '已完成',
+        cover: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400',
+        videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4',
+        cost: `${window._synthTotalCost || 60}积分`,
+        ai_marked: true,
+        visibility: 'private',
+        reviewStatus: 'pending',
+        episodes: state.storyboardShots.length
+      });
+      renderWorksList();
+      if (!hasFailed) {
+        playDemoVideo('最新AI猫咪漫剧：猫大厨传奇',
+          'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4',
+          state.storyboardShots.length);
+      }
+      updateDraftHint();
+    }
+
+    function retrySingleFailed(shotNo) {
+      showToast(`镜头 ${shotNo} 正在独立重试...`);
+      setTimeout(() => {
+        state.currentSynthFailedShots = state.currentSynthFailedShots.filter(n => n !== shotNo);
+        document.getElementById('failedShotsList').innerHTML = state.currentSynthFailedShots.map(n => `
+          <div class="failed-shot-row">
+            <span>镜头 ${n}：已自动重试 2 次，生成失败</span>
+            <button class="retry-btn" onclick="retrySingleFailed(${n})">单独重试</button>
+          </div>
+        `).join('');
+        if (state.currentSynthFailedShots.length === 0) {
+          document.getElementById('failedShotsArea').style.display = 'none';
+          document.getElementById('synthStatusText').innerText = '✅ 全部镜头合成成功！';
+          setTimeout(() => document.getElementById('synthesisModal').classList.remove('active'), 1200);
+          showToast('镜头重试成功！漫剧已完整合成');
+        } else {
+          showToast(`镜头 ${shotNo} 重试成功！`);
+        }
+      }, 1500);
+    }
+
+    function retryAllFailed() {
+      showToast('正在整体重新合成...');
+      setTimeout(() => {
+        state.currentSynthFailedShots = [];
+        document.getElementById('failedShotsArea').style.display = 'none';
+        document.getElementById('synthStatusText').innerText = '✅ 整体重试合成成功！AI水印已烧录';
+        setTimeout(() => document.getElementById('synthesisModal').classList.remove('active'), 1200);
+      }, 2000);
+    }
+
+    // ================================================================
+    // T2V / I2V - 生成 + 结果页 (P1)
+    // ================================================================
+    function startSingleVideoGen(typeTitle, cost) {
+      if (!deductPoints(cost, typeTitle)) return;
       showToast('BullMQ video-generate 队列排队中...');
       setTimeout(() => {
-        showToast('视频生成成功！已存入作品库');
-        state.works.unshift({
+        const newWork = {
           id: 'w' + Date.now(),
           title: typeTitle + '作品',
           type: 'AI视频',
           duration: '00:05',
           status: '已完成',
           cover: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400',
-          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-swimming-jellyfish-41559-large.mp4',
-          cost: '20积分'
-        });
+          videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-curious-cat-looking-around-42862-large.mp4',
+          cost: cost + '积分',
+          ai_marked: true,
+          visibility: 'private',
+          reviewStatus: 'none',
+          episodes: 1
+        };
+        state.works.unshift(newWork);
         renderWorksList();
-        goBack();
+
+        // P1: 进入结果页
+        state.currentVideoResultData = newWork;
+        document.getElementById('videoResultTitle').innerText = typeTitle;
+        document.getElementById('resultVideoTitle').innerText = newWork.title;
+        document.getElementById('resultVideoMeta').innerText = `时长: 5秒 | 消耗: ${cost}积分 | ai_marked: ✅`;
+        document.getElementById('resultVisibilityBadge').innerText = '🔒 私密';
+        const rv = document.getElementById('resultVideoEl');
+        rv.src = newWork.videoUrl;
+        openSubpage('videoResult');
       }, 1500);
     }
 
-    function playDemoVideo(title, url) {
+    // P1: 结果页操作
+    function resultSetPublic() {
+      if (!state.currentVideoResultData) return;
+      state.currentVideoResultData.visibility = 'public';
+      state.currentVideoResultData.reviewStatus = 'reviewing';
+      document.getElementById('resultVisibilityBadge').innerText = '⏳ 审核中';
+      showToast('已提交公开申请，审核通过后将显示在作品广场（ai_marked=1已验证）');
+    }
+
+    function resultSaveMaterial() {
+      if (!state.currentVideoResultData) return;
+      showToast('已将生成视频存为素材库资产，可用于分镜引用');
+    }
+
+    function resultUseInStoryboard() {
+      if (!state.currentVideoResultData) return;
+      showToast('已将此视频关联到分镜编辑，可在分镜中选用');
+      goBack();
+    }
+
+    function resultDownload() {
+      showToast('视频已缓存到本地（演示：实际调用 wx.saveVideoToPhotosAlbum）');
+    }
+
+    function resultRegenerate() {
+      if (!state.currentVideoResultData) return;
+      goBack();
+      showToast('已返回生成页，可修改参数后重新生成');
+    }
+
+    // ================================================================
+    // VIDEO PLAYER (P2: 选集真实交互)
+    // ================================================================
+    function playDemoVideo(title, url, totalEpisodes) {
       document.getElementById('playerTitle').innerText = title;
       const vid = document.getElementById('htmlVideoElement');
       vid.src = url;
+      state.currentPlayerVideoData = { title, url, totalEpisodes: totalEpisodes || 1, currentEp: 1 };
+
+      // Render episode chips
+      const epSel = document.getElementById('episodeSelector');
+      epSel.innerHTML = Array.from({ length: totalEpisodes || 1 }, (_, i) => `
+        <div class="ep-chip ${i === 0 ? 'active' : ''}" onclick="switchEpisode(${i+1}, this)">第${i+1}集</div>
+      `).join('');
+
+      document.getElementById('playerEpInfo').innerText = `第 1 集 (共 ${totalEpisodes || 1} 集)`;
       document.getElementById('videoPlayerModal').classList.add('active');
+      vid.play().catch(() => {});
+    }
+
+    function switchEpisode(ep, el) {
+      el.parentElement.querySelectorAll('.ep-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      state.currentPlayerVideoData.currentEp = ep;
+      document.getElementById('playerEpInfo').innerText = `第 ${ep} 集 (共 ${state.currentPlayerVideoData.totalEpisodes} 集)`;
+      // 在Demo中同一视频URL，实际场景会切换不同URL
+      showToast(`已切换至第 ${ep} 集`);
+      const vid = document.getElementById('htmlVideoElement');
+      vid.currentTime = 0;
+      vid.play().catch(() => {});
     }
 
     function closeVideoPlayer() {
@@ -1969,17 +2872,33 @@
       document.getElementById('videoPlayerModal').classList.remove('active');
     }
 
+    function doSameFromPlayer() {
+      if (state.currentPlayerVideoData) {
+        showToast('已复制该漫剧结构与Prompt，开始创作同款！');
+        closeVideoPlayer();
+        openSubpage('scriptCreation');
+      }
+    }
+
     function doSamePrompt(promptText) {
       showToast('已复制「做同款」提示词与参数配置！');
       openSubpage('t2vDrawer');
       document.getElementById('t2vPromptInput').value = promptText;
     }
 
-    // Works Gallery
+    // ================================================================
+    // WORKS LIST
+    // ================================================================
     function filterWorks(btn, type) {
       btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       renderWorksList(type);
+    }
+
+    function filterOrders(btn, status) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderOrdersList(status);
     }
 
     function renderWorksList(filter = 'all') {
@@ -1997,15 +2916,16 @@
 
       container.innerHTML = list.map(item => `
         <div style="background:white; border-radius:var(--radius-md); padding:10px; display:flex; gap:12px; box-shadow:var(--shadow-sm); align-items:center;">
-          <div style="position:relative; width:90px; height:70px; border-radius:8px; overflow:hidden; background:#000;" onclick="playDemoVideo('${item.title}', '${item.videoUrl}')">
+          <div style="position:relative; width:90px; height:70px; border-radius:8px; overflow:hidden; background:#000; flex-shrink:0; cursor:pointer;" onclick="playDemoVideo('${item.title}','${item.videoUrl}',${item.episodes||1})">
             <img src="${item.cover}" style="width:100%; height:100%; object-fit:cover;">
             <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:white; font-size:16px;">▶</div>
+            ${item.ai_marked ? '<div style="position:absolute; bottom:2px; right:2px; background:rgba(124,58,237,0.8); color:white; font-size:8px; padding:1px 3px; border-radius:2px;">AI</div>' : ''}
           </div>
-          <div style="flex:1;">
-            <div style="font-size:13px; font-weight:700; color:#111827;">${item.title}</div>
-            <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">类型: ${item.type} | 时长: ${item.duration}</div>
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:13px; font-weight:700; color:#111827; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.title}</div>
+            <div style="font-size:10px; color:var(--text-sub); margin-top:3px;">${item.type} | ${item.duration} | ${item.visibility === 'public' ? '🌐公开' : '🔒私密'}</div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
-              <span style="background:#D1FAE5; color:#059669; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">${item.status}</span>
+              <span style="background:${item.status === '已完成' ? '#D1FAE5' : item.status === '部分失败' ? '#FEE2E2' : '#FEF3C7'}; color:${item.status === '已完成' ? '#059669' : item.status === '部分失败' ? '#EF4444' : '#92400E'}; font-size:9px; padding:2px 6px; border-radius:4px; font-weight:700;">${item.status}</span>
               <span style="font-size:10px; color:var(--text-muted);">${item.cost}</span>
             </div>
           </div>
@@ -2013,7 +2933,131 @@
       `).join('');
     }
 
-    // Points Center Sub-tabs & Gift Transfer & Conversion
+    // ================================================================
+    // MATERIAL LIBRARY
+    // ================================================================
+    function uploadCustomCatImg() {
+      showToast('已从本地上传猫咪源图：[橘猫少爷.jpg]');
+      document.getElementById('charNameInput').value = '自选猫咪少爷';
+    }
+
+    // P0: 文生图4候选
+    function generateCat4Candidates() {
+      const name = document.getElementById('charNameInput').value || '拟人化猫咪';
+      if (!name.trim()) { showToast('请先输入角色名称'); return; }
+      if (!deductPoints(10, '文生图4候选生成')) return;
+      showToast('AI 正在生成 4 张候选图，请稍候...');
+      setTimeout(() => {
+        const candidates = [
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200',
+          'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200',
+          'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200',
+          'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200'
+        ];
+        document.getElementById('candidateArea').style.display = 'block';
+        document.getElementById('candidateGrid').innerHTML = candidates.map((img, i) => `
+          <div style="position:relative; cursor:pointer; border-radius:8px; overflow:hidden; border:2px solid transparent; transition:border-color 0.2s;" id="cand_${i}" onclick="selectCandidate(${i}, '${img}')">
+            <img src="${img}" style="width:100%; height:90px; object-fit:cover;">
+            <div style="position:absolute; top:4px; right:4px; background:rgba(0,0,0,0.6); color:white; font-size:9px; padding:2px 5px; border-radius:4px;">方案 ${i+1}</div>
+          </div>
+        `).join('');
+        showToast('4 张候选图已生成，请选择最满意的入库');
+      }, 1200);
+    }
+
+    let selectedCandidateImg = null;
+    function selectCandidate(idx, img) {
+      selectedCandidateImg = img;
+      document.querySelectorAll('#candidateGrid > div').forEach((el, i) => {
+        el.style.borderColor = i === idx ? 'var(--primary)' : 'transparent';
+      });
+      showToast(`已选择方案 ${idx+1}，点击「生成360°视角三视图」完成锁定`);
+    }
+
+    function generate360CatMatrix() {
+      const name = document.getElementById('charNameInput').value || '拟人化猫咪';
+      showToast('AI 正在产出猫咪角色的前后左右/俯视仰视 360° 全视角三视图...');
+      document.getElementById('matrixArea').style.display = 'block';
+      const grid = document.getElementById('angleMatrixGrid');
+      const baseImg = selectedCandidateImg || 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200';
+      const angles = [
+        { img: baseImg, label: '📸 正面 (Front)' },
+        { img: 'https://images.unsplash.com/photo-1533738363-b7f9aef128ce?w=200', label: '📸 背面 (Back)' },
+        { img: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=200', label: '📸 左侧面 (Left)' },
+        { img: 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=200', label: '📸 右侧面 (Right)' },
+        { img: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=200', label: '📸 俯视 (Top-down)' },
+        { img: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=200', label: '📸 仰视 (Bottom-up)' }
+      ];
+      grid.innerHTML = angles.map(a => `
+        <div class="angle-matrix-card">
+          <img src="${a.img}">
+          <div class="angle-label">${a.label}</div>
+        </div>
+      `).join('');
+    }
+
+    function confirmAngleMatrixLock() {
+      const name = document.getElementById('charNameInput').value || '拟人猫咪主角';
+      const baseImg = selectedCandidateImg || 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=200';
+      const newChar = {
+        id: 'c' + Date.now(),
+        name: name + ' (360°)',
+        species: '拟人猫咪',
+        isRef: true,
+        img: baseImg
+      };
+      state.materials.characters.unshift(newChar);
+      renderMaterialPool('characters');
+      showToast(`已把 ${name} 的 360° 视角三视图锁死入库！后续分镜 AI 生图将自动携带 ref 图保形象一致`);
+      document.getElementById('matrixArea').style.display = 'none';
+      document.getElementById('candidateArea').style.display = 'none';
+      selectedCandidateImg = null;
+    }
+
+    function switchMaterialTab(btn, cat) {
+      btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderMaterialPool(cat);
+    }
+
+    function renderMaterialPool(cat) {
+      const container = document.getElementById('characterMaterialPool');
+      if (!container) return;
+      const items = state.materials[cat] || [];
+      container.innerHTML = items.map(item => `
+        <div style="background:white; border-radius:var(--radius-sm); padding:8px; position:relative; box-shadow:var(--shadow-sm);">
+          <img src="${item.img}" style="width:100%; height:110px; object-fit:cover; border-radius:6px;">
+          <div style="font-size:12px; font-weight:700; margin-top:4px;">${item.name}</div>
+          ${item.isRef ? '<span style="position:absolute; top:12px; right:12px; background:var(--primary); color:white; font-size:9px; padding:2px 6px; border-radius:4px;">360°锁定</span>' : ''}
+        </div>
+      `).join('');
+    }
+
+    // ================================================================
+    // AUDIO PREVIEW
+    // ================================================================
+    function openAudioPreviewModal() {
+      const strip = document.getElementById('previewShotStrip');
+      if (strip) {
+        strip.innerHTML = state.storyboardShots.map((shot, i) => `
+          <div style="flex-shrink:0; text-align:center;">
+            <img src="${shot.img}" style="width:56px; height:42px; object-fit:cover; border-radius:6px; border:${i===0?'2px solid var(--primary)':'2px solid transparent'};">
+            <div style="font-size:9px; color:var(--text-sub); margin-top:2px;">镜${shot.no}</div>
+          </div>
+        `).join('');
+      }
+      const count = document.getElementById('previewShotCount');
+      if (count) count.innerText = state.storyboardShots.length;
+      document.getElementById('audioPreviewModal').classList.add('active');
+    }
+
+    function closeAudioPreviewModal() {
+      document.getElementById('audioPreviewModal').classList.remove('active');
+    }
+
+    // ================================================================
+    // POINTS CENTER
+    // ================================================================
     function switchPointsSubTab(btn, mode) {
       btn.parentElement.querySelectorAll('.pill-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
@@ -2024,57 +3068,165 @@
     }
 
     function convertPointsToCredits() {
-      if (state.points < 100) {
-        showToast('积分不足 100，无法兑换次数包');
-        return;
-      }
+      if (state.points < 100) { showToast('积分不足 100，无法兑换'); return; }
       state.points -= 100;
-      state.credits += 1;
-      state.pointsLogs.unshift({ type: 'convert', title: '积分兑换 1 次生成包', points: -100, date: '刚刚' });
-      document.getElementById('displayPoints').innerText = state.points;
-      document.getElementById('displayCredits').innerText = state.credits;
-      document.getElementById('pointsCenterVal').innerText = state.points;
-      renderPointsLogs();
-      showToast('成功兑换 1 次生成包！已存入余额');
+      state.packageCredits += 1;
+      addPointsLog('convert', '积分兑换 1 次生成包', -100, state.points);
+      updateBalanceDisplay();
+      showToast('成功兑换 1 次生成包！已存入次数包余额');
     }
 
+    // P1: 单日累计限额
     function transferGiftPoints() {
       const uid = document.getElementById('giftUserId').value.trim();
       const amt = parseInt(document.getElementById('giftAmount').value) || 0;
-      if (!uid) { showToast('请输入受赠好友微信 ID'); return; }
-      if (amt <= 0 || amt > 500) { showToast('转赠额度单日上限为 500 积分'); return; }
+      if (!uid) { showToast('请输入受赠好友用户 ID'); return; }
+      if (amt <= 0 || amt > 500) { showToast('单笔转赠 1~500 积分'); return; }
+      if (state.todayGiftTotal + amt > 500) {
+        showToast(`单日转赠上限 500 积分，今日已转赠 ${state.todayGiftTotal}，本次最多还可转赠 ${500 - state.todayGiftTotal} 积分`);
+        return;
+      }
       if (state.points < amt) { showToast('积分余额不足'); return; }
 
       state.points -= amt;
-      state.pointsLogs.unshift({ type: 'gift', title: `转赠积分给好友 ${uid}`, points: -amt, date: '刚刚' });
-      document.getElementById('displayPoints').innerText = state.points;
-      document.getElementById('pointsCenterVal').innerText = state.points;
-      renderPointsLogs();
-      showToast(`已成功转赠 ${amt} 积分给好友 ${uid}`);
+      state.todayGiftTotal += amt;
+      addPointsLog('gift', `转赠积分给好友 ${uid}（发出方）`, -amt, state.points);
+      // 模拟受赠方流水（实际服务端原子事务处理）
+      addPointsLog('gift_in', `收到好友 ${uid} 转赠（受赠方）`, +amt, state.points + amt);
+      updateBalanceDisplay();
+      // 更新单日提示
+      const todayEl = document.getElementById('todayGiftTotal');
+      if (todayEl) todayEl.innerText = state.todayGiftTotal;
+      showToast(`已成功转赠 ${amt} 积分给好友 ${uid}（今日已转赠: ${state.todayGiftTotal}/500）`);
     }
 
     function renderPointsLogs() {
       const list = document.getElementById('pointsLogsView');
       if (!list) return;
       list.innerHTML = state.pointsLogs.map(log => `
-        <div style="background:white; padding:10px; border-radius:var(--radius-sm); display:flex; justify-content:space-between; font-size:12px;">
+        <div style="background:white; padding:10px; border-radius:var(--radius-sm); display:flex; justify-content:space-between; font-size:12px; box-shadow:var(--shadow-sm);">
           <div>
             <div style="font-weight:600;">${log.title}</div>
             <div style="font-size:10px; color:var(--text-muted);">${log.date}</div>
           </div>
-          <div style="color:${log.points > 0 ? '#10B981' : '#EF4444'}; font-weight:700;">${log.points > 0 ? '+'+log.points : log.points} 积分</div>
+          <div style="text-align:right;">
+            <div style="color:${log.points > 0 ? '#10B981' : log.points < 0 ? '#EF4444' : '#6B7280'}; font-weight:700;">${log.points > 0 ? '+'+log.points : log.points > 0 ? log.points : log.points === 0 ? '—' : log.points} ${log.points !== 0 ? '积分' : ''}</div>
+            <div style="font-size:10px; color:var(--text-muted);">余额: ${log.balance} 积分</div>
+          </div>
         </div>
       `).join('');
     }
 
-    function renderOrdersList() {
+    // ================================================================
+    // PAYMENT (P0修复: 按商品类型分别发放权益)
+    // ================================================================
+    function buyPoints(pts, price) {
+      payWxSimulate(`${pts} 积分包`, price, `points_${pts}`);
+    }
+
+    function payWxSimulate(itemName, price, itemType) {
+      state.currentPayItemType = itemType;
+      document.getElementById('payItemName').innerText = itemName;
+      document.getElementById('payItemPrice').innerText = `¥ ${price}.00`;
+
+      // 权益说明
+      let benefitText = '';
+      if (itemType.startsWith('vip_month')) benefitText = '开通后立即获得：每日30次生成额度 + 300积分 + 直接文生视频能力';
+      else if (itemType.startsWith('vip_season')) benefitText = '开通后立即获得：每日40次生成额度 + 400积分 + 直接文生视频能力';
+      else if (itemType.startsWith('vip_year')) benefitText = '开通后立即获得：每日60次生成额度 + 600积分 + 直接文生视频能力';
+      else if (itemType.startsWith('pkg_10')) benefitText = '购买后立即发放：10次永久次数包，可用于任意AI生成';
+      else if (itemType.startsWith('pkg_50')) benefitText = '购买后立即发放：50次永久次数包，可用于任意AI生成';
+      else if (itemType.startsWith('points_600')) benefitText = '购买后立即发放：600积分到账';
+      else if (itemType.startsWith('points_1200')) benefitText = '购买后立即发放：1200积分到账';
+      else if (itemType.startsWith('points_3000')) benefitText = '购买后立即发放：3000积分到账';
+      else benefitText = '购买后立即到账';
+
+      document.getElementById('payBenefitDesc').innerText = '✅ ' + benefitText;
+      document.getElementById('wxPayModal').classList.add('active');
+    }
+
+    function closeWxPay() {
+      document.getElementById('wxPayModal').classList.remove('active');
+    }
+
+    // P0修复: 按商品类型分别发放权益
+    function confirmWxPay() {
+      closeWxPay();
+      const t = state.currentPayItemType;
+      let orderName = '';
+      let ptsAdded = 0;
+      let memberCrAdded = 0;
+      let pkgCrAdded = 0;
+      let priceStr = '';
+
+      if (t === 'vip_month') {
+        orderName = '连续包月VIP会员'; priceStr = '¥39.00';
+        state.isVip = true; state.vipExpiredAt = '2026-09-10';
+        memberCrAdded = 30; ptsAdded = 300; // 每日额度30次 + 300积分
+        document.getElementById('userVipBadge').innerText = '⭐ 尊享 VIP 月卡';
+      } else if (t === 'vip_season') {
+        orderName = '季度VIP会员'; priceStr = '¥98.00';
+        state.isVip = true; state.vipExpiredAt = '2026-11-10';
+        memberCrAdded = 40; ptsAdded = 400;
+        document.getElementById('userVipBadge').innerText = '⭐ 尊享 VIP 季卡';
+      } else if (t === 'vip_year') {
+        orderName = '年度VIP会员'; priceStr = '¥328.00';
+        state.isVip = true; state.vipExpiredAt = '2027-08-10';
+        memberCrAdded = 60; ptsAdded = 600;
+        document.getElementById('userVipBadge').innerText = '⭐ 尊享 VIP 年卡';
+      } else if (t === 'pkg_10') {
+        orderName = '10次生成包'; priceStr = '¥19.00';
+        pkgCrAdded = 10;
+      } else if (t === 'pkg_50') {
+        orderName = '50次生成包'; priceStr = '¥79.00';
+        pkgCrAdded = 50;
+      } else if (t === 'points_600') {
+        orderName = '充值600积分包'; priceStr = '¥60.00'; ptsAdded = 600;
+      } else if (t === 'points_1200') {
+        orderName = '充值1200积分包'; priceStr = '¥100.00'; ptsAdded = 1200;
+      } else if (t === 'points_3000') {
+        orderName = '充值3000积分包'; priceStr = '¥199.00'; ptsAdded = 3000;
+      }
+
+      // 发放资产
+      state.points += ptsAdded;
+      state.memberCredits += memberCrAdded;
+      state.packageCredits += pkgCrAdded;
+      state.frozenPoints = Math.max(0, state.frozenPoints - 0); // 解冻
+
+      // 记流水
+      if (ptsAdded > 0) addPointsLog('buy', `微信支付 · ${orderName}`, ptsAdded, state.points);
+      if (memberCrAdded > 0) addPointsLog('buy', `会员额度发放 · ${memberCrAdded}次/日`, 0, state.points);
+      if (pkgCrAdded > 0) addPointsLog('buy', `次数包发放 · ${pkgCrAdded}次`, 0, state.points);
+
+      // 记订单
+      state.orders.unshift({ id: 'ORD-' + Date.now(), name: orderName, amount: priceStr, status: '已支付', date: '刚刚' });
+      renderOrdersList();
+      updateBalanceDisplay();
+
+      let msg = `支付成功！`;
+      if (ptsAdded > 0) msg += ` 已发放 ${ptsAdded} 积分`;
+      if (memberCrAdded > 0) msg += ` + ${memberCrAdded}次会员额度`;
+      if (pkgCrAdded > 0) msg += ` + ${pkgCrAdded}次次数包`;
+      showToast(msg);
+    }
+
+    // ================================================================
+    // ORDERS
+    // ================================================================
+    function renderOrdersList(filter = 'all') {
       const container = document.getElementById('ordersList');
       if (!container) return;
-      container.innerHTML = state.orders.map(ord => `
+      const list = filter === 'all' ? state.orders : state.orders.filter(o => o.status === filter);
+      if (list.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted);">暂无订单</div>';
+        return;
+      }
+      container.innerHTML = list.map(ord => `
         <div style="background:white; border-radius:var(--radius-md); padding:12px; box-shadow:var(--shadow-sm);">
           <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:6px;">
             <span style="font-weight:700; color:#111827;">${ord.name}</span>
-            <span style="color:#10B981; font-weight:700;">${ord.status}</span>
+            <span style="color:${ord.status === '已支付' ? '#10B981' : ord.status === '已退款' ? '#EF4444' : '#F59E0B'}; font-weight:700;">${ord.status}</span>
           </div>
           <div style="font-size:11px; color:var(--text-sub);">订单号: ${ord.id}</div>
           <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:12px;">
@@ -2085,11 +3237,14 @@
       `).join('');
     }
 
+    // ================================================================
+    // REFERRALS
+    // ================================================================
     function renderReferrals() {
       const container = document.getElementById('referralList');
       if (!container) return;
       container.innerHTML = state.referrals.map(ref => `
-        <div style="background:white; padding:10px; border-radius:8px; display:flex; justify-content:space-between; font-size:12px;">
+        <div style="background:white; padding:10px; border-radius:8px; display:flex; justify-content:space-between; font-size:12px; box-shadow:var(--shadow-sm);">
           <div>
             <div style="font-weight:600;">${ref.user} (${ref.level})</div>
             <div style="font-size:10px; color:var(--text-muted);">${ref.date}</div>
@@ -2099,56 +3254,9 @@
       `).join('');
     }
 
-    // WX Pay Simulation
-    function payWxSimulate(itemName, price) {
-      document.getElementById('payItemName').innerText = itemName;
-      document.getElementById('payItemPrice').innerText = `¥ ${price}.00`;
-      document.getElementById('wxPayModal').classList.add('active');
-    }
-
-    function closeWxPay() {
-      document.getElementById('wxPayModal').classList.remove('active');
-    }
-
-    function confirmWxPay() {
-      closeWxPay();
-      state.points += 600;
-      state.credits += 10;
-      state.isVip = true;
-      state.orders.unshift({ id: 'ORD-' + Date.now(), name: '充值 600 积分包', amount: '¥60.00', status: '已支付', date: '刚刚' });
-      state.pointsLogs.unshift({ type: 'buy', title: '微信支付购买 600 积分包', points: 600, date: '刚刚' });
-
-      document.getElementById('displayPoints').innerText = state.points;
-      document.getElementById('displayCredits').innerText = state.credits;
-      document.getElementById('pointsCenterVal').innerText = state.points;
-      document.getElementById('userVipBadge').innerText = '⭐ 尊享 VIP 会员';
-      renderPointsLogs();
-      renderOrdersList();
-      showToast('微信支付成功！已发放 600 积分与 VIP 权益');
-    }
-
-    function buyPoints(pts, price) {
-      payWxSimulate(`${pts} 积分包`, price);
-    }
-
-    function generateEcomScript() {
-      const scripts = [
-        "喵星人看过来！今天这款【猫大厨联名白桃乌龙茶】真的绝了！冷萃留香、无糖清爽，限量立减 20 元，先到先得！",
-        "猫咪主子同款精致茶饮，高颜值回甘无限，限时买一送一，手慢无！",
-        "猫大厨私房推荐！纯天然无添加，全网爆卖 10w+ 件，今天直播间专属特惠仅需 ¥39.9！"
-      ];
-      document.getElementById('ecomScriptArea').value = scripts[Math.floor(Math.random()*scripts.length)];
-      showToast('AI 已自动生成猫咪爆款电商口播文案！');
-    }
-
-    function openAudioPreviewModal() {
-      document.getElementById('audioPreviewModal').classList.add('active');
-    }
-
-    function closeAudioPreviewModal() {
-      document.getElementById('audioPreviewModal').classList.remove('active');
-    }
-
+    // ================================================================
+    // WX LOGIN
+    // ================================================================
     function openWxLoginModal() {
       document.getElementById('wxLoginModal').classList.add('active');
     }
@@ -2159,7 +3267,20 @@
 
     function confirmWxLogin() {
       closeWxLoginModal();
-      showToast('微信一键登录成功！会话已安全续期');
+      showToast('微信一键登录成功！JWT会话已安全续期');
+    }
+
+    // ================================================================
+    // ECOM
+    // ================================================================
+    function generateEcomScript() {
+      const scripts = [
+        "喵星人看过来！今天这款【猫大厨联名白桃乌龙茶】真的绝了！冷萃留香、无糖清爽，限量立减 20 元，先到先得！",
+        "猫咪主子同款精致茶饮，高颜值回甘无限，限时买一送一，手慢无！",
+        "猫大厨私房推荐！纯天然无添加，全网爆卖 10w+ 件，今天直播间专属特惠仅需 ¥39.9！"
+      ];
+      document.getElementById('ecomScriptArea').value = scripts[Math.floor(Math.random()*scripts.length)];
+      showToast('AI 已自动生成猫咪爆款电商口播文案！');
     }
   </script>
 </body>
