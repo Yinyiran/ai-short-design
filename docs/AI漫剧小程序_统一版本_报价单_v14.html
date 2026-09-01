@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI 漫剧创作小程序 · 项目开发报价单</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            color: #1e293b;
+            line-height: 1.22;
+            font-size: 10px;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 8mm 10mm;
+        }
+
+        .header {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 3px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .title-group h1 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 0 0 1px 0;
+            letter-spacing: -0.3px;
+        }
+
+        .title-group .subtitle {
+            font-size: 10px;
+            color: #64748b;
+            margin: 5px;
+        }
+
+        .title-total {
+            flex-shrink: 0;
+            padding-left: 12px;
+            text-align: right;
+            border-left: 2px solid #fecaca;
+        }
+
+        .title-total .label {
+            display: block;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #64748b;
+            margin-bottom: 1px;
+        }
+
+        .title-total .value {
+            display: block;
+            font-size: 24px;
+            font-weight: 800;
+            color: #dc2626;
+            line-height: 1.05;
+        }
+
+        .title-total .value .cny {
+            font-size: 14px;
+            font-weight: 700;
+            margin-right: 1px;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 3px 6px;
+            margin-bottom: 5px;
+            font-size: 10px;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            padding: 4px 0;
+        }
+
+        .meta-item .key {
+            color: #64748b;
+            font-size: 8.5px;
+            margin-bottom: 4px;
+        }
+
+        .meta-item .value {
+            color: #0f172a;
+            font-weight: 600;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1f232e;
+            color: #ffffff;
+            padding: 6px;
+            border-radius: 3px;
+            margin-top: 8px;
+            margin-bottom: 2px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .section-header .subtotal {
+            font-size: 10px;
+            font-weight: 500;
+            color: #c0ddff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+            font-size: 10px;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            text-align: left;
+            padding: 2px 4px;
+            border-bottom: 1px solid #cbd5e1;
+            font-size: 10px;
+        }
+
+        td {
+            padding: 1.4px 4px;
+            border-bottom: 1px solid #e2e8f0;
+            color: #334155;
+            vertical-align: middle;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .col-id {
+            width: 24px;
+            text-align: center;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .col-name {
+            width: 115px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .col-desc {
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .col-price {
+            width: 65px;
+            text-align: right;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .summary-block {
+            margin-top: 10px;
+        }
+
+        .summary-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 10px;
+            color: #0f172a;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2px;
+            font-size: 10px;
+        }
+
+        .summary-table th {
+            background-color: #e2e8f0;
+            padding: 2px 5px;
+        }
+
+        .summary-table td {
+            padding: 1.8px 5px;
+            font-weight: 500;
+        }
+
+        .terms-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            padding: 4px 6px;
+            font-size: 10px;
+            margin-top: 10px;
+        }
+
+        .terms-box h4 {
+            margin: 0 0 2px 0;
+            font-size: 10px;
+            color: #0f172a;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 2px;
+        }
+
+        .terms-list {
+            margin: 0;
+            padding-left: 10px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .terms-list li {
+            margin-bottom: 1.2px;
+        }
+
+        .footer {
+            margin-top: 4px;
+            padding-top: 2px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="title-group">
+            <h1>AI 漫剧创作小程序 · 项目开发报价单</h1>
+            <p class="subtitle">统一全功能版（AI剧本 + 多模式生成 + 分销运营底座）</p>
+        </div>
+        <div class="title-total">
+            <span class="label">总 价</span>
+            <span class="value"><span class="cny">¥</span>12,000</span>
+        </div>
+    </div>
+
+    <div class="meta-grid">
+        <div class="meta-item">
+            <span class="key">项目名称</span>
+            <span class="value">AI 漫剧小程序开发</span>
+        </div>
+        <div class="meta-item">
+            <span class="key">报价日期</span>
+            <span class="value">2026 年 08 月 12 日</span>
+        </div>
+        <div class="meta-item">
+            <span class="key">报价有效期</span>
+            <span class="value">10 天（整包价）</span>
+        </div>
+        <div class="meta-item">
+            <span class="key">预计工期</span>
+            <span class="value">30–40 法定工作日</span>
+        </div>
+    </div>
+
+    <!-- 一、AI 生成与智能链路 -->
+    <div class="section-header">
+        <span>一、AI 生成与智能核心链路</span>
+        <span class="subtotal">小计：¥7,320 （占比 61%）</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="col-id">#</th>
+                <th class="col-name">模块名称</th>
+                <th class="col-desc">核心功能要点说明</th>
+                <th class="col-price">报价(元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">A1</td>
+                <td class="col-name">AI 智能写剧本</td>
+                <td class="col-desc">LLM 生成 5–15 分镜结构化剧本（镜头/拍摄/对白），多语言模式与草稿改写</td>
+                <td class="col-price">780</td>
+            </tr>
+            <tr>
+                <td class="col-id">A2</td>
+                <td class="col-name">AI 文生图素材库</td>
+                <td class="col-desc">角色/场景/道具批量生成，图生图保证角色跨镜形象一致，候选选图与单张重试</td>
+                <td class="col-price">660</td>
+            </tr>
+            <tr>
+                <td class="col-id">A3</td>
+                <td class="col-name">分镜编排与重生成</td>
+                <td class="col-desc">分镜卡片拖拽增删排序，单镜 Prompt 重生成，文生图与直接文生视频生成方式切换</td>
+                <td class="col-price">660</td>
+            </tr>
+            <tr>
+                <td class="col-id">A4</td>
+                <td class="col-name">漫剧合成链路</td>
+                <td class="col-desc">逐镜图生视频 → 多角色 TTS 配音 → ffmpeg 拼接转场+BGM+片头尾合成成片</td>
+                <td class="col-price">1,020</td>
+            </tr>
+            <tr>
+                <td class="col-id">A5</td>
+                <td class="col-name">文生视频模块</td>
+                <td class="col-desc">文本生成短视频，风格/运动幅度/时长/比例设置，异步生成与进度通知，支持"做同款"</td>
+                <td class="col-price">1,080</td>
+            </tr>
+            <tr>
+                <td class="col-id">A6</td>
+                <td class="col-name">图生视频模块</td>
+                <td class="col-desc">上传首帧图生成动效视频，运动强度调节，素材库角色图驱动，支持"做同款"</td>
+                <td class="col-price">840</td>
+            </tr>
+            <tr>
+                <td class="col-id">A7</td>
+                <td class="col-name">视频风格引擎</td>
+                <td class="col-desc">内置多种官方风格（治愈/热血/水墨等），滤镜/转场/比例/运镜/BGM 参数控制</td>
+                <td class="col-price">240</td>
+            </tr>
+            <tr>
+                <td class="col-id">A8</td>
+                <td class="col-name">视频风格复刻</td>
+                <td class="col-desc">上传参考视频自动提取风格与运镜模板，快速套用到新内容创作</td>
+                <td class="col-price">300</td>
+            </tr>
+            <tr>
+                <td class="col-id">A9</td>
+                <td class="col-name">第三方 AI 网关</td>
+                <td class="col-desc">统一封装 LLM/文生图/TTS/视频生成多供应商接口，具备重试、降级与熔断机制</td>
+                <td class="col-price">600</td>
+            </tr>
+            <tr>
+                <td class="col-id">A10</td>
+                <td class="col-name">异步任务队列</td>
+                <td class="col-desc">BullMQ 双队列任务编排、Redis 进度缓存、超时 TTL 防爆与高并发限流</td>
+                <td class="col-price">360</td>
+            </tr>
+            <tr>
+                <td class="col-id">A11</td>
+                <td class="col-name">积分中心系统</td>
+                <td class="col-desc">购买/兑换/赠送/消耗流水记录，两阶段冻结扣减防超发，生成失败自动按原额回退</td>
+                <td class="col-price">780</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 二、小程序前端 -->
+    <div class="section-header">
+        <span>二、小程序前端 UI 与交互</span>
+        <span class="subtotal">小计：¥2,790 （占比 23.25%）</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="col-id">#</th>
+                <th class="col-name">模块名称</th>
+                <th class="col-desc">核心功能要点说明</th>
+                <th class="col-price">报价(元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">B1</td>
+                <td class="col-name">微信授权登录</td>
+                <td class="col-desc">一键快捷登录换 OpenID、头像昵称授权、游客浏览与付费前登录拦截</td>
+                <td class="col-price">150</td>
+            </tr>
+            <tr>
+                <td class="col-id">B2</td>
+                <td class="col-name">首页与创作入口</td>
+                <td class="col-desc">Banner 轮播展示、三大创作入口卡片、漫剧精选瀑布流与分类筛选</td>
+                <td class="col-price">360</td>
+            </tr>
+            <tr>
+                <td class="col-id">B3</td>
+                <td class="col-name">漫剧高清播放器</td>
+                <td class="col-desc">播放/倍速/全屏/多集选集/断点续播，画面常驻 AI 生成合规角标</td>
+                <td class="col-price">420</td>
+            </tr>
+            <tr>
+                <td class="col-id">B4</td>
+                <td class="col-name">会员与次数包购买</td>
+                <td class="col-desc">月/季/年卡与次数包权益对比展示、微信支付一键调起与状态提醒</td>
+                <td class="col-price">300</td>
+            </tr>
+            <tr>
+                <td class="col-id">B5</td>
+                <td class="col-name">个人中心与设置</td>
+                <td class="col-desc">个人信息（余额/会员）、订单中心管理（按状态筛选）、客服与关于我们</td>
+                <td class="col-price">180</td>
+            </tr>
+            <tr>
+                <td class="col-id">B6</td>
+                <td class="col-name">作品管理中心</td>
+                <td class="col-desc">个人作品画廊（图片/视频 Tab）、生成参数查看、一键重生成与素材保存</td>
+                <td class="col-price">300</td>
+            </tr>
+            <tr>
+                <td class="col-id">B7</td>
+                <td class="col-name">作品广场社区</td>
+                <td class="col-desc">公开作品瀑布流、点赞与浏览交互、风格分类快速检索</td>
+                <td class="col-price">240</td>
+            </tr>
+            <tr>
+                <td class="col-id">B8</td>
+                <td class="col-name">裂变分享与海报</td>
+                <td class="col-desc">微信好友卡片分享、朋友圈自动生成分享海报、一键"做同款"带参数跳转</td>
+                <td class="col-price">240</td>
+            </tr>
+            <tr>
+                <td class="col-id">B9</td>
+                <td class="col-name">二级分销推广系统</td>
+                <td class="col-desc">专属推广码/链接、合规二级佣金自动结算、佣金明细查看与提现申请</td>
+                <td class="col-price">600</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 三、管理后台与合规 -->
+    <div class="section-header">
+        <span>三、管理后台与合规风控</span>
+        <span class="subtotal">小计：¥1,890 （占比 15.75%）</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="col-id">#</th>
+                <th class="col-name">模块名称</th>
+                <th class="col-desc">核心功能要点说明</th>
+                <th class="col-price">报价(元)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-id">C1</td>
+                <td class="col-name">后台登录与 RBAC</td>
+                <td class="col-desc">管理员登录、超管/运营/审核员角色划分、菜单及按钮级权限控制、日志审计</td>
+                <td class="col-price">240</td>
+            </tr>
+            <tr>
+                <td class="col-id">C2</td>
+                <td class="col-name">内容审核与管理</td>
+                <td class="col-desc">作品上下架、分类与精选标记、AI 合规水印标识强校验（确保可对外公开）</td>
+                <td class="col-price">300</td>
+            </tr>
+            <tr>
+                <td class="col-id">C3</td>
+                <td class="col-name">素材与模板库管理</td>
+                <td class="col-desc">官方素材库 CRUD、用户提交素材审核队列、精选素材标记与展示</td>
+                <td class="col-price">210</td>
+            </tr>
+            <tr>
+                <td class="col-id">C4</td>
+                <td class="col-name">用户与权限管理</td>
+                <td class="col-desc">用户列表与详情、违规账号冻结/解冻、管理员手动调整积分/生成次数</td>
+                <td class="col-price">210</td>
+            </tr>
+            <tr>
+                <td class="col-id">C5</td>
+                <td class="col-name">订单与财务核对</td>
+                <td class="col-desc">订单查询与状态修正、支持 Excel 数据导出、微信支付流水一键核对</td>
+                <td class="col-price">210</td>
+            </tr>
+            <tr>
+                <td class="col-id">C6</td>
+                <td class="col-name">商业化配置中心</td>
+                <td class="col-desc">会员套餐配置、积分兑换比例/消耗单价配置、佣金比例与提现审核流程</td>
+                <td class="col-price">240</td>
+            </tr>
+            <tr>
+                <td class="col-id">C7</td>
+                <td class="col-name">AI 数据与调用看板</td>
+                <td class="col-desc">AI API 调用次数/成本/失败率可视化图表、用户消耗排行与热门内容统计</td>
+                <td class="col-price">180</td>
+            </tr>
+            <tr>
+                <td class="col-id">D1</td>
+                <td class="col-name">AI 内容强制标识</td>
+                <td class="col-desc">成片自动烧录"AI 生成"显式水印，对齐《人工智能生成合成内容标识办法》要求</td>
+                <td class="col-price">180</td>
+            </tr>
+            <tr>
+                <td class="col-id">D2</td>
+                <td class="col-name">微信内容安全 API</td>
+                <td class="col-desc">敏感词库过滤、对接微信官方内容安全 API（文字/图片），违规内容自动拦截</td>
+                <td class="col-price">120</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 四、费用汇总占比表 -->
+    <div class="summary-block">
+        <div class="summary-title">四、费用汇总占比表</div>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>费用分类</th>
+                    <th style="text-align: right;">金额 (元)</th>
+                    <th style="text-align: right;">费用占比</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>一、AI 生成与智能核心链路</td>
+                    <td style="text-align: right;">7,320</td>
+                    <td style="text-align: right;">61.00%</td>
+                </tr>
+                <tr>
+                    <td>二、小程序前端 UI 与交互</td>
+                    <td style="text-align: right;">2,790</td>
+                    <td style="text-align: right;">23.25%</td>
+                </tr>
+                <tr>
+                    <td>三、管理后台与合规风控</td>
+                    <td style="text-align: right;">1,890</td>
+                    <td style="text-align: right;">15.75%</td>
+                </tr>
+                <tr style="background-color: #f1f5f9; font-weight: 700;">
+                    <td>项目开发费用合计</td>
+                    <td style="text-align: right; color: #2563eb; font-size: 11px;">¥12,000</td>
+                    <td style="text-align: right;">100.00%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 五、注意事项、风险提示与商务约定 -->
+    <div class="terms-box">
+        <h4>五、关键注意事项、风险提示与商务约定</h4>
+        <ul class="terms-list">
+            <li><strong>运营成本</strong>：本报价为纯开发费，不含 LLM / TTS / 视频生成 / 微信风控等 API 流量费，需甲方单独充值绑定并预估运营成本。</li>
+            <li><strong>服务器与 OSS 存储</strong>：不含服务器、域名、微信认证费及 COS / OSS 对象存储与 CDN 流量费，均由甲方采购绑定。</li>
+            <li><strong>工期边界约定</strong>：30–40 工期指国家法定工作日（不含节假日）；甲方延期确认素材、需求或测试的时间不计入开发工期。</li>
+            <li><strong>付款节点</strong>：首款 60% 启动项目 → 中期 Demo 演示支付 20% → 最终验收交付支付 10%。</li>
+            <li><strong>分销规则与资质备案</strong>：二级分销佣金逻辑与提现门槛须于主合同约定；小程序企业认证、ICP / 文网文 / 算法备案由甲方自行办理。</li>
+            <li><strong>售后质保</strong>：项目交付后提供 <strong>30 个工作日（1个月）</strong> 免费 Bug修复与售后质保支持。</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <span>AI 漫剧小程序开发报价单</span>
+        <span>共 1 页 / 第 1 页</span>
+    </div>
+
+</body>
+
+</html>

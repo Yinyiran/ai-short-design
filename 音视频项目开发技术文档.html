@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>末端通音视频调度系统全开源重构与跨端建设技术方案</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --accent: #2563eb;
+      --accent-light: #eff6ff;
+      --text-main: #1f2937;
+      --text-muted: #4b5563;
+      --border: #e5e7eb;
+      --bg-light: #f8fafc;
+      --bg-card: #ffffff;
+      --code-bg: #0f172a;
+      --tag-green: #059669;
+      --tag-green-bg: #ecfdf5;
+      --tag-red: #dc2626;
+      --tag-red-bg: #fef2f2;
+      --tag-orange: #d97706;
+      --tag-orange-bg: #fffbeb;
+      --tag-purple: #7c3aed;
+      --tag-purple-bg: #f5f3ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text-main);
+      background: #f1f5f9;
+      line-height: 1.65;
+      padding: 30px 15px;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      padding: 50px 65px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Header */
+    .doc-header {
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 25px;
+      margin-bottom: 35px;
+    }
+
+    .doc-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px;
+    }
+
+    .doc-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(37, 99, 235, 0.15);
+    }
+
+    .badge-success {
+      background: var(--tag-green-bg);
+      color: var(--tag-green);
+      border-color: rgba(5, 150, 105, 0.2);
+    }
+
+    .badge-danger {
+      background: var(--tag-red-bg);
+      color: var(--tag-red);
+      border-color: rgba(220, 38, 38, 0.2);
+    }
+
+    .badge-warning {
+      background: var(--tag-orange-bg);
+      color: var(--tag-orange);
+      border-color: rgba(217, 119, 6, 0.2);
+    }
+
+    .badge-purple {
+      background: var(--tag-purple-bg);
+      color: var(--tag-purple);
+      border-color: rgba(124, 58, 237, 0.2);
+    }
+
+    /* Section & Headings */
+    h2 {
+      font-size: 19px;
+      color: var(--primary);
+      margin: 40px 0 18px 0;
+      padding-left: 12px;
+      border-left: 5px solid var(--accent);
+      display: flex;
+      align-items: center;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 15px;
+      color: var(--primary-dark);
+      margin: 22px 0 10px 0;
+      font-weight: 700;
+      page-break-after: avoid;
+    }
+
+    p,
+    li {
+      font-size: 14px;
+      color: var(--text-main);
+      text-align: justify;
+    }
+
+    ul,
+    ol {
+      padding-left: 22px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* Cards & Grids */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin: 18px 0;
+    }
+
+    .card {
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      border-top: 3px solid var(--accent);
+    }
+
+    .card h4 {
+      font-size: 14px;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .card p {
+      font-size: 12.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+      margin: 18px 0 24px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th,
+    td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: var(--primary-dark);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:nth-child(even) td {
+      background: #fafafa;
+    }
+
+    /* Code & Architecture Blocks */
+    pre {
+      background: var(--code-bg);
+      color: #e2e8f0;
+      padding: 16px 20px;
+      border-radius: 8px;
+      font-size: 12px;
+      line-height: 1.55;
+      font-family: "Consolas", "Courier New", monospace;
+      overflow-x: auto;
+      margin: 16px 0 22px 0;
+      page-break-inside: avoid;
+    }
+
+    .highlight-box {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    .highlight-box p {
+      color: #1e40af;
+      font-size: 13px;
+    }
+
+    .warn-box {
+      background: var(--tag-red-bg);
+      border-left: 4px solid var(--tag-red);
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+
+    .warn-box p {
+      color: #991b1b;
+      font-size: 13px;
+    }
+
+    /* Print Setup */
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      .container {
+        box-shadow: none;
+        padding: 15px;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      h2 {
+        page-break-after: avoid;
+        margin-top: 25px;
+      }
+
+      h3 {
+        page-break-after: avoid;
+      }
+
+      table,
+      pre,
+      .card,
+      .grid-3,
+      .grid-2 {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header class="doc-header">
+      <h1 class="doc-title">末端通音视频调度系统全开源重构与跨端建设技术方案</h1>
+      <div class="doc-meta">
+        <span class="badge badge-success">100% 纯内网离线部署</span>
+        <span class="badge badge-danger">中心级绝对强管控</span>
+        <span class="badge badge-warning">弱网抗丢包与流量自愈</span>
+        <span class="badge badge-purple">底层硬件容灾避坑</span>
+        <span class="badge">跨三端同构 (Web + Android + 鸿蒙Next)</span>
+      </div>
+    </header>
+
+    <!-- 一、 项目背景与架构定位 -->
+    <section>
+      <h2>一、 项目背景与架构定位</h2>
+      <p>现有“末端通”系统基于商业闭源的好视通（HST RTC SDK）构建[cite: 1]，主要应用于指挥大厅与任务现场调度[cite: 1]。为了满足核心业务的自主可控与专网级强指挥要求，系统需彻底移除外部商业 SDK
+        依赖[cite: 1]，进行全开源改造与强管控能力升级。</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h4>1. 纯物理隔离内网部署</h4>
+          <p>运行环境完全无外网连接，无第三方推送服务（FCM/HMS/APNs），所有流媒体分发、录像、瓦片底图必须本地私有化闭环。</p>
+        </div>
+        <div class="card">
+          <h4>2. 移动端全天候保活唤醒</h4>
+          <p>Android 与华为纯血鸿蒙（Next）移动终端在熄屏和后台常驻运行，调度台发起呼叫能秒级响应并建立音视频连接。</p>
+        </div>
+        <div class="card">
+          <h4>3. 中心绝对指挥控制权</h4>
+          <p>调度员拥有最高管控权限，支持<b>远程强制拉入、强制远程开/关麦、强制远程开/关摄、强制移出与焦点锁定</b>，实现对末端设备的统一指挥。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 二、 总体技术栈选型 -->
+    <section>
+      <h2>二、 总体技术栈选型</h2>
+      <p>方案选用业内成熟度高、社区活跃的开源基础组件，构建高并发、低延迟且具备绝对管控力的指挥调度底座：</p>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>架构层级</th>
+              <th>选型组件</th>
+              <th>开发语言 / 运行时</th>
+              <th>选型核心优势与决策依据</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>RTC 媒体服务器</strong></td>
+              <td><strong>LiveKit Server</strong></td>
+              <td>Go / WebRTC (SFU)</td>
+              <td>高性能开源流媒体服务器，支持 Simulcast、SVC 带宽自适应与集群化扩展；单机/容器化离线即开即用。</td>
+            </tr>
+            <tr>
+              <td><strong>服务端混流录制</strong></td>
+              <td><strong>LiveKit Egress</strong></td>
+              <td>Docker / Chromium / GStreamer</td>
+              <td>服务端无头浏览器合流，自动拼接多画面并压制水印，输出 1080P MP4 视频，杜绝客户端作弊。</td>
+            </tr>
+            <tr>
+              <td><strong>信令与业务后端</strong></td>
+              <td><strong>NestJS</strong></td>
+              <td>Node.js (TypeScript)</td>
+              <td>维护统一 WebSocket 长连接心跳、在线状态树、JWT 入会凭证签发、强管控指令下发与 IM 消息流转。</td>
+            </tr>
+            <tr>
+              <td><strong>对象与持久化存储</strong></td>
+              <td><strong>MinIO + PostgreSQL</strong></td>
+              <td>Go (S3兼容) / SQL</td>
+              <td>MinIO 负责聊天图片、白板数据与录像 MP4 文件的私有存储；PostgreSQL 记录人员、会议与会话历史。</td>
+            </tr>
+            <tr>
+              <td><strong>离线地图瓦片引擎</strong></td>
+              <td><strong>TileServer GL</strong></td>
+              <td>Node.js / C++</td>
+              <td>托管离线 OpenStreetMap 矢量切片与卫星离线数据，为调度台与移动端提供内网地图底图能力。</td>
+            </tr>
+            <tr>
+              <td><strong>Web 调度主控台</strong></td>
+              <td><strong>Vue + livekit-client</strong></td>
+              <td>TypeScript / JavaScript</td>
+              <td>替换原有 <code>hst-rtc-sdk</code>[cite: 1]，承载任务会议、态势感知大屏[cite: 1]、画中画/焦点布局[cite: 1]、强管控中心控制与离线地图交互。</td>
+            </tr>
+            <tr>
+              <td><strong>Android 移动端</strong></td>
+              <td><strong>Kotlin + livekit-android</strong></td>
+              <td>Kotlin</td>
+              <td>通过系统<b>前台服务（Foreground Service）</b>维持长连接，具备后台常驻及接收指令自动推流能力。</td>
+            </tr>
+            <tr>
+              <td><strong>鸿蒙移动端 (Next)</strong></td>
+              <td><strong>ArkTS + N-API WebRTC</strong></td>
+              <td>ArkTS / C++ NDK</td>
+              <td>申请<b>后台长任务（Continuous Task）</b>常驻长连接，通过 N-API 接入 WebRTC 实现原生硬件采集与自动推拉流。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 三、 双通道系统架构：信令面 vs 媒体面 -->
+    <section>
+      <h2>三、 双通道系统架构：信令面 vs 媒体面</h2>
+      <p>系统在物理与逻辑上严格遵循<b>“信令控制面”与“媒体流转发面”分离</b>的解耦原则，保障系统在高并发或强管控场景下的绝对稳健：</p>
+
+      <pre>
+                                ┌───────────────────────────────────────────────────────────┐
+                                │                    纯内网私有化基础设施                    │
+                                │                                                           │
+                                │   ┌─────────────────────────┐   ┌─────────────────────┐   │
+                                │   │   LiveKit SFU 媒体服务  │   │  LiveKit Egress     │   │
+                                │   │   (实时音视频/屏幕共享) │◄──┤  (混流录制落盘服务) │   │
+                                │   └────────────┬────────────┘   └──────────┬──────────┘   │
+                                │                │ gRPC / REST               │              │
+                                │                ▼                           ▼              │
+  ┌─────────────────────────┐   │   ┌─────────────────────────┐   ┌─────────────────────┐   │   ┌──────────────────────────┐
+  │      Web 调度主控台     │───┼──►│     NestJS 业务网关     │   │   MinIO 私有存储    │   │   │     Android / 鸿蒙终端   │
+  │  - 多流布局/焦点切换    │   │   │  - 统一长连接信令中心   │   │  - 聊天图片/附件    │   │   │  - 前台常驻服务 / 长任务 │
+  │  - 离线地图态势标绘     │   │   │  - 强管控指令强制执行   │   │  - 会议录像归档     │   │   │  - 原生音视频采集与渲染  │
+  │  - 远程强开/强关设备    │   │   │  - 房间状态机与Token签发│   └──────────▲──────────┘   │   │  - 响应指令自动采集推流  │
+  └────────────┬────────────┘   │   └────────────▲────────────┘              │              │   └────────────┬─────────────┘
+               │                │                │                           │              │                │
+               │                └────────────────┼───────────────────────────┼──────────────┘                │
+               │                                 │ WebSocket (统一管控信令)  │ HTTP (图片/文件上传)          │
+               │                                 └───────────────────────────┼───────────────────────────────┘
+               │                                                             │
+               └──────────────── WebRTC (RTP/RTCP 媒体流推拉通道) ───────────┘
+      </pre>
+
+      <div class="highlight-box">
+        <p><strong>架构分工原则：</strong> LiveKit SFU 专职负责高吞吐、低延迟的音视频 RTP 流转发；NestJS
+          网关专职负责所有终端在线状态、强管控调度指令（强拉入会、强关强开麦摄、踢人）、业务鉴权以及 IM 富媒体元数据路由。</p>
+      </div>
+    </section>
+
+    <!-- 四、 全功能矩阵与通道分工清单（强管控升级版） -->
+    <section>
+      <h2>四、 全功能矩阵与通道分工清单</h2>
+      <p>系统所有功能在信令通道与媒体通道的分工归属如下表所示（突出调度员最高权限）：</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>业务大类</th>
+              <th>具体功能项</th>
+              <th>承载通道 / 服务</th>
+              <th>实现原理与数据流转</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td rowspan="5"><strong>音视频媒体</strong></td>
+              <td><strong>音视频采集与推流</strong></td>
+              <td>LiveKit (WebRTC)</td>
+              <td>移动端/Web 采集摄像头和麦克风，直连内网 LiveKit SFU 节点推流。</td>
+            </tr>
+            <tr>
+              <td><strong>多画面拉流与渲染</strong></td>
+              <td>LiveKit (WebRTC)</td>
+              <td>根据调度台布局（画中画、多格焦点）按需订阅并渲染远端 Track[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>屏幕共享</strong></td>
+              <td>LiveKit (WebRTC)</td>
+              <td>桌面或移动端屏幕流作为独立 Video Track 发布，全员实时同步。</td>
+            </tr>
+            <tr>
+              <td><strong>音量能量统计</strong></td>
+              <td>LiveKit Client SDK</td>
+              <td>客户端 SDK 本地提取音频能量振幅，直接驱动 UI 音量波形跳动[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>服务端混流录制</strong></td>
+              <td>LiveKit Egress + MinIO</td>
+              <td>调度员启动录制，Egress 合成 1080P MP4 视频并自动上传至 MinIO 归档[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td rowspan="6"><strong>调度强管控</strong><br><em>(管理员绝对权限)</em></td>
+              <td><strong>远程强拉入会 (免确认)</strong></td>
+              <td>NestJS (WS) ➔ LiveKit</td>
+              <td>调度台点击“强拉” ➔ NestJS 下发包含 Token 的入会信令 ➔ 终端后台服务自动加载并强制连入房间推流[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>远程强制开麦 / 关麦</strong></td>
+              <td>NestJS (WS) ➔ 终端采集驱动<br>+ LiveKit API 物理截断</td>
+              <td><b>强制开麦</b>：下发指令直达终端底层驱动，自动开启麦克风推流；<br><b>强制关麦</b>：SFU 层面物理截断音频转发并下发状态置灰[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>远程强制开摄 / 关摄</strong></td>
+              <td>NestJS (WS) ➔ 终端 Camera 驱动</td>
+              <td>调度台下发强开指令 ➔ 终端原生服务自动调用前/后置摄像头采集并发布视频 Track 至房间，无需现场人员操作[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>主画面锁定 / 焦点切换</strong></td>
+              <td>NestJS (WebSocket)</td>
+              <td>调度台下发 <code>SET_MAIN_VENUE</code> ➔ 全端将指定用户画面强制放大至主屏区域[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>强制请离 (踢人)</strong></td>
+              <td>NestJS ➔ LiveKit API</td>
+              <td>后端调用 LiveKit 断开 SFU 连接 ➔ WS 下发清退通知 ➔ 终端强制关闭通话页面返回首页[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>解散房间</strong></td>
+              <td>NestJS ➔ LiveKit API</td>
+              <td>后端销毁 Room ➔ 广播 <code>ROOM_CLOSED</code> ➔ 停止录制并强制全员退会[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td rowspan="2"><strong>人员与状态</strong></td>
+              <td><strong>全局人员在/离线感知</strong></td>
+              <td>NestJS (WebSocket)</td>
+              <td>移动端后台长连接心跳（15~30s），NestJS 实时更新调度台人员在线/空闲/通话中状态树。</td>
+            </tr>
+            <tr>
+              <td><strong>被叫唤醒与自主接听</strong></td>
+              <td>NestJS (WebSocket)</td>
+              <td>调度台普通呼叫 ➔ 目标手机前台服务响铃 ➔ 现场人员点击接听进入房间[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td rowspan="4"><strong>即时通讯 (IM)</strong></td>
+              <td><strong>单聊 / 群聊 (文本表情)</strong></td>
+              <td>NestJS (WS) + PostgreSQL</td>
+              <td>文本/表情经 WS 传输，后端持久化入库后按房间或单人进行精确分发。</td>
+            </tr>
+            <tr>
+              <td><strong>富媒体图片发送</strong></td>
+              <td>HTTP (MinIO) + NestJS WS</td>
+              <td>客户端 HTTP 上传原图至 MinIO ➔ 获取内网 URL ➔ 经 WS 广播轻量元数据。</td>
+            </tr>
+            <tr>
+              <td><strong>离线地图位置共享</strong></td>
+              <td>NestJS (WS) + PostgreSQL</td>
+              <td>经纬度数据经 WS 广播，端侧展示位置卡片，点击联动内网离线地图平移定位。</td>
+            </tr>
+            <tr>
+              <td><strong>历史聊天记录回溯</strong></td>
+              <td>NestJS (HTTP REST)</td>
+              <td>进入会话或房间后，通过 HTTP RESTful 分页拉取历史消息记录[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>协同指挥</strong></td>
+              <td><strong>电子白板笔迹同步</strong></td>
+              <td>LiveKit DataChannel / WS</td>
+              <td>矢量坐标与笔迹轨迹点通过低延迟数据通道毫秒级全员同步[cite: 1]。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 五、 移动端纯内网后台保活与即时呼叫方案 -->
+    <section>
+      <h2>五、 移动端纯内网后台保活与即时呼叫方案</h2>
+      <p>在专网与专用调度终端环境下，移动端通过预授予系统级权限与常驻机制，实现后台长连接、秒级唤醒及自动执行硬件调度：</p>
+
+      <h3>1. Android 原生保活与全屏拉起流程</h3>
+      <ul>
+        <li><strong>前台服务常驻（Foreground Service）</strong>：启动 <code>PersistentCallService</code>，声明
+          <code>foregroundServiceType="microphone|camera|phoneCall|connectedDevice"</code>，挂载不可滑动清除的常驻通知栏。</li>
+        <li><strong>权限与白名单预设</strong>：配置 <code>REQUEST_IGNORE_BATTERY_OPTIMIZATIONS</code>（电池白名单）与
+          <code>PARTIAL_WAKE_LOCK</code> 确保 CPU 在熄屏休眠时仍能响应网络指令，同时预先授予系统相机与录音常驻权限。</li>
+        <li><strong>强拉入会与硬件控制响应</strong>：收到 <code>FORCE_JOIN_ROOM</code>、<code>FORCE_OPEN_MIC</code> 或
+          <code>FORCE_OPEN_CAM</code> 信令时，前台服务无需经过用户交互，直接在底层唤醒 AudioRecord 与 Camera2 驱动，自动连接 LiveKit 并开始推流。</li>
+      </ul>
+
+      <h3>2. 鸿蒙（HarmonyOS Next / ArkTS）原生保活与 NDK 接入</h3>
+      <ul>
+        <li><strong>后台长任务（Continuous Task）</strong>：使用 <code>@ohos.resourceschedule.backgroundTaskManager</code>
+          申请长任务。待机状态声明 <code>DATA_TRANSFER</code>（数据传输）维持 WebSocket 长连接；收到入会指令时无缝切换至
+          <code>VOICE_ROUNDTRIP</code>，确保音视频采集持续运行。</li>
+        <li><strong>系统级通知与指令执行</strong>：普通呼叫调用 <code>@ohos.multimedia.audio</code> 与音频播放振铃；收到<b>强拉指令</b>时，直接在后台通过
+          AbilityContext 调起通话 <code>UIAbility</code> 并自动入会。</li>
+        <li><strong>WebRTC NDK 媒体层封装</strong>：通过 OpenHarmony LLVM 工具链编译 <code>libwebrtc.so</code>，通过 N-API
+          向上暴露接口；接收到强开指令直接调用 <code>CameraKit</code> 与音频底层流水线建立媒体轨道。</li>
+      </ul>
+    </section>
+
+    <!-- 六、 弱网通信保障与多人会议流量治理方案 -->
+    <section>
+      <h2>六、 弱网通信保障与多人会议流量治理方案</h2>
+      <p>指挥专网及无线移动边缘网络容易出现弱网丢包与多人流量风暴，系统采用一套完整的传输层 QoS 算法与自适应分发机制：</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. 弱网通信保障机制 (QoS)</h4>
+          <p><b>TWCC 拥塞控制</b>：毫秒级探测信道实际带宽，动态自适应编码码率。<br>
+            <b>NACK + FlexFEC 纠错</b>：轻微丢包请求重传，中重度丢包通过前向纠错冗余包在本地算法还原，无需往返等待。<br>
+            <b>音频绝对优先 (Audio First)</b>：极端拥塞下自动暂停视频流；Opus 开启 In-Band FEC 与静音检测（DTX），50% 丢包率下语音依然清晰可懂。
+          </p>
+        </div>
+        <div class="card">
+          <h4>2. 多人流量暴涨治理 (Traffic Control)</h4>
+          <p><b>Simulcast 三级大小流</b>：推流端同时输出 High(1080P)/Medium(480P)/Low(180P) 三路子流。<br>
+            <b>Dynacast 动态上行节流</b>：全房间无人放大某路画面时，SFU 自动下发指令让推流端暂停 High 流编码，节省 60% 上行流量与功耗。<br>
+            <b>视口感知与按需订阅</b>：调度台仅对可见区域拉取视频流，翻页折叠或最小化窗口自动转为纯音频拉流。
+          </p>
+        </div>
+      </div>
+
+      <h3>多人会议（20人同时推流）优化前后带宽消耗对比</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>优化方案对比</th>
+              <th>单端推流（上行）消耗</th>
+              <th>单端拉流（下行）消耗</th>
+              <th>20人总并发下行流量</th>
+              <th>弱网抗性与体验表现</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>传统无优化方案</strong><br><em>(固定推拉 720P)</em></td>
+              <td>1.5 Mbps<br>（全员总上传 30 Mbps）</td>
+              <td>拉取 19 路 720P<br>（约 <strong>28.5 Mbps</strong>）</td>
+              <td>约 <strong>570 Mbps</strong><br><em>(极易打爆内网交换机与终端网卡)</em></td>
+              <td>3人以上并发即出现严重卡顿、花屏，手机发烫掉帧，弱网下迅速崩溃。</td>
+            </tr>
+            <tr>
+              <td><strong>本重构方案</strong><br><em>(Simulcast + Dynacast + 焦点订阅)</em></td>
+              <td>1人焦点推 High (1.5M)<br>19人推 Low (100k)<br>（总上传仅 <strong>3.4 Mbps</strong>）</td>
+              <td>1路 High + 8路 Low (九宫格) + 10路纯音频<br>（仅约 <strong>2.5 Mbps</strong>）</td>
+              <td>约 <strong>50 Mbps</strong><br><em>(整体下行带宽压降 <strong>90% 以上</strong>)</em></td>
+              <td><b>毫秒级超低延迟</b>，百兆/千兆专网轻松承载，30% 丢包下画面稳定、语音流畅。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 七、 全栈自研开发任务与工作量清单 -->
+    <section>
+      <h2>七、 全栈自研开发任务与工作量清单（我们写什么 vs LiveKit 自带什么）</h2>
+      <p>LiveKit 提供了底层的算法引擎（TWCC/NACK/FEC/Simulcast路由），但无法感知前端业务视图与排版。我们团队需要开发的重点是<b>“业务视图状态与 LiveKit 节流 API
+          的联动逻辑”</b>及<b>“NestJS 信令长连接自愈”</b>：</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>模块分类</th>
+              <th>LiveKit 底层已自带能力（无需开发）</th>
+              <th>我们必须自研编码的部分（开发任务工作量）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>推流端适配</strong></td>
+              <td>WebRTC 视频编解码、音频 3A (AEC/ANS/AGC)、RTP 打包</td>
+              <td>调用 SDK 发布 Track 时显式配置 <code>simulcast: true</code>、<code>dtx: true</code> 与弱网保清晰度策略。</td>
+            </tr>
+            <tr>
+              <td><strong>多人防卡顿联动</strong></td>
+              <td>SFU 大小流路由分发、Dynacast 动态节流信令下发</td>
+              <td>1. <b>活跃发言人画质切换器</b>：监听 <code>ActiveSpeakersChanged</code>，将发言者切 High，其余切 Low；<br>2. <b>Web
+                  分页订阅控制器</b>：翻页时对不可见人员调用 <code>pub.setSubscribed(false)</code>；<br>3. <b>视口监听器</b>：利用
+                <code>IntersectionObserver</code> 监听窗口遮挡自动停流。</td>
+            </tr>
+            <tr>
+              <td><strong>信令与弱网自愈</strong></td>
+              <td>RTC 媒体通道的 ICE-Restart 重启</td>
+              <td>1. <b>NestJS WebSocket 网关</b>：管理在线状态树，维护掉线 60s 内的消息缓存队列；<br>2. <b>移动端指数退避重连</b>：断网后按 1s/2s/4s 递增重试，并发送
+                <code>RESUME_SESSION</code> 补发遗漏信令。</td>
+            </tr>
+            <tr>
+              <td><strong>会控强管控</strong></td>
+              <td>SFU 侧物理阻断 Track、剔除连接的底层 API</td>
+              <td>NestJS 封装 <code>RoomServiceClient</code> 执行强控；调度台 UI 界面；端侧后台接收指令自动驱动摄像头麦克风推流。</td>
+            </tr>
+            <tr>
+              <td><strong>基础设施配置</strong></td>
+              <td>Docker 容器运行时</td>
+              <td>编写 <code>config.yaml</code> 开启 <code>dynacast: true</code>，配置固定内网 IP 并清空外网 STUN 探测地址。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 八、 统一信令与即时通讯协议规范 -->
+    <section>
+      <h2>八、 统一信令与即时通讯协议规范</h2>
+      <p>所有业务信令、强管控指令与富媒体消息均收敛至标准 TypeScript 契约，各端可直接基于此模型生成对应的 Kotlin / ArkTS 类：</p>
+
+      <pre>
+// unified-protocol.ts
+
+export enum SignalAction {
+  // 通讯录与在线状态
+  USER_ONLINE = 'USER_ONLINE',
+  USER_OFFLINE = 'USER_OFFLINE',
+  HEARTBEAT_PING = 'PING',
+  HEARTBEAT_PONG = 'PONG',
+
+  // 呼叫与房间生命周期 (含强管控)
+  CALL_INVITE = 'CALL_INVITE',       // 普通呼叫邀请
+  FORCE_JOIN_ROOM = 'FORCE_JOIN',   // 强制拉入房间 (终端自动应答并推流)
+  CALL_REPLY = 'CALL_REPLY',         // 自主接听/拒绝
+  CALL_CANCEL = 'CALL_CANCEL',       // 取消呼叫
+  USER_KICKED = 'USER_KICKED',       // 强制踢出
+  ROOM_CLOSED = 'ROOM_CLOSED',       // 解散房间
+
+  // 设备强管控
+  FORCE_MUTE_MIC = 'FORCE_MUTE_MIC',     // 强制关麦
+  FORCE_OPEN_MIC = 'FORCE_OPEN_MIC',     // 强制开麦 (自动启动采集)
+  FORCE_CLOSE_CAM = 'FORCE_CLOSE_CAM',   // 强制关摄
+  FORCE_OPEN_CAM = 'FORCE_OPEN_CAM',     // 强制开摄 (自动启动采集)
+  SET_MAIN_VENUE = 'SET_MAIN_VENUE',     // 设置主画面焦点
+
+  // 即时通讯与确认
+  CHAT_MESSAGE = 'CHAT_MESSAGE',         // 富媒体消息
+  MSG_ACK = 'MSG_ACK'                    // 消息确认回执 (防乱序与丢包)
+}
+
+export enum ChatMessageType {
+  TEXT = 'TEXT',
+  EMOJI = 'EMOJI',
+  IMAGE = 'IMAGE',
+  LOCATION = 'LOCATION'
+}
+
+export interface UnifiedMessagePacket {
+  action: SignalAction;
+  seqId: string;                     // 消息全局唯一 ID (UUID)
+  senderId: string;                  // 发送人 UID
+  senderName: string;                // 发送人姓名/呼号
+  targetType: 'ROOM' | 'PRIVATE';    // 广播房间 或 单聊用户
+  targetId: string;                  // 房间号 或 目标 UID
+  timestamp: number;
+
+  // 会控/呼叫载荷
+  controlPayload?: {
+    roomId?: string;
+    roomToken?: string;              // 入会凭证
+    mediaType?: 'AUDIO' | 'VIDEO';
+    enabled?: boolean;               // 开启或关闭
+    cameraFacing?: 'FRONT' | 'BACK'; // 前置/后置摄像头指定
+    focusUserId?: string;            // 主画面锁定用户 UID
+    reason?: string;
+  };
+
+  // 聊天富媒体载荷
+  chatPayload?: {
+    msgType: ChatMessageType;
+    content?: string;                // 文本/表情代号
+    media?: {
+      url: string;                   // MinIO 内网相对路径
+      thumbnailUrl?: string;
+      width?: number;
+      height?: number;
+      size?: number;
+    };
+    location?: {
+      latitude: number;              // 纬度 (WGS84)
+      longitude: number;             // 经度
+      title: string;                 // 目标点名称
+      address?: string;              // 详细地址描述
+      zoomLevel?: number;            // 推荐地图缩放层级
+    };
+  };
+}
+      </pre>
+    </section>
+
+    <!-- 九、 会控强管控机制设计原则 -->
+    <section>
+      <h2>九、 会控强管控机制设计原则</h2>
+      <p>指挥调度系统要求中心调度员具备绝对话语权，会控逻辑严格遵循<b>“信令传达控制，端侧驱动执行，服务端物理截断”</b>：</p>
+
+      <pre>
+  [场景 1：调度员强制开麦/开摄]
+  调度台点击“强开视频” ──► NestJS ──(WS 下发 FORCE_OPEN_CAM)──► 终端前台服务
+                                                                       │
+                                                       (调用 Camera2/CameraKit 底层驱动)
+                                                                       │
+  LiveKit SFU 媒体服务 ◄──────(终端自动发布本地 Video Track)────────────┘
+
+  ─────────────────────────────────────────────────────────────────────────────
+
+  [场景 2：调度员强制全场静音/踢人]
+  调度台点击“全场静音” ──► NestJS ──(gRPC 调用 LiveKit Server SDK)──► LiveKit SFU (服务端物理丢弃音频包)
+                                │
+                                └──(WS 广播 FORCE_MUTE_MIC)────────► 全体参会终端 (UI 置灰显示为禁音)
+      </pre>
+    </section>
+
+    <!-- 十、 纯内网基础设施与网络规划 -->
+    <section>
+      <h2>十、 纯内网基础设施与网络规划</h2>
+      <p>针对内网防火墙、端口隔离与离线证书环境，规划如下配置策略：</p>
+
+      <h3>1. 端口开放与防火墙规划</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>服务组件</th>
+              <th>协议类型</th>
+              <th>规划端口</th>
+              <th>业务用途说明</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Nginx (反向代理)</strong></td>
+              <td>TCP</td>
+              <td><code>80 / 443</code></td>
+              <td>Web 调度台静态资源托管、SSL 证书卸载、业务 API 代理。</td>
+            </tr>
+            <tr>
+              <td><strong>NestJS 信令服务</strong></td>
+              <td>TCP</td>
+              <td><code>3000 (或 443 代理)</code></td>
+              <td>统一 WebSocket 长连接信令通信。</td>
+            </tr>
+            <tr>
+              <td><strong>LiveKit Server</strong></td>
+              <td>TCP</td>
+              <td><code>7880</code></td>
+              <td>RTC 媒体信令连接 (HTTP/WebSocket)。</td>
+            </tr>
+            <tr>
+              <td><strong>LiveKit Server</strong></td>
+              <td>UDP</td>
+              <td><code>50000 - 60000</code></td>
+              <td>WebRTC 媒体流数据传输 (RTP/RTCP)。</td>
+            </tr>
+            <tr>
+              <td><strong>内网 Coturn 服务</strong></td>
+              <td>UDP / TCP</td>
+              <td><code>3478</code></td>
+              <td>跨 VLAN、跨子网专网场景下的内网 STUN/TURN 中继。</td>
+            </tr>
+            <tr>
+              <td><strong>MinIO 对象存储</strong></td>
+              <td>TCP</td>
+              <td><code>9000 / 9001</code></td>
+              <td>S3 API 访问接口与 MinIO 运维控制台。</td>
+            </tr>
+            <tr>
+              <td><strong>TileServer GL</strong></td>
+              <td>TCP</td>
+              <td><code>8080</code></td>
+              <td>离线矢量/卫星地图瓦片发布服务。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>2. 离线 WebRTC 与 HTTPS 证书要求</h3>
+      <ul>
+        <li><strong>规避公网 STUN 超时</strong>：在 LiveKit Server 配置中明确关闭公网 IP 探测，绑定固定内网 IP（<code>rtc.node_ip</code>），清空所有外网
+          STUN 探测地址，消除内网下 10~30 秒的无谓超时等待。</li>
+        <li><strong>内网私有 CA 证书链</strong>：浏览器调用 <code>getUserMedia</code> 强制要求 HTTPS/WSS 安全上下文。使用 <code>mkcert</code>
+          生成内网专用根证书（Root CA）并为内网域名签发证书，通过批量策略导入调度台 PC 及移动端系统受信任证书库中。</li>
+      </ul>
+    </section>
+
+    <!-- 十一、 移动端底层硬件陷阱与工程深水区避坑指南（新增核心章节） -->
+    <section>
+      <h2>十一、 移动端底层硬件陷阱与工程深水区避坑指南</h2>
+      <p>在纯内网移动端原生开发与 AI 辅助落地过程中，必须高度重视以下 5 个维度的硬件与系统底层“暗坑”：</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h4>1. 啸叫抑制与音频通讯模式</h4>
+          <p>多台终端近距离同室开启免提会引发强烈啸叫。<b>必须在 Android 原生端强制设置 <code>AudioManager.MODE_IN_COMMUNICATION</code></b>，强行激活底层硬件
+            AEC（回声消除）与 NS（降噪），禁止使用普通媒体播放模式。</p>
+        </div>
+        <div class="card">
+          <h4>2. 摄像头硬件独占与防闪退</h4>
+          <p>Camera 是排他性资源。当调度台强开摄像头被占用或系统相机崩溃时，端侧 Native 必须捕获 <code>CameraAccessException</code>，向 NestJS 回传
+            <code>ERROR_CAMERA_BUSY</code> 并自动降级为纯音频，<b>严禁应用闪退</b>。</p>
+        </div>
+        <div class="card">
+          <h4>3. 状态一致性与防“脑裂”</h4>
+          <p>手机断电或拔网线会导致 NestJS 与 LiveKit 状态脱节。<b>必须在 LiveKit 配置 Webhook 回调</b>，以 SFU 的 <code>participant_left</code>
+            为最终真实事实来源（Source of Truth），反向校准 NestJS 在线树。</p>
+        </div>
+        <div class="card">
+          <h4>4. 专网跨网段与 MTU 分片</h4>
+          <p>手机 4G/5G 专网与中心调度台跨网段时无法直接 P2P，必须通过内网 Coturn 进行 TURN 中继。针对专网 VPN 的 MTU 压缩，<b>在 LiveKit 中限制 RTP 包长为 1200
+              字节</b>，防止 DTLS 握手包分片丢弃导致连接卡死。</p>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <p><strong>国产系统 ROM 与 AI 避坑提示：</strong><br>
+          1. <b>国产 Android 防杀</b>：引导用户开启“允许后台弹出界面”、“自启动”与“锁屏显示”，否则 <code>Full-Screen Intent</code> 会被系统降级为普通静音通知。<br>
+          2. <b>防范鸿蒙 ArkTS 幻觉</b>：提示 AI 时必须严格锁定 <b>HarmonyOS Next (API 11/12+ Stage 模型)</b>，严禁使用已废弃的 FA 模型或 Java API，并将
+          DevEco Studio 的 <code>.d.ts</code> 类型文件喂给 AI 生成代码。</p>
+      </div>
+    </section>
+
+    <!-- 十二、 全栈实施路径、AI 协作指南与全景自检清单 -->
+    <section>
+      <h2>十二、 全栈实施路径、AI 协作指南与全景自检清单</h2>
+      <p>项目整体交付周期规划为 <b>5 周</b>，依托 TypeScript 在 NestJS、ArkTS 及 Web 前端的同构优势，按阶段稳步推进：</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>实施阶段</th>
+              <th>规划周期</th>
+              <th>核心建设任务与 AI 协作切入点</th>
+              <th>阶段验收交付成果</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>阶段一：底座与 Web 闭环</strong></td>
+              <td>第 1~2 周</td>
+              <td>Docker 部署 LiveKit、MinIO、TileServer GL；开发 NestJS 统一信令网关；使用 <code>livekit-client</code> 重构 Web
+                调度主控台[cite: 1]。</td>
+              <td>Web 调度台实现多路音视频互通、强管控会控、画中画布局与离线地图标绘[cite: 1]。</td>
+            </tr>
+            <tr>
+              <td><strong>阶段二：Android 端闭环</strong></td>
+              <td>第 3 周</td>
+              <td>利用 AI 快速生成 Kotlin <code>ForegroundService</code> 保活与 OkHttp WebSocket 心跳模板；集成
+                <code>livekit-android</code>，编写强拉入会与自动采集推流逻辑。</td>
+              <td>Android 终端在锁屏状态下，调度台可<b>一键强拉入会并强制开启音视频推流</b>。</td>
+            </tr>
+            <tr>
+              <td><strong>阶段三：鸿蒙 Next 端闭环</strong></td>
+              <td>第 4 周</td>
+              <td>利用 AI 将 TS 信令模型转为 ArkTS 类；配置 <code>Continuous Task</code> 后台长任务；对接 WebRTC NDK，实现接收指令自动推拉流。</td>
+              <td>鸿蒙 Next 终端实现后台长任务常驻，完全受控于 Web 调度台的强管控指令。</td>
+            </tr>
+            <tr>
+              <td><strong>阶段四：录制、压测与加固</strong></td>
+              <td>第 5 周</td>
+              <td>部署 LiveKit Egress 服务端混流录制；执行跨网段丢包/抖动弱网压测与断线重连风暴测试。</td>
+              <td>会议录像 MP4 自动存入 MinIO，系统具备断线秒级自愈与全业务流程审计闭环。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>全景架构上线前自检清单（Pre-Flight Checklist）</h3>
+      <pre>
+[基础设施]
+  [ ] Docker Compose 集群 (LiveKit, Egress, MinIO, PostgreSQL, Redis, TileServer GL, Coturn)
+  [ ] 内网 mkcert 私有根证书分发机制 (确保 WebRTC getUserMedia 正常授权)
+  [ ] MinIO 90 天录像自动滚动清理规则 (防止磁盘撑爆)
+
+[服务端 (NestJS)]
+  [ ] WebSocket 网关具备指数退避重连与 Session Resume 断点补发
+  [ ] 集成 LiveKit Webhook，防止业务状态与媒体状态“脑裂”
+  [ ] 消息 ACK 回执与 PostgreSQL 幂等入库
+
+[调度台 Web (Vue)]
+  [ ] 视口监听 (IntersectionObserver) + 分页订阅 (只拉可见画面，降低带宽)
+  [ ] 活跃发言人画质自动切换 (Active Speaker -> High, 其余 -> Low)
+  [ ] 离线 Leaflet 地图标绘与 IM 地图卡片联动
+
+[移动端 (Android / 鸿蒙 Next)]
+  [ ] 前台常驻保活机制 (Foreground Service / Continuous Task)
+  [ ] 音频强制走通信模式 (MODE_IN_COMMUNICATION) 启用硬件消噪消回声
+  [ ] 摄像头硬件异常捕获 (禁止崩溃，自动降级为纯语音)
+  [ ] 国产系统权限引导（后台弹出界面、忽略电池优化）
+      </pre>
+    </section>
+  </div>
+</body>
+
+</html>
